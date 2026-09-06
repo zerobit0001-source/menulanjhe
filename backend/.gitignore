@@ -1,0 +1,301 @@
+# =========================================================
+# Python
+# =========================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# C extensions
+*.pyd
+
+# Python distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# =========================================================
+# Virtual Environments
+# =========================================================
+
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# =========================================================
+# Django
+# =========================================================
+
+# Local Django files
+*.log
+
+# Local database
+db.sqlite3
+db.sqlite3-journal
+
+# Django cache
+.cache/
+django_cache/
+
+# Django migrations
+# DO NOT ignore migrations in a real project.
+# migrations should be committed to Git.
+#
+# migrations/
+# */migrations/
+
+# =========================================================
+# Environment Variables / Secrets
+# =========================================================
+
+.env
+.env.*
+!.env.example
+
+# Secret / local configuration
+*.secret
+secrets/
+secrets.json
+
+# =========================================================
+# Django Static / Media
+# =========================================================
+
+staticfiles/
+static_root/
+media/
+media_root/
+
+# If you want to keep empty directories:
+# !staticfiles/.gitkeep
+# !media/.gitkeep
+
+# =========================================================
+# PostgreSQL
+# =========================================================
+
+*.dump
+*.sql
+*.sql.gz
+
+# Local PostgreSQL data
+postgres_data/
+postgresql_data/
+pgdata/
+
+# =========================================================
+# Redis
+# =========================================================
+
+redis_data/
+dump.rdb
+appendonly.aof
+
+# =========================================================
+# Celery
+# =========================================================
+
+celerybeat-schedule
+celerybeat.pid
+
+# =========================================================
+# Coverage / Testing
+# =========================================================
+
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# =========================================================
+# Type Checking
+# =========================================================
+
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+
+# =========================================================
+# Ruff / Linters
+# =========================================================
+
+.ruff_cache/
+
+# =========================================================
+# Jupyter
+# =========================================================
+
+.ipynb_checkpoints/
+
+# =========================================================
+# IDEs
+# =========================================================
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains / PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# =========================================================
+# OS Files
+# =========================================================
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+
+# Windows installer files
+*.msi
+*.msix
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+.directory
+.Trash-*
+
+# =========================================================
+# Docker
+# =========================================================
+
+# Docker local overrides
+docker-compose.override.yml
+
+# Docker volumes
+docker/volumes/
+docker-data/
+
+# =========================================================
+# Logs
+# =========================================================
+
+logs/
+*.log
+log/
+*.log.*
+
+# =========================================================
+# Temporary Files
+# =========================================================
+
+*.tmp
+*.temp
+*.bak
+*.backup
+*.swp
+*.swo
+
+tmp/
+temp/
+
+# =========================================================
+# Local Development
+# =========================================================
+
+.local/
+local/
+.localenv/
+
+# =========================================================
+# API / HTTP Client
+# =========================================================
+
+# JetBrains HTTP Client
+.http/
+
+# =========================================================
+# Generated Documentation
+# =========================================================
+
+docs/_build/
+
+# =========================================================
+# Generated Files
+# =========================================================
+
+*.generated.py
+
+# =========================================================
+# OS / Editor Backup
+# =========================================================
+
+*.orig
+*.rej
+
+# =========================================================
+# Security / Certificates
+# =========================================================
+
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# IMPORTANT:
+# Never commit private keys or production certificates.
+
+# =========================================================
+# Local SSL
+# =========================================================
+
+certs/
+ssl/
