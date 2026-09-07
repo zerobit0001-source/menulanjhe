@@ -1,7 +1,6 @@
+import MenuRenderer from "@/features/menu/MenuRenderer";
+import { demoMenu } from "@/features/menu/data/demoMenu";
+
 export default function MenuPage() {
-  return (
-    <div>
-      <p className="font-extrabold text-6xl">سلام منو</p>
-    </div>
-  );
+  return <MenuRenderer template="modern" menu={demoMenu} />;
 }
