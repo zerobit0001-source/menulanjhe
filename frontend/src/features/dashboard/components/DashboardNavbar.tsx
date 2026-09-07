@@ -1,50 +1,124 @@
 "use client";
 
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  InputBase,
+  Typography,
+} from "@mui/material";
 import { Bell, Search, ChevronDown } from "lucide-react";
 
 export default function DashboardNavbar() {
   return (
-    <header className="h-20 shrink-0 border-b border-slate-200 bg-white">
-      <div className="flex h-full items-center justify-between px-6">
+    <Box
+      component="header"
+      sx={{
+        height: 80,
+        flexShrink: 0,
+        borderBottom: "1px solid",
+        borderColor: "divider",
+        bgcolor: "background.paper",
+      }}
+    >
+      <Box
+        sx={{
+          height: "100%",
+          px: 3,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         {/* Shop */}
-        <button className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">
-            M
-          </div>
+        <Button
+          variant="text"
+          color="inherit"
+          sx={{
+            p: 1,
+            minWidth: 0,
+            textTransform: "none",
+            borderRadius: 1,
+            "&:hover": {
+              bgcolor: "action.hover",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            {/* Shop Avatar */}
+            <Avatar
+              variant="rounded"
+              sx={{
+                width: 36,
+                height: 36,
+                bgcolor: "grey.900",
+                fontSize: 14,
+                fontWeight: 700,
+              }}
+            >
+              M
+            </Avatar>
 
-          <div className="text-right">
-            <p className="text-sm font-semibold text-slate-900">فروشگاه من</p>
+            {/* Shop Info */}
+            <Box sx={{ textAlign: "right" }}>
+              <Typography variant="body2">فروشگاه من</Typography>
 
-            <p className="text-xs text-slate-500">فروشگاه فعال</p>
-          </div>
+              <Typography variant="caption">فروشگاه فعال</Typography>
+            </Box>
 
-          <ChevronDown size={16} className="text-slate-400" />
-        </button>
+            <ChevronDown size={16} color="currentColor" />
+          </Box>
+        </Button>
 
         {/* Right */}
-        <div className="flex items-center gap-3">
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+          }}
+        >
           {/* Search */}
-          <div className="hidden h-10 w-64 items-center gap-2 rounded-xl bg-slate-50 px-3 md:flex">
-            <Search size={17} className="text-slate-400" />
-
-            <input
-              type="text"
-              placeholder="جستجو..."
-              className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
-            />
-          </div>
 
           {/* Notification */}
-          <button className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50">
+          <IconButton
+            sx={{
+              width: 40,
+              height: 40,
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: 3,
+              color: "text.secondary",
+              "&:hover": {
+                bgcolor: "grey.50",
+              },
+            }}
+          >
             <Bell size={18} strokeWidth={1.8} />
-          </button>
+          </IconButton>
 
           {/* Avatar */}
-          <button className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-700">
+          <Avatar
+            sx={{
+              width: 40,
+              height: 40,
+              bgcolor: "grey.200",
+              color: "grey.700",
+              fontSize: 14,
+              fontWeight: 600,
+            }}
+          >
             A
-          </button>
-        </div>
-      </div>
-    </header>
+          </Avatar>
+        </Box>
+      </Box>
+    </Box>
   );
 }

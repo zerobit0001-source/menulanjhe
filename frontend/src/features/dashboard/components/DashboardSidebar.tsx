@@ -2,15 +2,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import {
-  LayoutDashboard,
-  ShoppingCart,
-  UtensilsCrossed,
-  Package,
-  Tags,
   BarChart3,
+  LayoutDashboard,
+  Package,
   Settings,
+  ShoppingCart,
+  Tags,
 } from "lucide-react";
+
+import {
+  Box,
+  Divider,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 
 const menuItems = [
   {
@@ -19,8 +31,8 @@ const menuItems = [
     icon: LayoutDashboard,
   },
   {
-    title: "فروش‌ها",
-    href: "/dashboard/sales",
+    title: "سفارش‌ها",
+    href: "/dashboard/orders",
     icon: ShoppingCart,
   },
   {
@@ -43,59 +55,153 @@ const menuItems = [
 export default function DashboardSidebar() {
   const pathname = usePathname();
 
+  const isActiveRoute = (href: string) => {
+    if (href === "/dashboard") {
+      return pathname === href;
+    }
+
+    return pathname.startsWith(href);
+  };
+
   return (
-    <aside className="hidden w-64 shrink-0 flex-col border-l border-slate-200 bg-white lg:flex">
+    <Paper
+      component="aside"
+      elevation={0}
+      square
+      sx={{
+        width: 256,
+        flexShrink: 0,
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        borderLeft: 1,
+        borderColor: "divider",
+        bgcolor: "background.paper",
+      }}
+    >
       {/* Logo */}
-      <div className="flex h-20 items-center px-6">
-        <Link href="/dashboard" className="text-xl font-bold text-slate-900">
+      <Box
+        sx={{
+          height: 80,
+          px: 3,
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Typography
+          component={Link}
+          href="/dashboard"
+          variant="h6"
+          sx={{
+            color: "text.primary",
+            textDecoration: "none",
+            fontWeight: 700,
+          }}
+        >
           Menu Lanjhe
-        </Link>
-      </div>
+        </Typography>
+      </Box>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-4">
-        <div className="space-y-1">
+      <Box
+        component="nav"
+        sx={{
+          flex: 1,
+          px: 2,
+          py: 2,
+        }}
+      >
+        <List disablePadding>
           {menuItems.map((item) => {
             const Icon = item.icon;
-
-            const isActive =
-              pathname === item.href ||
-              (item.href !== "/dashboard" && pathname.startsWith(item.href));
+            const isActive = isActiveRoute(item.href);
 
             return (
-              <Link
+              <ListItemButton
                 key={item.href}
+                component={Link}
                 href={item.href}
-                className={`
-                  flex items-center gap-3 rounded-xl px-4 py-3
-                  text-sm font-medium transition-colors
-                  ${
-                    isActive
-                      ? "bg-slate-100 text-slate-900"
-                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                  }
-                `}
-              >
-                <Icon size={19} strokeWidth={1.8} />
+                selected={isActive}
+                sx={{
+                  minHeight: 44,
+                  mb: 0.5,
+                  px: 2,
+                  borderRadius: 1,
 
-                <span>{item.title}</span>
-              </Link>
+                  "&.Mui-selected": {
+                    bgcolor: "action.selected",
+                    color: "text.primary",
+                  },
+
+                  "&.Mui-selected:hover": {
+                    bgcolor: "action.selected",
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 40,
+                    color: isActive ? "text.primary" : "text.secondary",
+                  }}
+                >
+                  <Icon size={19} strokeWidth={1.8} />
+                </ListItemIcon>
+
+                <ListItemText
+                  primary={item.title}
+                  slotProps={{
+                    primary: {
+                      sx: {
+                        fontSize: 14,
+                        fontWeight: 500,
+                      },
+                    },
+                  }}
+                />
+              </ListItemButton>
             );
           })}
-        </div>
-      </nav>
+        </List>
+      </Box>
 
-      {/* Bottom */}
-      <div className="border-t border-slate-200 p-4">
-        <Link
-          href="/dashboard/settings"
-          className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
-        >
-          <Settings size={19} strokeWidth={1.8} />
+      {/* Settings */}
+      <Box>
+        <Divider />
 
-          <span>تنظیمات</span>
-        </Link>
-      </div>
-    </aside>
+        <Stack sx={{ p: 2 }}>
+          <ListItemButton
+            component={Link}
+            href="/dashboard/settings"
+            selected={isActiveRoute("/dashboard/settings")}
+            sx={{
+              minHeight: 44,
+              px: 2,
+              borderRadius: 1,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 40,
+                color: "text.secondary",
+              }}
+            >
+              <Settings size={19} strokeWidth={1.8} />
+            </ListItemIcon>
+
+            <ListItemText
+              primary="تنظیمات"
+              slotProps={{
+                primary: {
+                  sx: {
+                    fontSize: 14,
+                    fontWeight: 500,
+                  },
+                },
+              }}
+            />
+          </ListItemButton>
+        </Stack>
+      </Box>
+    </Paper>
   );
 }

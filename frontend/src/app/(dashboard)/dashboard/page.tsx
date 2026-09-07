@@ -1,7 +1,11 @@
+import DashboardContainer from "@/features/dashboard/components/DashboardContainer";
+import { DashboardPageCategories } from "@/features/dashboard/sections/DashboardPageCategories";
+
 export default function DashboardPage() {
   return (
-    <div>
+    <DashboardContainer>
+      <DashboardPageCategories />
       <p>Welcome to the Dashboard!</p>
-    </div>
+    </DashboardContainer>
   );
 }
