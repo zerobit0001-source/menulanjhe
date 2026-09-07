@@ -34,7 +34,7 @@ class MembershipSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Membership
-        fields = ["id", "user", "role", "role_codename", "branch", "is_active", "created_at"]
+        fields = ["id", "user", "role", "role_codename", "is_active", "created_at"]
         read_only_fields = ["id", "user", "role_codename", "created_at"]
 
 
