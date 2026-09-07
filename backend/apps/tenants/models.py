@@ -55,7 +55,7 @@ class Membership(UUIDTimeStampedModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="memberships")
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name="memberships")
     role = models.ForeignKey(Role, on_delete=models.PROTECT, related_name="memberships")
-    branch = models.ForeignKey("branches.Branch", on_delete=models.SET_NULL, related_name="memberships", null=True, blank=True)
+    # branch = models.ForeignKey("branches.Branch", on_delete=models.SET_NULL, related_name="memberships", null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:
