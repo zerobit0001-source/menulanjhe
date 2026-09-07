@@ -5,16 +5,25 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, phone_number, password=None, **extra):
+    use_in_migrations = True
+
+    def _create_user(self, phone_number, password=None, **extra):
+        if not phone_number:
+            raise ValueError("کاربر باید شماره تلفن داشته باشد")
         user = self.model(phone_number=phone_number, **extra)
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
         return user
 
-    def create_superuser(self, phone_number, password=None, **extra):
-        extra["is_staff"] = True
-        extra["is_superuser"] = True
-        return self.create_user(phone_number, password, **extra)
+    def create_user(self, phone_number, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
+        return self._create_user(phone_number, password, **extra_fields)
+
+    def create_superuser(self, phone_number, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self.create_user(phone_number, password, **extra_fields)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -25,6 +34,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = UserManager()
     USERNAME_FIELD = "phone_number"
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.full_name or self.phone_number
