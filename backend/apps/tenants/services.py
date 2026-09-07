@@ -1,8 +1,8 @@
 import secrets
 from django.contrib.auth import get_user_model
 from django.db import transaction
-# from apps.branches.models import Branch
-# from apps.restaurants.models import RestaurantProfile
+from apps.branches.models import Branch
+from apps.restaurants.models import RestaurantProfile
 from .models import Membership, Role, Tenant
 
 User = get_user_model()
@@ -30,8 +30,8 @@ def onboard_new_tenant(*, phone_number: str, full_name: str, tenant_name: str, t
         user.save(update_fields=["password"])
 
     tenant = Tenant.objects.create(name=tenant_name, slug=tenant_slug)
-    # RestaurantProfile.objects.create(tenant=tenant, name=tenant_name, slug=tenant_slug)
-    # Branch.objects.create(tenant=tenant, name=f"{tenant_name} - Main", slug="main", is_default=True)
+    RestaurantProfile.objects.create(tenant=tenant, name=tenant_name, slug=tenant_slug)
+    Branch.objects.create(tenant=tenant, name=f"{tenant_name} - Main", slug="main", is_default=True)
 
     owner_role = Role.objects.get(is_system=True, codename="owner")
     Membership.objects.create(user=user, tenant=tenant, role=owner_role, is_active=True)
