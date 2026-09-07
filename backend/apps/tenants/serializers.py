@@ -1,29 +1,56 @@
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken
-from .models import Membership
+from apps.accounts.serializers import UserSerializer
+from .models import Membership, Permission, Role
 
 
-class SelectTenantSerializer(serializers.Serializer):
-    tenant_id = serializers.UUIDField()
+class PermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = ["id", "codename", "description"]
 
-    def validate_tenant_id(self, value):
-        user = self.context["request"].user
-        membership = Membership.objects.filter(
-            user=user, tenant_id=value, is_active=True, tenant__is_active=True
-        ).first()
-        if not membership:
-            raise serializers.ValidationError("شما عضو این رستوران نیستید یا دسترسی شما غیرفعال شده است.")
-        self.context["membership"] = membership
-        return value
+
+class RoleSerializer(serializers.ModelSerializer):
+    permissions = PermissionSerializer(many=True, read_only=True)
+    permission_codenames = serializers.SlugRelatedField(
+        source="permissions", slug_field="codename", many=True, queryset=Permission.objects.all(), write_only=True
+    )
+
+    class Meta:
+        model = Role
+        fields = ["id", "name", "codename", "is_system", "rank", "permissions", "permission_codenames"]
+        read_only_fields = ["id", "is_system", "rank"]
 
     def create(self, validated_data):
-        membership = self.context["membership"]
-        user = self.context["request"].user
-        refresh = RefreshToken.for_user(user)
-        refresh["active_tenant_id"] = str(membership.tenant_id)
-        return {
-            "access": str(refresh.access_token),
-            "refresh": str(refresh),
-            "tenant_id": str(membership.tenant_id),
-            "role": membership.role.codename,
-        }
+        permissions = validated_data.pop("permissions", [])
+        tenant = self.context["request"].tenant
+        role = Role.objects.create(tenant=tenant, is_system=False, rank=0, **validated_data)
+        role.permissions.set(permissions)
+        return role
+
+
+class MembershipSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    role_codename = serializers.CharField(source="role.codename", read_only=True)
+
+    class Meta:
+        model = Membership
+        fields = ["id", "user", "role", "role_codename", "branch", "is_active", "created_at"]
+        read_only_fields = ["id", "user", "role_codename", "created_at"]
+
+
+class StaffInviteSerializer(serializers.Serializer):
+    phone_number = serializers.CharField()
+    full_name = serializers.CharField(required=False, allow_blank=True)
+    role_id = serializers.UUIDField()
+
+    def validate_role_id(self, value):
+        try:
+            role = Role.objects.get(id=value)
+        except Role.DoesNotExist:
+            raise serializers.ValidationError("نقش مشخص شده وجود ندارد.")
+        if role.codename == "owner":
+            raise serializers.ValidationError("شما نمی‌توانید کاربر را به عنوان مالک دعوت کنید.")
+        if role.tenant_id is not None and role.tenant_id != self.context["request"].tenant.id:
+            raise serializers.ValidationError("نقش مشخص شده متعلق به یک مستاجر دیگر است.")
+        self.context["role"] = role
+        return value

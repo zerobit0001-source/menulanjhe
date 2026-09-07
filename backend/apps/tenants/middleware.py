@@ -21,10 +21,17 @@ class TenantContextMiddleware:
                 active_tenant_id = validated_token.get("active_tenant_id")
                 if active_tenant_id:
                     from apps.tenants.models import Membership
-                    membership = Membership.objects.select_related("tenant", "role").filter(
-                        user=user, tenant_id=active_tenant_id,
-                        is_active=True, tenant__is_active=True,
-                    ).first()
+
+                    membership = (
+                        Membership.objects.select_related("tenant", "role")
+                        .filter(
+                            user=user,
+                            tenant_id=active_tenant_id,
+                            is_active=True,
+                            tenant__is_active=True,
+                        )
+                        .first()
+                    )
                     if membership:
                         request.tenant = membership.tenant
                         request.membership = membership
