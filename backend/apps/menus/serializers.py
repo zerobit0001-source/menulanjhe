@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.utils.text import slugify
 from apps.products.serializers import PublicProductSerializer
 from .models import Category, Menu
 
@@ -15,6 +16,22 @@ class AdminMenuSerializer(serializers.ModelSerializer):
         if branch.tenant_id != tenant.id:
             raise serializers.ValidationError("این شعبه متعلق به رستوران شما نیست.")
         return branch
+
+    def create(self, validated_data):
+        if not validated_data.get("slug"):
+            validated_data["slug"] = self._generate_unique_slug(
+                name=validated_data["name"], branch=validated_data["branch"]
+            )
+        return super().create(validated_data)
+
+    def _generate_unique_slug(self, name, branch):
+        base_slug = slugify(name, allow_unicode=True) or "menu"
+        slug = base_slug
+        counter = 2
+        while Menu.objects.filter(branch=branch, slug=slug).exists():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+        return slug
 
 
 class AdminCategorySerializer(serializers.ModelSerializer):
