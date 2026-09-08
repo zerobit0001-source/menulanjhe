@@ -8,4 +8,7 @@ urlpatterns = [
     path("api/v1/admin/", include("apps.tenants.urls_admin")),
     path("api/v1/admin/", include("apps.restaurants.urls")),
     path("api/v1/admin/", include("apps.branches.urls")),
+    path("api/v1/admin/", include("apps.menus.urls")),
+    path("api/v1/admin/", include("apps.products.urls")),
+    path("api/v1/admin/", include("apps.menus.urls_public")),
 ]
