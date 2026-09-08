@@ -4,6 +4,8 @@ from .models import Product
 
 
 class AdminProductSerializer(serializers.ModelSerializer):
+    slug = serializers.SlugField(required=False, allow_blank=True)
+
     class Meta:
         model = Product
         fields = [
@@ -16,7 +18,7 @@ class AdminProductSerializer(serializers.ModelSerializer):
         tenant = self.context["request"].tenant
         if category.menu.branch.tenant_id != tenant.id:
             raise serializers.ValidationError("این دسته‌بندی متعلق به رستوران شما نیست.")
-        return 
+        return category
 
     def create(self, validated_data):
         if not validated_data.get("slug"):
