@@ -7,7 +7,6 @@ export default function DashboardPage() {
     <DashboardContainer>
       <DashboardPageCategories />
       <DashboardPageMenu />
-      <p>Welcome to the Dashboard!</p>
     </DashboardContainer>
   );
 }
