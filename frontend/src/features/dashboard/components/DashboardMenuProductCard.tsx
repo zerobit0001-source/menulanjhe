@@ -1,6 +1,15 @@
 "use client";
 
-import { Box, Card, IconButton, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  IconButton,
+  Modal,
+  Switch,
+  Typography,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
 import {
   Eye,
   EyeOff,
@@ -12,6 +21,53 @@ import {
   SquarePen,
 } from "lucide-react";
 import { useState } from "react";
+
+const AntSwitch = styled(Switch)(({ theme }) => ({
+  width: 28,
+  height: 16,
+  padding: 0,
+  display: "flex",
+  "&:active": {
+    "& .MuiSwitch-thumb": {
+      width: 15,
+    },
+    "& .MuiSwitch-switchBase.Mui-checked": {
+      transform: "translateX(9px)",
+    },
+  },
+  "& .MuiSwitch-switchBase": {
+    padding: 2,
+    "&.Mui-checked": {
+      transform: "translateX(12px)",
+      color: "#fff",
+      "& + .MuiSwitch-track": {
+        opacity: 1,
+        backgroundColor: "#1890ff",
+        ...theme.applyStyles("dark", {
+          backgroundColor: "#177ddc",
+        }),
+      },
+    },
+  },
+  "& .MuiSwitch-thumb": {
+    boxShadow: "0 2px 4px 0 rgb(0 35 11 / 20%)",
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    transition: theme.transitions.create(["width"], {
+      duration: 200,
+    }),
+  },
+  "& .MuiSwitch-track": {
+    borderRadius: 16 / 2,
+    opacity: 1,
+    backgroundColor: "rgba(0,0,0,.25)",
+    boxSizing: "border-box",
+    ...theme.applyStyles("dark", {
+      backgroundColor: "rgba(255,255,255,.35)",
+    }),
+  },
+}));
 
 export default function DashboardMenuProductCard({ product }) {
   const [open, setOpen] = useState<boolean>(false);
@@ -125,12 +181,12 @@ export default function DashboardMenuProductCard({ product }) {
             left-1/2
             top-1/2
             w-[calc(100%-32px)]
-            max-w-[480px]
+            max-w-[400px]
             -translate-x-1/2
             -translate-y-1/2
             rounded-2xl
             bg-white
-            p-2
+            p-4
             shadow-2xl
             outline-none
             flex flex-col
@@ -152,7 +208,7 @@ export default function DashboardMenuProductCard({ product }) {
           </Box>
 
           {/* Title + Price */}
-          <Box className="flex items-start justify-between gap-4">
+          <Box className="flex items-center justify-between gap-4">
             <Box className="min-w-0">
               <Typography variant="h6" className="font-bold!">
                 {product.title}
@@ -249,8 +305,28 @@ export default function DashboardMenuProductCard({ product }) {
               </Box>
             </Box>
           </Box>
-          <div className="text-end">
-            <span className="py-2 px-4 bg-gray-200 rounded-full">
+          <Box className="flex items-center justify-between gap-4">
+            <Box className="min-w-0">
+              <Typography variant="body1" className="font-bold!">
+                نمایش محصول
+              </Typography>
+
+              <Typography variant="caption" className="text-gray-500!">
+                دیده شدن محصول در منو
+              </Typography>
+            </Box>
+            <Switch defaultChecked />
+          </Box>
+
+          <div className="flex gap-2">
+            <Button
+              color="primary"
+              variant="contained"
+              className="rounded-full! flex-1"
+            >
+              ثبت
+            </Button>
+            <span className="py-0 px-4 rounded-full">
               <IconButton color="error">
                 <Trash />
               </IconButton>
