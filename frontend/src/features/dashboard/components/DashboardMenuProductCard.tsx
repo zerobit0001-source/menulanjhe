@@ -315,7 +315,7 @@ export default function DashboardMenuProductCard({ product }) {
                 دیده شدن محصول در منو
               </Typography>
             </Box>
-            <Switch defaultChecked />
+            <Switch defaultChecked={product.visible} />
           </Box>
 
           <div className="flex gap-2">
