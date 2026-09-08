@@ -1,10 +1,18 @@
 import DashboardContainer from "@/features/dashboard/components/DashboardContainer";
+import OrdersPageToolbar from "@/features/dashboard/components/orders/OrdersPageToolbar";
+import { SectionTitle } from "@/features/dashboard/components/SectionTitle";
 import { Typography } from "@mui/material";
+import { SquareText } from "lucide-react";
 
 export default function OrderPage() {
   return (
     <DashboardContainer>
-      <Typography variant="body1">hello to orders</Typography>
+      <SectionTitle
+        title="سفارش ها"
+        icon={<SquareText size={20} className="text-gray-500" />}
+        count={13}
+      />
+      <OrdersPageToolbar />
     </DashboardContainer>
   );
 }
