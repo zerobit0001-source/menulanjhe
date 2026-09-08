@@ -2,7 +2,7 @@ import { Layers, Plus } from "lucide-react";
 import { Button, Card, Typography } from "@mui/material";
 
 import { SectionTitle } from "../components/SectionTitle";
-import { dasboardCtegories } from "../data/demoDashboard";
+import { dashboardCategories } from "../data/demoDashboard";
 
 export const DashboardPageCategories = () => {
   return (
@@ -10,7 +10,7 @@ export const DashboardPageCategories = () => {
       <SectionTitle
         title="دسته‌بندی‌ها"
         icon={<Layers size={20} className="text-gray-500" />}
-        count={dasboardCtegories.menu_categories.length}
+        count={dashboardCategories.menu_categories.length}
         link="/dashboard/categories"
         linkText="مشاهده همه"
       />
@@ -38,7 +38,7 @@ export const DashboardPageCategories = () => {
         </Button>
 
         {/* Categories */}
-        {dasboardCtegories.menu_categories.map((category) => (
+        {dashboardCategories.menu_categories.map((category) => (
           <Card
             key={category.id}
             elevation={3}
