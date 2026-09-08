@@ -5,6 +5,8 @@ from .models import Category, Menu
 
 
 class AdminMenuSerializer(serializers.ModelSerializer):
+    slug = serializers.SlugField(required=False, allow_blank=True)
+
     class Meta:
         model = Menu
         fields = ["id", "branch", "name", "slug", "description", "is_active", "is_published",
