@@ -305,6 +305,8 @@ export default function DashboardMenuProductCard({ product }) {
               </Box>
             </Box>
           </Box>
+
+          
           <Box className="flex items-center justify-between gap-4">
             <Box className="min-w-0">
               <Typography variant="body1" className="font-bold!">
