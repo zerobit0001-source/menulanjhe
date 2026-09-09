@@ -100,7 +100,7 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
         {/* Date */}
         <div className="mt-4 flex items-center justify-between">
           <Typography variant="caption" className="text-gray-400!">
-            {order.created_at}
+            {new Date(order.created_at).toLocaleString("fa-IR")}
           </Typography>
 
           <Typography variant="caption" className="text-gray-400!">
