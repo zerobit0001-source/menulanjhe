@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 
 import {
   BarChart3,
+  BetweenVerticalEnd,
+  Coffee,
   LayoutDashboard,
   Package,
   Settings,
@@ -44,6 +46,11 @@ const menuItems = [
     title: "دسته‌بندی‌ها",
     href: "/dashboard/categories",
     icon: Tags,
+  },
+  {
+    title: "میزها",
+    href: "/dashboard/tables",
+    icon: BetweenVerticalEnd,
   },
   {
     title: "گزارش‌ها",
