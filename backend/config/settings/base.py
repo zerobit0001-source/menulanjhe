@@ -169,3 +169,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
 }
+
+
+
+PUBLIC_TABLE_URL_BASE = os.getenv("PUBLIC_TABLE_URL_BASE")
