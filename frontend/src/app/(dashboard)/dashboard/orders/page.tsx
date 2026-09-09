@@ -1,7 +1,7 @@
 import DashboardContainer from "@/features/dashboard/components/DashboardContainer";
+import OrderPageOrdersList from "@/features/dashboard/components/orders/OrderPageOrdersList";
 import OrdersPageToolbar from "@/features/dashboard/components/orders/OrdersPageToolbar";
 import { SectionTitle } from "@/features/dashboard/components/SectionTitle";
-import { Typography } from "@mui/material";
 import { SquareText } from "lucide-react";
 
 export default function OrderPage() {
@@ -13,6 +13,7 @@ export default function OrderPage() {
         count={13}
       />
       <OrdersPageToolbar />
+      <OrderPageOrdersList />
     </DashboardContainer>
   );
 }
