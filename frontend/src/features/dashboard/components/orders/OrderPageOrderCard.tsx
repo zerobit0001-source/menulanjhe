@@ -178,6 +178,7 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
               variant="outlined"
               fullWidth
               className="rounded-xl! border-gray-200! text-gray-600!"
+              onClick={() => setDetailsOpen(!detailsOpen)}
             >
               مشاهده سفارش
             </Button>

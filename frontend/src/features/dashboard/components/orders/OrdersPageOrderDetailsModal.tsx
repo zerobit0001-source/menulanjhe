@@ -17,7 +17,7 @@ type OrderDetailsModalProps = {
   onClose: () => void;
 };
 
-export default function OrderPageOrderDetailsModal({
+export default function OrderDetailsModal({
   order,
   open,
   onClose,
@@ -35,17 +35,11 @@ export default function OrderPageOrderDetailsModal({
             {/* Header */}
             <div className="flex items-center justify-between">
               <div>
-                <Typography
-                  variant="h6"
-                  className="font-bold! text-gray-900!"
-                >
+                <Typography variant="h6" className="font-bold! text-gray-900!">
                   جزئیات سفارش
                 </Typography>
 
-                <Typography
-                  variant="caption"
-                  className="text-gray-500!"
-                >
+                <Typography variant="caption" className="text-gray-500!">
                   سفارش #{order.order_number}
                 </Typography>
               </div>
@@ -87,10 +81,7 @@ export default function OrderPageOrderDetailsModal({
                   {displayName}
                 </Typography>
 
-                <Typography
-                  variant="caption"
-                  className="text-gray-500!"
-                >
+                <Typography variant="caption" className="text-gray-500!">
                   میز {order.table_number}
                 </Typography>
               </div>
@@ -120,10 +111,7 @@ export default function OrderPageOrderDetailsModal({
                       {item.product_name}
                     </Typography>
 
-                    <Typography
-                      variant="caption"
-                      className="text-gray-400!"
-                    >
+                    <Typography variant="caption" className="text-gray-400!">
                       {item.unit_price.toLocaleString("fa-IR")} ×{" "}
                       {item.quantity}
                     </Typography>
@@ -150,10 +138,7 @@ export default function OrderPageOrderDetailsModal({
                 مجموع سفارش
               </Typography>
 
-              <Typography
-                variant="h6"
-                className="font-bold! text-gray-900!"
-              >
+              <Typography variant="h6" className="font-bold! text-gray-900!">
                 {order.total_amount.toLocaleString("fa-IR")} تومان
               </Typography>
             </div>
