@@ -10,6 +10,7 @@ import Template001FeaturedProducts from "../components/Template001/Template001Fe
 import Template001CategoryNav from "../components/Template001/Template001CategoryNav";
 import Template001CartButton from "../components/Template001/Template001CartButton";
 import Template001ProductList from "../components/Template001/Template001ProductList";
+import Template001CartDrawer from "../components/Template001/Template001CartDrawer";
 
 type Props = {
   menu: MenuData;
@@ -18,6 +19,7 @@ type Props = {
 export default function Template001({ menu }: Props) {
   const [search, setSearch] = useState("");
   const [quickSection, setQuickSection] = useState("popular");
+  const [cartOpen, setCartOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(
     menu.categories[0]?.id ?? "",
   );
@@ -94,6 +96,26 @@ export default function Template001({ menu }: Props) {
 
   const allProducts = menu.categories.flatMap((category) => category.products);
 
+  const cartItems = Object.entries(quantities)
+    .map(([productId, quantity]) => {
+      const product = allProducts.find((item) => item.id === productId);
+
+      if (!product) return null;
+
+      return {
+        product,
+        quantity,
+      };
+    })
+    .filter(
+      (
+        item,
+      ): item is {
+        product: MenuProduct;
+        quantity: number;
+      } => item !== null,
+    );
+
   const cartTotal = Object.entries(quantities).reduce(
     (total, [productId, quantity]) => {
       const product = allProducts.find((item) => item.id === productId);
@@ -104,6 +126,15 @@ export default function Template001({ menu }: Props) {
     },
     0,
   );
+  const removeProduct = (product: MenuProduct) => {
+    setQuantities((prev) => {
+      const next = { ...prev };
+
+      delete next[product.id];
+
+      return next;
+    });
+  };
 
   const handleCategoryChange = (id: string) => {
     setSearch("");
@@ -122,9 +153,7 @@ export default function Template001({ menu }: Props) {
       <Template001Header
         shop={menu.shop}
         cartCount={cartCount}
-        onCartClick={() => {
-          console.log("Open cart");
-        }}
+        onCartClick={() => setCartOpen(true)}
       />
 
       <Template001Search value={search} onChange={setSearch} />
@@ -205,9 +234,17 @@ export default function Template001({ menu }: Props) {
       <Template001CartButton
         count={cartCount}
         total={cartTotal}
-        onClick={() => {
-          console.log("Open cart");
-        }}
+        onClick={() => setCartOpen(true)}
+      />
+      
+      <Template001CartDrawer
+        open={cartOpen}
+        onClose={() => setCartOpen(false)}
+        items={cartItems}
+        total={cartTotal}
+        onIncrease={increaseProduct}
+        onDecrease={decreaseProduct}
+        onRemove={removeProduct}
       />
     </div>
   );
