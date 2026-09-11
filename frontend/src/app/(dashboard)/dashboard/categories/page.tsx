@@ -1,3 +1,4 @@
+import CategoriesPageAddCategoryButton from "@/features/dashboard/components/categories/CategoriesPageAddCategoryButton";
 import CategoriesPageCategoryList from "@/features/dashboard/components/categories/CategoriesPageCategoryList";
 import CategoryPageCategoriesToolbar from "@/features/dashboard/components/categories/CategoryPageCategoriesToolbar";
 import DashboardContainer from "@/features/dashboard/components/DashboardContainer";
@@ -12,9 +13,7 @@ export default function CategoriesPage() {
         title="دسته‌بندی‌ها"
         icon={<Layers size={20} className="text-gray-500" />}
       >
-        <Button variant="contained" endIcon={<LayersPlus size={18} />}>
-          افزودن دسته‌بندی
-        </Button>
+        <CategoriesPageAddCategoryButton />
       </SectionTitle>
       <CategoryPageCategoriesToolbar />
       <CategoriesPageCategoryList />

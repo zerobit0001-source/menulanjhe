@@ -22,6 +22,7 @@ import {
 import { useState } from "react";
 
 import type { DashboardCategory } from "../../types/categories/categories.types";
+import CategoriesPageCategoryModal from "./CategoriesPageCategoryModal";
 
 type Props = {
   category: DashboardCategory;
@@ -38,6 +39,7 @@ export default function CategoriesPageCategoryCard({
   onToggleVisibility,
 }: Props) {
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [editOpen, setEditOpen] = useState(false);
 
   const menuOpen = Boolean(menuAnchor);
 
@@ -51,7 +53,7 @@ export default function CategoriesPageCategoryCard({
 
   const handleEdit = () => {
     handleMenuClose();
-    onEdit();
+    setEditOpen(true);
   };
 
   const handleDelete = () => {
@@ -183,6 +185,17 @@ export default function CategoriesPageCategoryCard({
           </MenuItem>
         </Menu>
       </div>
+      <CategoriesPageCategoryModal
+        open={editOpen}
+        category={category}
+        onClose={() => setEditOpen(false)}
+        onSubmit={(data) => {
+          console.log("Updated category:", {
+            ...category,
+            ...data,
+          });
+        }}
+      />
     </Card>
   );
 }
