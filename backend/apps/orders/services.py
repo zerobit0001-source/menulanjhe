@@ -3,6 +3,8 @@ from apps.table_sessions.models import TableSession
 from .exceptions import InvalidStateTransition, InvalidTableSession, ProductNotAvailable
 from .models import Order, OrderItem
 from apps.products.models import Product
+from apps.orders.serializers import OrderSerializer
+from apps.realtime.events import dispatch_order_event
 
 ALLOWED_TRANSITIONS = {
     "PENDING": {"CONFIRMED", "CANCELLED"},
@@ -10,6 +12,15 @@ ALLOWED_TRANSITIONS = {
     "COMPLETED": set(),
     "CANCELLED": set(),
 }
+
+def _serialize_order_for_event(order: Order) -> dict:
+    return {
+        "id": str(order.id),
+        "status": order.status,
+        "table_id": str(order.table_id) if order.table_id else None,
+        "total": str(order.total),
+        "created_at": order.created_at.isoformat(),
+    }
 
 
 @transaction.atomic
@@ -81,6 +92,13 @@ def create_dine_in_order(*, tenant, branch, session_token: str, items: list[dict
     order.save(update_fields=["subtotal", "total", "updated_at"])
 
     # real-time phase...
+
+    transaction.on_commit(lambda: dispatch_order_event(
+        tenant_id=tenant.id,
+        event_type="ORDER_CREATED",
+        order_data=_serialize_order_for_event(order),
+    ))
+    
     return order
 
 
@@ -92,25 +110,51 @@ def _assert_transition(order: Order, target_status: str):
         )
 
 
-@transaction.atomic
-def confirm_order(order: Order) -> Order:
-    _assert_transition(order, "CONFIRMED")
-    order.status = "CONFIRMED"
+def _transition_and_notify(order: Order, target_status: str, event_type: str) -> Order:
+    _assert_transition(order, target_status)
+    order.status = target_status
     order.save(update_fields=["status", "updated_at"])
+
+    transaction.on_commit(
+        lambda: dispatch_order_event(
+            tenant_id=order.tenant_id, event_type=event_type,
+            order_data=_serialize_order_for_event(order),
+        )
+    )
     return order
 
+
+# @transaction.atomic
+# def confirm_order(order: Order) -> Order:
+#     _assert_transition(order, "CONFIRMED")
+#     order.status = "CONFIRMED"
+#     order.save(update_fields=["status", "updated_at"])
+#     return order
+
+@transaction.atomic
+def confirm_order(order: Order) -> Order:
+    return _transition_and_notify(order, target_status="CONFIRMED", event_type="ORDER_UPDATED")
 
 @transaction.atomic
 def complete_order(order: Order) -> Order:
-    _assert_transition(order, "COMPLETED")
-    order.status = "COMPLETED"
-    order.save(update_fields=["status", "updated_at"])
-    return order
-
+    return _transition_and_notify(order, target_status="COMPLETED", event_type="ORDER_UPDATED")
 
 @transaction.atomic
 def cancel_order(order: Order) -> Order:
-    _assert_transition(order, "CANCELLED")
-    order.status = "CANCELLED"
-    order.save(update_fields=["status", "updated_at"])
-    return order
+    return _transition_and_notify(order, target_status="CANCELLED", event_type="ORDER_CANCELLED")
+
+
+# @transaction.atomic
+# def complete_order(order: Order) -> Order:
+#     _assert_transition(order, "COMPLETED")
+#     order.status = "COMPLETED"
+#     order.save(update_fields=["status", "updated_at"])
+#     return order
+# 
+# 
+# @transaction.atomic
+# def cancel_order(order: Order) -> Order:
+#     _assert_transition(order, "CANCELLED")
+#     order.status = "CANCELLED"
+#     order.save(update_fields=["status", "updated_at"])
+#     return order
