@@ -176,8 +176,6 @@ SIMPLE_JWT = {
 PUBLIC_TABLE_URL_BASE = os.getenv("PUBLIC_TABLE_URL_BASE")
 
 
-
-
 ASGI_APPLICATION = "config.asgi.application"
 
 # CHANNEL_LAYERS = {
