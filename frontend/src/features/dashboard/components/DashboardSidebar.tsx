@@ -11,6 +11,7 @@ import {
   Package,
   Settings,
   ShoppingCart,
+  SquareMenu,
   Tags,
 } from "lucide-react";
 
@@ -51,6 +52,11 @@ const menuItems = [
     title: "میزها",
     href: "/dashboard/tables",
     icon: BetweenVerticalEnd,
+  },
+  {
+    title: "منو",
+    href: "/dashboard/menu",
+    icon: SquareMenu,
   },
   {
     title: "گزارش‌ها",
