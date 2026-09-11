@@ -150,11 +150,7 @@ export default function CategoriesPageCategoryModal({
             </Typography>
           </div>
 
-          <IconButton
-            size="small"
-            onClick={onClose}
-            className="text-gray-400!"
-          >
+          <IconButton size="small" onClick={onClose} className="text-gray-400!">
             <X size={19} />
           </IconButton>
         </div>
@@ -202,9 +198,7 @@ export default function CategoriesPageCategoryModal({
                   >
                     <Icon size={20} />
 
-                    <span className="text-[10px]">
-                      {item.label}
-                    </span>
+                    <span className="text-[10px]">{item.label}</span>
                   </button>
                 );
               })}
@@ -273,9 +267,8 @@ export default function CategoriesPageCategoryModal({
               >
                 {(() => {
                   const selectedIcon =
-                    categoryIcons.find(
-                      (item) => item.value === icon,
-                    ) ?? categoryIcons[0];
+                    categoryIcons.find((item) => item.value === icon) ??
+                    categoryIcons[0];
 
                   const Icon = selectedIcon.icon;
 
@@ -314,9 +307,7 @@ export default function CategoriesPageCategoryModal({
               control={
                 <Switch
                   checked={visible}
-                  onChange={(event) =>
-                    setVisible(event.target.checked)
-                  }
+                  onChange={(event) => setVisible(event.target.checked)}
                   size="small"
                 />
               }
@@ -328,11 +319,7 @@ export default function CategoriesPageCategoryModal({
 
         {/* Footer */}
         <div className="flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
-          <Button
-            variant="outlined"
-            onClick={onClose}
-            className="rounded-xl!"
-          >
+          <Button variant="outlined" onClick={onClose} className="rounded-xl!">
             انصراف
           </Button>
 
