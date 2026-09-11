@@ -1,3 +1,4 @@
+import CategoriesPageCategoryList from "@/features/dashboard/components/categories/CategoriesPageCategoryList";
 import CategoryPageCategoriesToolbar from "@/features/dashboard/components/categories/CategoryPageCategoriesToolbar";
 import DashboardContainer from "@/features/dashboard/components/DashboardContainer";
 import { SectionTitle } from "@/features/dashboard/components/SectionTitle";
@@ -16,6 +17,7 @@ export default function CategoriesPage() {
         </Button>
       </SectionTitle>
       <CategoryPageCategoriesToolbar />
+      <CategoriesPageCategoryList />
     </DashboardContainer>
   );
 }
