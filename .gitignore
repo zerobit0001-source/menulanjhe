@@ -65,6 +65,7 @@ env/
 venv/
 ENV/
 .venv/
+backend/venv/
 
 # VS Code
 .vscode/
