@@ -6,14 +6,12 @@ export const SectionTitle = ({
   title,
   icon,
   count,
-  link,
-  linkText,
+  children,
 }: {
   title: string;
   icon: React.ReactNode;
   count?: number;
-  link?: string;
-  linkText?: string;
+  children?: React.ReactNode;
 }) => {
   return (
     <div className="w-full flex items-center justify-between">
@@ -28,14 +26,7 @@ export const SectionTitle = ({
           </span>
         )}
       </div>
-      {link && (
-        <Link
-          href={link}
-          className="flex items-center gap-1 text-sm text-blue-500 hover:underline hover:text-blue-600 transition-all"
-        >
-          {linkText} <ChevronLeft size={20} />{" "}
-        </Link>
-      )}
+      {children && <>{children}</>}
     </div>
   );
 };

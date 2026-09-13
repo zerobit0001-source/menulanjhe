@@ -1,5 +1,5 @@
-import { Layers, Plus } from "lucide-react";
-import { Button, Card, Typography } from "@mui/material";
+import { ChevronLeft, Layers, Plus } from "lucide-react";
+import { Button, Card, Link, Typography } from "@mui/material";
 
 import { SectionTitle } from "../components/SectionTitle";
 import { dashboardCategories } from "../data/demoDashboard";
@@ -11,9 +11,14 @@ export const DashboardPageCategories = () => {
         title="دسته‌بندی‌ها"
         icon={<Layers size={20} className="text-gray-500" />}
         count={dashboardCategories.menu_categories.length}
-        link="/dashboard/categories"
-        linkText="مشاهده همه"
-      />
+      >
+        <Link
+          href="/dashboard/categories"
+          className="flex items-center gap-1 text-sm! text-blue-500 hover:underline hover:text-blue-600 transition-all"
+        >
+          مشاهده همه <ChevronLeft size={18} />
+        </Link>
+      </SectionTitle>
 
       <div className="grid grid-cols-1 gap-4 py-4 md:grid-cols-2 lg:grid-cols-3">
         {/* Add Category */}

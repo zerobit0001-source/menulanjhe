@@ -1,0 +1,88 @@
+import { DashboardTable } from "../../types/tables/tables.type";
+
+export const dashboardTables: DashboardTable[] = [
+  {
+    id: "table_01",
+    number: 1,
+    status: "AVAILABLE",
+    active_order_count: 0,
+    created_at: "2026-08-20T10:00:00",
+  },
+  {
+    id: "table_02",
+    number: 2,
+    status: "ORDERING",
+    active_order_count: 1,
+    created_at: "2026-08-20T10:05:00",
+  },
+  {
+    id: "table_03",
+    number: 3,
+    status: "AVAILABLE",
+    active_order_count: 0,
+    created_at: "2026-08-20T10:10:00",
+  },
+  {
+    id: "table_04",
+    number: 4,
+    status: "WAITING_PAYMENT",
+    active_order_count: 1,
+    created_at: "2026-08-20T10:15:00",
+  },
+  {
+    id: "table_05",
+    number: 5,
+    status: "ORDERING",
+    active_order_count: 2,
+    created_at: "2026-08-20T10:20:00",
+  },
+  {
+    id: "table_06",
+    number: 6,
+    status: "AVAILABLE",
+    active_order_count: 0,
+    created_at: "2026-08-20T10:25:00",
+  },
+  {
+    id: "table_07",
+    number: 7,
+    status: "AVAILABLE",
+    active_order_count: 0,
+    created_at: "2026-08-20T10:30:00",
+  },
+  {
+    id: "table_08",
+    number: 8,
+    status: "ORDERING",
+    active_order_count: 1,
+    created_at: "2026-08-20T10:35:00",
+  },
+  {
+    id: "table_09",
+    number: 9,
+    status: "WAITING_PAYMENT",
+    active_order_count: 1,
+    created_at: "2026-08-20T10:40:00",
+  },
+  {
+    id: "table_10",
+    number: 10,
+    status: "AVAILABLE",
+    active_order_count: 0,
+    created_at: "2026-08-20T10:45:00",
+  },
+  {
+    id: "table_11",
+    number: 11,
+    status: "ORDERING",
+    active_order_count: 3,
+    created_at: "2026-08-20T10:50:00",
+  },
+  {
+    id: "table_12",
+    number: 12,
+    status: "AVAILABLE",
+    active_order_count: 0,
+    created_at: "2026-08-20T10:55:00",
+  },
+];
