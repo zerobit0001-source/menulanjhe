@@ -57,6 +57,7 @@ export default function MenuPage() {
   }
 
   const menuUrl = `/menu/${menu.slug}`;
+  const qrUrl = `${window.location.origin}${menuUrl}`;
 
   return (
     <DashboardContainer>
@@ -68,7 +69,11 @@ export default function MenuPage() {
           isPublished={menu.is_published}
         />
 
-        <MenuPageMenuQrCard menuUrl={menuUrl} shopName={menu.name} />
+        <MenuPageMenuQrCard
+          menuUrl={menuUrl}
+          shopName={menu.name}
+          qrUrl={qrUrl}
+        />
       </div>
 
       <MenuPageMenuTemplateGrid templates={menuTemplates} />

@@ -7,10 +7,15 @@ import { QRCodeCanvas } from "qrcode.react";
 
 type Props = {
   menuUrl: string;
+  qrUrl: string;
   shopName: string;
 };
 
-export default function MenuPageMenuQrCard({ menuUrl, shopName }: Props) {
+export default function MenuPageMenuQrCard({
+  menuUrl,
+  qrUrl,
+  shopName,
+}: Props) {
   const qrRef = useRef<HTMLDivElement>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
@@ -43,6 +48,7 @@ export default function MenuPageMenuQrCard({ menuUrl, shopName }: Props) {
       <html lang="fa" dir="rtl">
         <head>
           <title>QR منوی ${shopName}</title>
+
           <style>
             * {
               box-sizing: border-box;
@@ -132,7 +138,12 @@ export default function MenuPageMenuQrCard({ menuUrl, shopName }: Props) {
             ref={qrRef}
             className="rounded-2xl border border-gray-100 bg-white p-4"
           >
-            <QRCodeCanvas value={menuUrl} size={180} level="H" marginSize={2} />
+            <QRCodeCanvas
+              value={qrUrl}
+              size={180}
+              level="H"
+              marginSize={2}
+            />
           </div>
 
           <Typography className="mt-3! max-w-xs! truncate! text-center! text-xs! text-gray-400!">
@@ -191,7 +202,7 @@ export default function MenuPageMenuQrCard({ menuUrl, shopName }: Props) {
           <div className="mt-6 flex justify-center">
             <div className="rounded-2xl border border-gray-100 bg-white p-5">
               <QRCodeCanvas
-                value={menuUrl}
+                value={qrUrl}
                 size={280}
                 level="H"
                 marginSize={3}
