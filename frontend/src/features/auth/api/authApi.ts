@@ -46,6 +46,13 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Auth"],
     }),
+    logout: builder.mutation<{ ok: boolean }, void>({
+      query: () => ({
+        url: "auth/logout/",
+        method: "POST",
+      }),
+      invalidatesTags: ["Auth"],
+    }),
   }),
 });
 
@@ -54,4 +61,5 @@ export const {
   useMeQuery,
   useLazyMeQuery,
   useSelectTenantMutation,
+  useLogoutMutation,
 } = authApi;

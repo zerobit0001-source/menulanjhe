@@ -26,6 +26,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import LogoutButton from "@/features/auth/components/LogoutButton";
 
 const menuItems = [
   {
@@ -180,7 +181,6 @@ export default function DashboardSidebar() {
       {/* Settings */}
       <Box>
         <Divider />
-
         <Stack sx={{ p: 2 }}>
           <ListItemButton
             component={Link}
