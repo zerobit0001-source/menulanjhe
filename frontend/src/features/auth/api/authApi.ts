@@ -2,15 +2,23 @@ import { baseApi } from "@/features/api/baseApi";
 
 import type {
   LoginRequest,
-  LoginResponse,
   MeResponse,
   SelectTenantRequest,
-  SelectTenantResponse,
 } from "../types/auth.types";
+
+type LoginProxyResponse = {
+  ok: boolean;
+};
+
+type SelectTenantProxyResponse = {
+  ok: boolean;
+  tenant_id: string;
+  role: string;
+};
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, LoginRequest>({
+    login: builder.mutation<LoginProxyResponse, LoginRequest>({
       query: (body) => ({
         url: "auth/login/",
         method: "POST",
@@ -28,7 +36,7 @@ export const authApi = baseApi.injectEndpoints({
     }),
 
     selectTenant: builder.mutation<
-      SelectTenantResponse,
+      SelectTenantProxyResponse,
       SelectTenantRequest
     >({
       query: (body) => ({
@@ -44,5 +52,6 @@ export const authApi = baseApi.injectEndpoints({
 export const {
   useLoginMutation,
   useMeQuery,
+  useLazyMeQuery,
   useSelectTenantMutation,
 } = authApi;
