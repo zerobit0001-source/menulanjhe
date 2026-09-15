@@ -1,11 +1,13 @@
 from rest_framework import serializers
 from django.utils.text import slugify
 from .models import Product
+from apps.common.fields import TomanPriceField
 
 
 class AdminProductSerializer(serializers.ModelSerializer):
     slug = serializers.SlugField(required=False, allow_blank=True)
     category_name = serializers.CharField(source="category.name", read_only=True)
+    price = TomanPriceField()
 
     class Meta:
         model = Product
@@ -37,6 +39,7 @@ class AdminProductSerializer(serializers.ModelSerializer):
 
 class PublicProductSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source="category.name", read_only=True)
+    price = TomanPriceField()
 
     class Meta:
         model = Product
