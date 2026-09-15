@@ -7,16 +7,14 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type CategoryFilter = "all" | "visible" | "hidden";
 
 type Props = {
   search: string;
-  onSearchChange: (value: string) => void;
-
   filter: CategoryFilter;
-  onFilterChange: (value: CategoryFilter) => void;
 };
 
 const filters: {
@@ -38,20 +36,71 @@ const filters: {
 ];
 
 export default function CategoryPageCategoriesToolbar({
-  // search,
-  onSearchChange,
-  // filter,
-  onFilterChange,
+  search,
+  filter,
 }: Props) {
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"all" | "visible" | "hidden">("all");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [searchValue, setSearchValue] = useState(search);
+
+  /*
+   * Sync input with URL
+   */
+  useEffect(() => {
+    setSearchValue(search);
+  }, [search]);
+
+  /*
+   * Search debounce
+   */
+  useEffect(() => {
+    const value = searchValue.trim();
+
+    if (value === search) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      if (value) {
+        params.set("search", value);
+      } else {
+        params.delete("search");
+      }
+
+      const queryString = params.toString();
+
+      router.replace(queryString ? `${pathname}?${queryString}` : pathname);
+    }, 500);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [searchValue, search, searchParams, pathname, router]);
+
+  /*
+   * Filter
+   */
   const handleFilterChange = (
     _: React.MouseEvent<HTMLElement>,
     newFilter: CategoryFilter | null,
   ) => {
-    if (newFilter) {
-      setFilter(newFilter);
+    if (!newFilter) return;
+
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (newFilter === "all") {
+      params.delete("filter");
+    } else {
+      params.set("filter", newFilter);
     }
+
+    const queryString = params.toString();
+
+    router.replace(queryString ? `${pathname}?${queryString}` : pathname);
   };
 
   return (
@@ -64,8 +113,8 @@ export default function CategoryPageCategoriesToolbar({
         <Search size={18} className="shrink-0 text-gray-400" />
 
         <InputBase
-          value={search}
-          onChange={(event) => onSearchChange(event.target.value)}
+          value={searchValue}
+          onChange={(event) => setSearchValue(event.target.value)}
           placeholder="جستجوی دسته‌بندی..."
           fullWidth
           className="text-sm!"

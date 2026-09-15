@@ -45,7 +45,7 @@ export default function ProductPageProductCard({
       <div className="relative flex h-50 w-full items-center justify-center bg-gray-200 p-2 text-gray-400">
         <span className="absolute right-2 top-2 z-10 rounded-full bg-white px-4 py-1">
           <Typography variant="body2" className="text-xs!">
-            {product.category_detail?.name ?? "دسته‌بندی نامشخص"}
+            {product.category_name ?? "دسته‌بندی نامشخص"}
           </Typography>
         </span>
 

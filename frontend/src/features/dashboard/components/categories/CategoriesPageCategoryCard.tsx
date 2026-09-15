@@ -3,11 +3,10 @@
 import {
   Eye,
   EyeOff,
-  MoreVertical,
-  Package,
-  Pencil,
+  Folder,
   GripVertical,
-  Trash2,
+  MoreVertical,
+  Pencil,
 } from "lucide-react";
 
 import {
@@ -19,29 +18,36 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import type { DashboardCategory } from "../../types/categories/categories.types";
+import { useToggleCategoryActiveMutation } from "../../api/categoryApi";
+
+import type { Category } from "../../types/categories/categories.type";
+
 import CategoriesPageCategoryModal from "./CategoriesPageCategoryModal";
 
 type Props = {
-  category: DashboardCategory;
-
-  onEdit: () => void;
-  onDelete: () => void;
-  onToggleVisibility: () => void;
+  category: Category;
 };
 
-export default function CategoriesPageCategoryCard({
-  category,
-  onEdit,
-  onDelete,
-  onToggleVisibility,
-}: Props) {
+export default function CategoriesPageCategoryCard({ category }: Props) {
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+
   const [editOpen, setEditOpen] = useState(false);
 
+  const [checked, setChecked] = useState(category.is_active);
+
+  const [toggleCategoryActive, { isLoading }] =
+    useToggleCategoryActiveMutation();
+
   const menuOpen = Boolean(menuAnchor);
+
+  /*
+   * Sync with RTK Query data after refetch
+   */
+  useEffect(() => {
+    setChecked(category.is_active);
+  }, [category.is_active]);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMenuAnchor(event.currentTarget);
@@ -56,16 +62,26 @@ export default function CategoriesPageCategoryCard({
     setEditOpen(true);
   };
 
-  const handleDelete = () => {
-    handleMenuClose();
-    onDelete();
+  const handleToggle = async () => {
+    const previousValue = checked;
+    const newValue = !checked;
+
+    // Optimistic update
+    setChecked(newValue);
+
+    try {
+      await toggleCategoryActive(category.id).unwrap();
+    } catch {
+      // Rollback if request fails
+      setChecked(previousValue);
+    }
   };
 
   return (
     <Card
       elevation={0}
       className={`rounded-2xl! border! p-3! transition-colors ${
-        category.visible
+        checked
           ? "border-gray-200! bg-white!"
           : "border-gray-100! bg-gray-50/60!"
       }`}
@@ -76,19 +92,17 @@ export default function CategoriesPageCategoryCard({
           <GripVertical size={19} />
         </div>
 
-        {/* Category Icon */}
-        <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl"
-          style={{
-            backgroundColor: `${category.color}18`,
-          }}
-        >
-          <Package
-            size={20}
-            style={{
-              color: category.color,
-            }}
-          />
+        {/* Category Image / Icon */}
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-100 text-gray-400">
+          {category.image ? (
+            <img
+              src={category.image}
+              alt={category.name}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <Folder size={20} />
+          )}
         </div>
 
         {/* Category Info */}
@@ -97,13 +111,13 @@ export default function CategoriesPageCategoryCard({
             <Typography
               variant="body2"
               className={`font-bold! ${
-                category.visible ? "text-gray-900!" : "text-gray-400!"
+                checked ? "text-gray-900!" : "text-gray-400!"
               }`}
             >
-              {category.title}
+              {category.name}
             </Typography>
 
-            {!category.visible && (
+            {!checked && (
               <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-400">
                 مخفی
               </span>
@@ -111,23 +125,24 @@ export default function CategoriesPageCategoryCard({
           </div>
 
           <div className="mt-1 flex items-center gap-1.5 text-xs text-gray-400">
-            <Package size={13} />
+            <Folder size={13} />
 
-            <span>{category.product_count.toLocaleString("fa-IR")} محصول</span>
+            <span>{category.description || "توضیحی ثبت نشده است"}</span>
           </div>
         </div>
 
         {/* Visibility */}
         <div className="hidden items-center gap-2 sm:flex">
-          {category.visible ? (
+          {checked ? (
             <Eye size={16} className="text-green-500" />
           ) : (
             <EyeOff size={16} className="text-gray-300" />
           )}
 
           <Switch
-            checked={category.visible}
-            onChange={onToggleVisibility}
+            checked={checked}
+            onChange={handleToggle}
+            disabled={isLoading}
             size="small"
           />
         </div>
@@ -151,19 +166,22 @@ export default function CategoriesPageCategoryCard({
             },
           }}
         >
+          {/* Edit */}
           <MenuItem onClick={handleEdit} className="gap-2! text-sm!">
             <Pencil size={16} />
             ویرایش
           </MenuItem>
 
+          {/* Toggle */}
           <MenuItem
+            disabled={isLoading}
             onClick={() => {
               handleMenuClose();
-              onToggleVisibility();
+              handleToggle();
             }}
             className="gap-2! text-sm!"
           >
-            {category.visible ? (
+            {checked ? (
               <>
                 <EyeOff size={16} />
                 مخفی کردن
@@ -175,16 +193,10 @@ export default function CategoriesPageCategoryCard({
               </>
             )}
           </MenuItem>
-
-          <MenuItem
-            onClick={handleDelete}
-            className="gap-2! text-sm! text-red-500!"
-          >
-            <Trash2 size={16} />
-            حذف
-          </MenuItem>
         </Menu>
       </div>
+
+      {/* Edit Modal */}
       <CategoriesPageCategoryModal
         open={editOpen}
         category={category}
@@ -194,6 +206,8 @@ export default function CategoriesPageCategoryCard({
             ...category,
             ...data,
           });
+
+          setEditOpen(false);
         }}
       />
     </Card>
