@@ -5,11 +5,12 @@ from .models import Product
 
 class AdminProductSerializer(serializers.ModelSerializer):
     slug = serializers.SlugField(required=False, allow_blank=True)
+    category_name = serializers.CharField(source="category.name", read_only=True)
 
     class Meta:
         model = Product
         fields = [
-            "id", "category", "name", "slug", "description", "image", "price",
+            "id", "category", "name", "slug", "description", "image", "price", "category_name",
             "is_available", "is_featured", "sort_order", "created_at", "updated_at",
         ]
         read_only_fields = ["id", "created_at", "updated_at"]
@@ -35,7 +36,9 @@ class AdminProductSerializer(serializers.ModelSerializer):
         return slug
 
 class PublicProductSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source="category.name", read_only=True)
+
     class Meta:
         model = Product
-        fields = ["id", "name", "slug", "description", "image", "price", "is_available", "is_featured"]
+        fields = ["id", "name", "slug", "description", "image", "price", "category_name", "is_available", "is_featured"]
         read_only_fields = fields
