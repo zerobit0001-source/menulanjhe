@@ -6,6 +6,7 @@ import "@fontsource/vazirmatn/700.css";
 import "@fontsource/vazirmatn/800.css";
 import "./globals.css";
 import Providers from "./providers";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: "Menu Lanjhe",
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body>
+        <NextTopLoader />
         <Providers>{children}</Providers>
       </body>
     </html>
