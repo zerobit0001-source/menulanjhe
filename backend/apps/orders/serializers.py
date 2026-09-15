@@ -1,8 +1,12 @@
 from rest_framework import serializers
 from .models import Order, OrderItem
+from apps.common.fields import TomanPriceField
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    unit_price = TomanPriceField()
+    total_price = TomanPriceField()
+
     class Meta:
         model = OrderItem
         fields = ["id", "product", "product_name", "unit_price", "quantity", "total_price"]
@@ -11,6 +15,9 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only=True)
+    subtotal = TomanPriceField()
+    discount = TomanPriceField()
+    total = TomanPriceField()
 
     class Meta:
         model = Order
