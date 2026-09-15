@@ -1,6 +1,10 @@
+"use client";
+
 import { Box, Button, Card, Switch, Typography } from "@mui/material";
 import { Eye, EyeOff, Package } from "lucide-react";
+import { useEffect, useState } from "react";
 
+import { useToggleProductActiveMutation } from "../../api/productApi";
 import { Product } from "../../types/products/products.type";
 
 export default function ProductPageProductCard({
@@ -8,11 +12,38 @@ export default function ProductPageProductCard({
 }: {
   product: Product;
 }) {
+  const [checked, setChecked] = useState(product.is_available);
+
+  const [toggleProductActive, { isLoading }] = useToggleProductActiveMutation();
+
+  /*
+   * اگر اطلاعات product از سمت RTK Query
+   * تغییر کرد، state داخلی Switch هم sync شود.
+   */
+  useEffect(() => {
+    setChecked(product.is_available);
+  }, [product.is_available]);
+
+  const handleToggle = async () => {
+    const previousValue = checked;
+    const newValue = !checked;
+
+    // Optimistic update
+    setChecked(newValue);
+
+    try {
+      await toggleProductActive(product.id).unwrap();
+    } catch {
+      // Rollback
+      setChecked(previousValue);
+    }
+  };
+
   return (
     <Card elevation={1}>
       {/* Image */}
       <div className="relative flex h-50 w-full items-center justify-center bg-gray-200 p-2 text-gray-400">
-        <span className="absolute right-2 top-2 rounded-full bg-white px-4 py-1">
+        <span className="absolute right-2 top-2 z-10 rounded-full bg-white px-4 py-1">
           <Typography variant="body2" className="text-xs!">
             {product.category_detail?.name ?? "دسته‌بندی نامشخص"}
           </Typography>
@@ -58,19 +89,15 @@ export default function ProductPageProductCard({
 
         {/* Details */}
         <Box className="grid w-full grid-cols-2 rounded-2xl border border-gray-300">
-          {/* Visibility / Available */}
+          {/* Available */}
           <Box className="rounded-r-2xl border-l border-dashed border-gray-300 bg-gray-50 p-1">
             <Box className="w-full text-center">
               <Box
                 className={`flex justify-center ${
-                  product.is_available ? "text-emerald-600" : "text-gray-400"
+                  checked ? "text-emerald-600" : "text-gray-400"
                 }`}
               >
-                {product.is_available ? (
-                  <Eye size={17} />
-                ) : (
-                  <EyeOff size={17} />
-                )}
+                {checked ? <Eye size={17} /> : <EyeOff size={17} />}
               </Box>
 
               <Typography variant="caption" className="block! text-gray-400!">
@@ -110,9 +137,15 @@ export default function ProductPageProductCard({
             </Typography>
           </Box>
 
-          <Switch checked={product.is_available} size="small" />
+          <Switch
+            checked={checked}
+            onChange={handleToggle}
+            disabled={isLoading}
+            size="small"
+          />
         </Box>
 
+        {/* Details button */}
         <Button variant="text" fullWidth size="small">
           مشاهده
         </Button>
