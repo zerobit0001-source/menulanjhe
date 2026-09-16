@@ -9,7 +9,7 @@ import MenuPageMenuTemplateGrid from "@/features/dashboard/components/menu/MenuP
 import { menuTemplates } from "@/features/dashboard/data/menu/demoMenu";
 import { demoMenu } from "@/features/menu/data/demoMenu";
 
-import { useGetMenusQuery } from "@/features/menu/api/menuApi";
+import { useGetMenusQuery } from "@/features/dashboard/api/menuApi";
 
 export default function MenuPage() {
   const { data, isLoading, isError, refetch } = useGetMenusQuery();
