@@ -1,10 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
 from apps.common.mixins import TenantScopedQuerySetMixin
 from apps.tenants.permissions import HasTenantPermission
-
 from .models import TableSession
 from .serializers import TableSessionSerializer
 
