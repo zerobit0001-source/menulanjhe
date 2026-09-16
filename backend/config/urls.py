@@ -15,6 +15,7 @@ urlpatterns = [
     path("api/v1/admin/", include("apps.orders.urls_admin")),
     path("api/v1/public/", include("apps.menus.urls_public")),
     path("api/v1/public/", include("apps.table_sessions.urls_public")),
+    path("api/vi/admin/", include("apps.table_session.urls")),
     path("api/v1/public/", include("apps.tables.urls_public")),
     path("api/v1/public/", include("apps.orders.urls_public")),
 ]
