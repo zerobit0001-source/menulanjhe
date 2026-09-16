@@ -2,7 +2,11 @@
 
 import { useMemo, useState } from "react";
 
-import type { MenuData, MenuProduct } from "../types/menu.types";
+import type {
+  MenuData,
+  MenuProduct,
+  PublicMenuResponse,
+} from "../types/menu.types";
 import Template001Header from "../components/Template001/Template001Header";
 import Template001Search from "../components/Template001/Template001Search";
 import Template001QuickCategories from "../components/Template001/Template001QuickCategories";
@@ -13,7 +17,7 @@ import Template001ProductList from "../components/Template001/Template001Product
 import Template001CartDrawer from "../components/Template001/Template001CartDrawer";
 
 type Props = {
-  menu: MenuData;
+  menu: PublicMenuResponse;
 };
 
 export default function Template001({ menu }: Props) {
@@ -236,7 +240,7 @@ export default function Template001({ menu }: Props) {
         total={cartTotal}
         onClick={() => setCartOpen(true)}
       />
-      
+
       <Template001CartDrawer
         open={cartOpen}
         onClose={() => setCartOpen(false)}
