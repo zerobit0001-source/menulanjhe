@@ -3,8 +3,7 @@
 import { useMemo, useState } from "react";
 
 import type {
-  MenuData,
-  MenuProduct,
+  PublicMenuProduct,
   PublicMenuResponse,
 } from "../types/menu.types";
 import Template001Header from "../components/Template001/Template001Header";
@@ -15,22 +14,39 @@ import Template001CategoryNav from "../components/Template001/Template001Categor
 import Template001CartButton from "../components/Template001/Template001CartButton";
 import Template001ProductList from "../components/Template001/Template001ProductList";
 import Template001CartDrawer from "../components/Template001/Template001CartDrawer";
+import Template001Checkout from "../components/Template001/Template001Checkout";
 
 type Props = {
   menu: PublicMenuResponse;
+  sessionToken?: string | null;
+  tableName?: string | null;
 };
 
-export default function Template001({ menu }: Props) {
+export default function Template001({ menu, sessionToken, tableName }: Props) {
   const [search, setSearch] = useState("");
   const [quickSection, setQuickSection] = useState("popular");
   const [cartOpen, setCartOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(
     menu.categories[0]?.id ?? "",
   );
 
+  const handleCheckout = () => {
+    if (!cartItems.length) {
+      return;
+    }
+
+    if (!sessionToken) {
+      return;
+    }
+
+    setCartOpen(false);
+    setCheckoutOpen(true);
+  };
+
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
-  const addProduct = (product: MenuProduct) => {
+  const addProduct = (product: PublicMenuProduct) => {
     if (!product.available) return;
 
     setQuantities((prev) => ({
@@ -39,11 +55,11 @@ export default function Template001({ menu }: Props) {
     }));
   };
 
-  const increaseProduct = (product: MenuProduct) => {
+  const increaseProduct = (product: PublicMenuProduct) => {
     addProduct(product);
   };
 
-  const decreaseProduct = (product: MenuProduct) => {
+  const decreaseProduct = (product: PublicMenuProduct) => {
     setQuantities((prev) => {
       const current = prev[product.id] ?? 0;
 
@@ -115,7 +131,7 @@ export default function Template001({ menu }: Props) {
       (
         item,
       ): item is {
-        product: MenuProduct;
+        product: PublicMenuProduct;
         quantity: number;
       } => item !== null,
     );
@@ -130,7 +146,7 @@ export default function Template001({ menu }: Props) {
     },
     0,
   );
-  const removeProduct = (product: MenuProduct) => {
+  const removeProduct = (product: PublicMenuProduct) => {
     setQuantities((prev) => {
       const next = { ...prev };
 
@@ -151,6 +167,23 @@ export default function Template001({ menu }: Props) {
       });
     });
   };
+
+  if (checkoutOpen) {
+    return (
+      <Template001Checkout
+        items={cartItems}
+        total={cartTotal}
+        sessionToken={sessionToken!}
+        onBack={() => setCheckoutOpen(false)}
+        onSuccess={(order) => {
+          console.log("Order created:", order);
+
+          setQuantities({});
+          setCheckoutOpen(false);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white pb-24">
@@ -249,6 +282,7 @@ export default function Template001({ menu }: Props) {
         onIncrease={increaseProduct}
         onDecrease={decreaseProduct}
         onRemove={removeProduct}
+        onCheckout={handleCheckout}
       />
     </div>
   );

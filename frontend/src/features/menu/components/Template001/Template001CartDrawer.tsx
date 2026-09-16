@@ -38,6 +38,7 @@ type Props = {
   onRemove: (product: MenuProduct) => void;
 
   total: number;
+  onCheckout: () => void;
 };
 
 export default function Template001CartDrawer({
@@ -48,6 +49,7 @@ export default function Template001CartDrawer({
   onDecrease,
   onRemove,
   total,
+  onCheckout,
 }: Props) {
   const itemsCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -281,6 +283,7 @@ export default function Template001CartDrawer({
                 fullWidth
                 variant="contained"
                 className="h-12! rounded-xl! bg-gray-900! font-bold! shadow-none! hover:bg-gray-800!"
+                onClick={onCheckout}
               >
                 پرداخت سفارش
               </Button>

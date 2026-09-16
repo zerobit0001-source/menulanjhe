@@ -12,10 +12,19 @@ type MenuTemplate = keyof typeof menuTemplates;
 type MenuRendererProps = {
   template: MenuTemplate;
   menu: MenuData;
+  sessionToken?: string | null;
+  tableName?: string | null;
 };
 
-export default function MenuRenderer({ template, menu }: MenuRendererProps) {
+export default function MenuRenderer({
+  template,
+  menu,
+  sessionToken,
+  tableName,
+}: MenuRendererProps) {
   const Template = menuTemplates[template];
 
-  return <Template menu={menu} />;
+  return (
+    <Template menu={menu} sessionToken={sessionToken} tableName={tableName} />
+  );
 }
