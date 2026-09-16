@@ -1,72 +1,39 @@
-export type MenuCategory = {
+export type PublicMenuProduct = {
   id: string;
-  name: string;
-  products: MenuProduct[];
-};
-
-export type MenuData = {
-  shop: {
-    name: string;
-    logo?: string;
-    description?: string;
-  };
-
-  featuredProducts: MenuProduct[];
-
-  quickSections: MenuQuickSection[];
-
-  categories: MenuCategory[];
-};
-export type MenuProduct = {
-  id: string;
-  name: string;
-  description?: string;
-
-  price: number;
-  originalPrice?: number;
-  discountPercent?: number;
-
-  image?: string;
-
-  available: boolean;
-};
-
-export type MenuQuickSection = {
-  id: string;
-  title: string;
-  type: "popular" | "discount";
-  products: MenuProduct[];
-};
-
-export type Menu = {
-  id: string;
-  branch: string;
   name: string;
   slug: string;
   description: string;
-  is_active: boolean;
-  is_published: boolean;
-  created_at: string;
-  updated_at: string;
+  image: string | null;
+  price: number;
+  category_name: string;
+  is_available: boolean;
+  is_featured: boolean;
 };
 
-export type MenuListResponse = {
-  ok: boolean;
-  count: number;
-  total_pages: number;
-  current_page: number;
-  results: Menu[];
-};
-
-export type CreateMenuRequest = {
-  branch: string;
+export type PublicMenuCategory = {
+  id: string;
   name: string;
-  is_published?: boolean;
+  description: string;
+  image: string | null;
+  sort_order: number;
+  products: PublicMenuProduct[];
 };
 
-export type UpdateMenuRequest = {
-  name?: string;
-  description?: string;
-  is_active?: boolean;
-  is_published?: boolean;
+export type PublicMenu = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  restaurant_name: string;
+  categories: PublicMenuCategory[];
+};
+
+export type PublicMenuResponse = {
+  ok: boolean;
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  restaurant_name: string;
+  categories: PublicMenuCategory[];
 };
