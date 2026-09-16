@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
-import type { MenuProduct } from "../../types/menu.types";
 import { useCreatePublicOrderMutation } from "../../api/menuPublicApi";
+import { PublicMenuProduct } from "../../types/menu.types";
 
 type CartItem = {
-  product: MenuProduct;
+  product: PublicMenuProduct;
   quantity: number;
 };
 
@@ -29,6 +29,10 @@ export default function Template001Checkout({
   const [name, setName] = useState("");
   const [notes, setNotes] = useState("");
 
+  const [error, setError] = useState("");
+
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
+
   const [createOrder, { isLoading }] = useCreatePublicOrderMutation();
 
   const handleSubmit = async () => {
@@ -36,11 +40,12 @@ export default function Template001Checkout({
       return;
     }
 
-    const idempotencyKey = crypto.randomUUID();
+    setError("");
 
     try {
       const result = await createOrder({
         session_token: sessionToken,
+
         idempotency_key: idempotencyKey,
 
         items: items.map((item) => ({
@@ -48,13 +53,13 @@ export default function Template001Checkout({
           quantity: item.quantity,
         })),
 
-        customer: name
+        customer: name.trim()
           ? {
-              name,
+              name: name.trim(),
             }
           : undefined,
 
-        notes: notes || undefined,
+        notes: notes.trim() ? notes.trim() : undefined,
       }).unwrap();
 
       onSuccess({
@@ -62,7 +67,9 @@ export default function Template001Checkout({
         total: result.total,
       });
     } catch (error) {
-      console.error("Create order failed:", error);
+      console.error(error);
+
+      setError("ثبت سفارش انجام نشد. لطفاً دوباره تلاش کنید.");
     }
   };
 
@@ -100,8 +107,8 @@ export default function Template001Checkout({
                 key={item.product.id}
                 className="flex items-center justify-between gap-3"
               >
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-gray-800">
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">
                     {item.product.name}
                   </p>
 
@@ -110,7 +117,7 @@ export default function Template001Checkout({
                   </p>
                 </div>
 
-                <p className="shrink-0 text-sm font-bold text-gray-900">
+                <p className="text-sm font-bold">
                   {(item.product.price * item.quantity).toLocaleString("fa-IR")}{" "}
                   تومان
                 </p>
@@ -120,10 +127,10 @@ export default function Template001Checkout({
 
           <div className="my-4 h-px bg-gray-100" />
 
-          <div className="flex items-center justify-between">
+          <div className="flex justify-between">
             <span className="text-sm text-gray-500">مبلغ کل</span>
 
-            <span className="text-base font-black text-gray-900">
+            <span className="font-black">
               {total.toLocaleString("fa-IR")} تومان
             </span>
           </div>
@@ -132,45 +139,48 @@ export default function Template001Checkout({
         {/* Customer */}
 
         <div className="mt-4 rounded-2xl border border-gray-200 p-4">
-          <h2 className="mb-4 text-sm font-bold text-gray-900">
-            اطلاعات سفارش
-          </h2>
+          <h2 className="mb-4 text-sm font-bold">اطلاعات سفارش</h2>
 
-          <div>
-            <label className="mb-2 block text-xs font-medium text-gray-500">
-              نام
-            </label>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="نام شما"
+            className="h-11 w-full rounded-xl border border-gray-200 px-3 text-sm outline-none"
+          />
 
-            <input
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder="مثلاً امیر"
-              className="h-11 w-full rounded-xl border border-gray-200 px-3 text-sm outline-none transition focus:border-gray-400"
-            />
-          </div>
-
-          <div className="mt-4">
-            <label className="mb-2 block text-xs font-medium text-gray-500">
-              توضیحات
-            </label>
-
-            <textarea
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-              placeholder="مثلاً بدون شکر"
-              rows={3}
-              className="w-full resize-none rounded-xl border border-gray-200 px-3 py-3 text-sm outline-none transition focus:border-gray-400"
-            />
-          </div>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="توضیحات سفارش"
+            rows={3}
+            className="mt-4 w-full resize-none rounded-xl border border-gray-200 px-3 py-3 text-sm outline-none"
+          />
         </div>
+
+        {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
 
         {/* Submit */}
 
         <button
-          type="button"
           disabled={isLoading || !items.length}
+
           onClick={handleSubmit}
-          className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gray-900 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+
+          className="
+          mt-4
+          flex
+          h-12
+          w-full
+          items-center
+          justify-center
+          gap-2
+          rounded-xl
+          bg-gray-900
+          text-sm
+          font-bold
+          text-white
+          disabled:opacity-50
+          "
         >
           {isLoading ? (
             <>

@@ -15,18 +15,26 @@ import Template001CartButton from "../components/Template001/Template001CartButt
 import Template001ProductList from "../components/Template001/Template001ProductList";
 import Template001CartDrawer from "../components/Template001/Template001CartDrawer";
 import Template001Checkout from "../components/Template001/Template001Checkout";
+import Template001OrderSuccess from "../components/Template001/Template001OrderSuccess";
 
 type Props = {
   menu: PublicMenuResponse;
   sessionToken?: string | null;
   tableName?: string | null;
 };
+type MenuView = "menu" | "checkout" | "success";
 
 export default function Template001({ menu, sessionToken, tableName }: Props) {
   const [search, setSearch] = useState("");
   const [quickSection, setQuickSection] = useState("popular");
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [view, setView] = useState<MenuView>("menu");
+
+  const [createdOrder, setCreatedOrder] = useState<{
+    id: string;
+    total: number;
+  } | null>(null);
   const [activeCategory, setActiveCategory] = useState(
     menu.categories[0]?.id ?? "",
   );
@@ -42,6 +50,7 @@ export default function Template001({ menu, sessionToken, tableName }: Props) {
 
     setCartOpen(false);
     setCheckoutOpen(true);
+    setView("checkout");  
   };
 
   const [quantities, setQuantities] = useState<Record<string, number>>({});
@@ -168,18 +177,30 @@ export default function Template001({ menu, sessionToken, tableName }: Props) {
     });
   };
 
-  if (checkoutOpen) {
+  if (view === "checkout") {
     return (
       <Template001Checkout
         items={cartItems}
         total={cartTotal}
-        sessionToken={sessionToken!}
-        onBack={() => setCheckoutOpen(false)}
+        sessionToken="..."
+        onBack={() => setView("menu")}
         onSuccess={(order) => {
-          console.log("Order created:", order);
-
+          setCreatedOrder(order);
           setQuantities({});
-          setCheckoutOpen(false);
+          setView("success");
+        }}
+      />
+    );
+  }
+
+  if (view === "success" && createdOrder) {
+    return (
+      <Template001OrderSuccess
+        orderId={createdOrder.id}
+        total={createdOrder.total}
+        onBack={() => {
+          setCreatedOrder(null);
+          setView("menu");
         }}
       />
     );
