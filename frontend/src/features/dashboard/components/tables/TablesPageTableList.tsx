@@ -6,6 +6,8 @@ import TablesPageTableCard from "./TablesPageTableCard";
 export default function TablesPageTableList() {
   const { data, isLoading, isError } = useGetTablesQuery();
 
+  console.log(data);
+
   if (isLoading) {
     return (
       <div className="py-12 text-center text-sm text-gray-400">

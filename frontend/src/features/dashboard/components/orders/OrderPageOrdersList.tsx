@@ -2,19 +2,28 @@
 
 import { CircularProgress, Typography } from "@mui/material";
 
-import { useGetOrdersQuery } from "../../api/orderApi";
 import OrderPageOrderCard from "./OrderPageOrderCard";
-import type { OrderStatus } from "../../types/orders/orders.types";
+
+import type { Order } from "../../types/orders/orders.types";
 
 type Props = {
-  status?: OrderStatus;
+  orders: Order[];
   search?: string;
+  isLoading: boolean;
+  isFetching: boolean;
+  error: unknown;
 };
 
-export default function OrdersPageOrderList({ status, search = "" }: Props) {
-  const { data, isLoading, isFetching, error } = useGetOrdersQuery(
-    status ? { status } : undefined,
-  );
+export default function OrderPageOrdersList({
+  orders,
+  search = "",
+  isLoading,
+  isFetching,
+  error,
+}: Props) {
+  // ─────────────────────────────
+  // Initial Loading
+  // ─────────────────────────────
 
   if (isLoading) {
     return (
@@ -24,19 +33,27 @@ export default function OrdersPageOrderList({ status, search = "" }: Props) {
     );
   }
 
+  // ─────────────────────────────
+  // Error
+  // ─────────────────────────────
+
   if (error) {
     return (
-      <div className="flex min-h-60 items-center justify-center">
-        <Typography className="text-sm! text-red-500!">
-          دریافت سفارش‌ها با خطا مواجه شد.
+      <div className="flex min-h-60 flex-col items-center justify-center gap-2">
+        <Typography className="font-semibold! text-gray-700!">
+          دریافت سفارش‌ها امکان‌پذیر نیست
+        </Typography>
+
+        <Typography className="text-sm! text-gray-400!">
+          لطفاً دوباره تلاش کنید.
         </Typography>
       </div>
     );
   }
 
-  const orders = data?.results ?? [];
-
-  console.log(orders);
+  // ─────────────────────────────
+  // Local Search
+  // ─────────────────────────────
 
   const normalizedSearch = search.trim().toLowerCase();
 
@@ -52,15 +69,29 @@ export default function OrdersPageOrderList({ status, search = "" }: Props) {
       })
     : orders;
 
+  // ─────────────────────────────
+  // Empty
+  // ─────────────────────────────
+
   if (!filteredOrders.length) {
     return (
-      <div className="flex min-h-60 items-center justify-center">
-        <Typography className="text-sm! text-gray-500!">
-          سفارشی پیدا نشد.
+      <div className="flex min-h-60 flex-col items-center justify-center gap-2">
+        <Typography className="font-semibold! text-gray-700!">
+          سفارشی پیدا نشد
+        </Typography>
+
+        <Typography className="text-sm! text-gray-400!">
+          {normalizedSearch
+            ? "عبارت جستجو را تغییر دهید."
+            : "هنوز سفارشی برای نمایش وجود ندارد."}
         </Typography>
       </div>
     );
   }
+
+  // ─────────────────────────────
+  // Data
+  // ─────────────────────────────
 
   return (
     <div className="relative">
@@ -72,7 +103,7 @@ export default function OrdersPageOrderList({ status, search = "" }: Props) {
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
         {filteredOrders.map((order) => (
-          <OrderPageOrderCard order={order} key={order.id} />
+          <OrderPageOrderCard key={order.id} order={order} />
         ))}
       </div>
     </div>
