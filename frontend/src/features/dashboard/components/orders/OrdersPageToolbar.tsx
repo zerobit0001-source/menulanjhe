@@ -8,81 +8,100 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { useState } from "react";
+import type { OrderStatus } from "../../types/orders/orders.types";
 
-const filters = [
+type FilterValue = "ALL" | OrderStatus;
+
+type Props = {
+  filter: FilterValue;
+  search: string;
+  onFilterChange: (filter: FilterValue) => void;
+  onSearchChange: (value: string) => void;
+};
+
+const filters: {
+  value: FilterValue;
+  label: string;
+}[] = [
   {
-    value: "all",
+    value: "ALL",
     label: "همه",
   },
   {
-    value: "PENDING_PAYMENT",
-    label: "در انتظار پرداخت",
+    value: "PENDING",
+    label: "در انتظار تأیید",
   },
-  // {
-  //   value: "PAID",
-  //   label: "پرداخت شده",
-  // },
-  // {
-  //   value: "PREPARING",
-  //   label: "در حال آماده‌سازی",
-  // },
-  // {
-  //   value: "READY",
-  //   label: "آماده",
-  // },
+  {
+    value: "CONFIRMED",
+    label: "تأیید شده",
+  },
   {
     value: "COMPLETED",
     label: "تکمیل شده",
   },
+  {
+    value: "CANCELLED",
+    label: "لغو شده",
+  },
 ];
 
-export default function OrdersPageToolbar() {
-  const [filter, setFilter] = useState("all");
-  const [search, setSearch] = useState("");
+export default function OrdersPageToolbar({
+  filter,
+  search,
+  onFilterChange,
+  onSearchChange,
+}: Props) {
   const handleFilter = (
     _event: React.MouseEvent<HTMLElement>,
-    newFilter: string | null,
+    newFilter: FilterValue | null,
   ) => {
     if (newFilter !== null) {
-      setFilter(newFilter);
+      onFilterChange(newFilter);
     }
   };
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex">
+    <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex items-center gap-2">
         <Paper
           elevation={0}
-          className="flex items-center gap-2 px-3 h-10 border border-gray-200!"
+          className="flex h-10 min-w-0 flex-1 items-center gap-2 border border-gray-200! px-3 sm:w-64 sm:flex-none"
         >
-          <Search size={19} className="text-gray-400" />
+          <Search size={19} className="shrink-0 text-gray-400" />
 
           <InputBase
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) => onSearchChange(event.target.value)}
             placeholder="جستجوی سفارش..."
             className="flex-1 text-sm!"
             fullWidth
           />
         </Paper>
+
         <IconButton>
-          <SlidersHorizontal />
+          <SlidersHorizontal size={20} />
         </IconButton>
       </div>
-      <ToggleButtonGroup
-        value={filter}
-        exclusive
-        onChange={handleFilter}
-        aria-label="فیلتر سفارش‌ها"
-        size="small"
-      >
-        {filters.map((item) => (
-          <ToggleButton key={item.value} value={item.value}>
-            {item.label}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
+
+      <div className="overflow-x-auto">
+        <ToggleButtonGroup
+          value={filter}
+          exclusive
+          onChange={handleFilter}
+          aria-label="فیلتر سفارش‌ها"
+          size="small"
+        >
+          {filters.map((item) => (
+            <ToggleButton
+              key={item.value}
+              value={item.value}
+              className="whitespace-nowrap!"
+            >
+              {item.label}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+      </div>
     </div>
   );
 }

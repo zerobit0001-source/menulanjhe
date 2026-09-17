@@ -14,7 +14,7 @@ type CartItem = {
 type Props = {
   items: CartItem[];
   total: number;
-  sessionToken: string;
+  sessionToken?: string | null;
   onBack: () => void;
   onSuccess: (order: { id: string; total: number }) => void;
 };

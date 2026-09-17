@@ -1,25 +1,42 @@
-export type OrderStatus =
-  | "PENDING_PAYMENT"
-  | "PAID"
-  | "PREPARING"
-  | "READY"
-  | "COMPLETED"
-  | "CANCELLED";
+export type OrderStatus = "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+
+export type OrderType = "DINE_IN";
+
+export type OrderCustomer = {
+  name?: string;
+  phone?: string;
+} | null;
 
 export type OrderItem = {
   id: string;
+  product: string;
   product_name: string;
-  quantity: number;
   unit_price: number;
+  quantity: number;
   total_price: number;
 };
 
-export type DashboardOrder = {
+export type Order = {
   id: string;
-  order_number: number;
-  table_number: number;
+  branch: string;
+  table: string;
+  table_session: string;
+  customer: OrderCustomer;
+  order_type: OrderType;
   status: OrderStatus;
+  subtotal: number;
+  discount: number;
+  total: number;
+  notes: string;
   items: OrderItem[];
-  total_amount: number;
   created_at: string;
+  updated_at: string;
+};
+
+export type OrderListResponse = {
+  ok: boolean;
+  count: number;
+  total_pages: number;
+  current_page: number;
+  results: Order[];
 };
