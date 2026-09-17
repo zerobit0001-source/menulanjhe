@@ -1,6 +1,13 @@
 "use client";
 
-import { Button, Card, CardContent, Divider, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Divider,
+  Typography,
+} from "@mui/material";
 import { Check, CircleX, Clock3, UserRound } from "lucide-react";
 import { useState } from "react";
 
@@ -265,7 +272,11 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
                   onClick={handleCancel}
                   className="rounded-xl! border-red-200! text-red-600!"
                 >
-                  لغو
+                  {isCancelling ? (
+                    <CircularProgress size={18} className="text-red-600!" />
+                  ) : (
+                    "لغو"
+                  )}
                 </Button>
 
                 <Button
@@ -275,7 +286,11 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
                   onClick={handleConfirm}
                   className="rounded-xl! bg-blue-600! shadow-none! hover:bg-blue-700!"
                 >
-                  تأیید
+                  {isConfirming ? (
+                    <CircularProgress size={18} className="text-white!" />
+                  ) : (
+                    "تأیید"
+                  )}
                 </Button>
               </>
             )}
@@ -289,7 +304,11 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
                   onClick={handleCancel}
                   className="rounded-xl! border-red-200! text-red-600!"
                 >
-                  لغو
+                  {isCancelling ? (
+                    <CircularProgress size={18} className="text-red-600!" />
+                  ) : (
+                    "لغو"
+                  )}
                 </Button>
 
                 <Button
@@ -299,7 +318,11 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
                   onClick={handleComplete}
                   className="rounded-xl! bg-green-600! shadow-none! hover:bg-green-700!"
                 >
-                  تکمیل سفارش
+                  {isCompleting ? (
+                    <CircularProgress size={18} className="text-white!" />
+                  ) : (
+                    "تکمیل سفارش"
+                  )}
                 </Button>
               </>
             )}
