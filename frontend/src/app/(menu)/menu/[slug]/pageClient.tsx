@@ -28,6 +28,17 @@ export default function PublicMenuPageClient() {
     isError: isSessionError,
   } = useTableSession(qrToken ?? undefined);
 
+  console.log(
+    "sessionToken",
+    sessionToken,
+    "table",
+    table,
+    "isSessionLoading",
+    isSessionLoading,
+    "isSessionError",
+    isSessionError,
+  );
+
   // -------------------------
   // Loading
   // -------------------------

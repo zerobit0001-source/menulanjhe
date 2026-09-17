@@ -50,7 +50,7 @@ export default function Template001({ menu, sessionToken, tableName }: Props) {
 
     setCartOpen(false);
     setCheckoutOpen(true);
-    setView("checkout");  
+    setView("checkout");
   };
 
   const [quantities, setQuantities] = useState<Record<string, number>>({});
@@ -182,7 +182,7 @@ export default function Template001({ menu, sessionToken, tableName }: Props) {
       <Template001Checkout
         items={cartItems}
         total={cartTotal}
-        sessionToken="..."
+        sessionToken={sessionToken}
         onBack={() => setView("menu")}
         onSuccess={(order) => {
           setCreatedOrder(order);

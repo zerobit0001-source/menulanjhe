@@ -1,44 +1,45 @@
 "use client";
 
-import { dashboardTables } from "../../data/tables/demoTables";
-import { DashboardTable } from "../../types/tables/tables.type";
+import { useGetTablesQuery } from "@/features/dashboard/api/tableApi";
 import TablesPageTableCard from "./TablesPageTableCard";
 
 export default function TablesPageTableList() {
-  if (dashboardTables.length === 0) {
-    return (
-      <div className="flex min-h-60 items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50/50">
-        <div className="text-center">
-          <p className="text-sm font-semibold text-gray-500">میزی پیدا نشد</p>
+  const { data, isLoading, isError } = useGetTablesQuery();
 
-          <p className="mt-1 text-xs text-gray-400">
-            جستجو یا فیلتر را تغییر دهید
-          </p>
-        </div>
+  if (isLoading) {
+    return (
+      <div className="py-12 text-center text-sm text-gray-400">
+        در حال دریافت میزها...
       </div>
     );
   }
 
-  const onEdit = (table: DashboardTable) => {
-    console.log("edit", table);
-  };
-  const onDelete = (table: DashboardTable) => {
-    console.log("delete", table);
-  };
-  const onShowQr = (table: DashboardTable) => {
-    console.log("QR", table);
-  };
+  if (isError) {
+    return (
+      <div className="py-12 text-center text-sm text-red-500">
+        دریافت میزها با خطا مواجه شد.
+      </div>
+    );
+  }
+
+  if (!data?.results.length) {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-sm font-bold text-gray-700">
+          هنوز میزی ایجاد نشده است
+        </p>
+
+        <p className="mt-2 text-xs text-gray-400">
+          اولین میز خود را ایجاد کنید.
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {dashboardTables.map((table) => (
-        <TablesPageTableCard
-          key={table.id}
-          table={table}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onShowQr={onShowQr}
-        />
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {data.results.map((table) => (
+        <TablesPageTableCard key={table.id} table={table} />
       ))}
     </div>
   );
