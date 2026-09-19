@@ -21,12 +21,9 @@ export const categoryApi = baseApi.injectEndpoints({
         method: "GET",
         params: {
           menu,
-          ...(page && {
-            page,
-          }),
+          ...(page ? { page } : {}),
         },
       }),
-
       providesTags: ["Category"],
     }),
 
@@ -36,7 +33,6 @@ export const categoryApi = baseApi.injectEndpoints({
         method: "POST",
         body,
       }),
-
       invalidatesTags: ["Category"],
     }),
 
@@ -52,7 +48,6 @@ export const categoryApi = baseApi.injectEndpoints({
         method: "PATCH",
         body,
       }),
-
       invalidatesTags: ["Category"],
     }),
 
@@ -61,7 +56,6 @@ export const categoryApi = baseApi.injectEndpoints({
         url: `admin/categories/${id}/toggle_active/`,
         method: "POST",
       }),
-
       invalidatesTags: ["Category"],
     }),
   }),

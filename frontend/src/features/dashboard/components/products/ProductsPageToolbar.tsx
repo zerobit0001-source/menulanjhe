@@ -74,6 +74,8 @@ export default function ProductsPageToolbar({ search, filter }: Props) {
       params.set("filter", newFilter);
     }
 
+    params.delete("page");
+
     const queryString = params.toString();
 
     router.push(queryString ? `${pathname}?${queryString}` : pathname);

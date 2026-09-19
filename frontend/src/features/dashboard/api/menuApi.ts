@@ -1,10 +1,4 @@
 import { baseApi } from "@/features/api/baseApi";
-import type {
-  CreateMenuRequest,
-  Menu,
-  MenuListResponse,
-  UpdateMenuRequest,
-} from "../../../app/(dashboard)/dashboard/menu/types/menu.type";
 
 export const menuApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

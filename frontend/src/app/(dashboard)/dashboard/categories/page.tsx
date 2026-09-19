@@ -19,6 +19,7 @@ export default async function CategoriesPage({
   const params = await searchParams;
 
   const search = params.search ?? "";
+
   const filter =
     params.filter === "visible" || params.filter === "hidden"
       ? params.filter

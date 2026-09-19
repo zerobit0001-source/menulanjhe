@@ -18,10 +18,7 @@ type CreateTableSessionResponse = {
 
 export const tableSessionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    resolveTable: builder.query<
-      ResolveTableResponse,
-      string
-    >({
+    resolveTable: builder.query<ResolveTableResponse, string>({
       query: (qrToken) => ({
         url: `public/tables/resolve/${qrToken}/`,
         method: "GET",
@@ -41,7 +38,5 @@ export const tableSessionApi = baseApi.injectEndpoints({
   }),
 });
 
-export const {
-  useLazyResolveTableQuery,
-  useCreateTableSessionMutation,
-} = tableSessionApi;
+export const { useLazyResolveTableQuery, useCreateTableSessionMutation } =
+  tableSessionApi;
