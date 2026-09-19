@@ -45,3 +45,13 @@ class CreateDineInOrderSerializer(serializers.Serializer):
     items = OrderItemInputSerializer(many=True)
     customer = GuestCustomerInputSerializer(required=False)
     notes = serializers.CharField(required=False, allow_blank=True)
+
+
+class CreateManualOrderSerializer(serializers.Serializer):
+    branch = serializers.UUIDField(required=False)
+    order_type = serializers.ChoiceField(choices=["DINE_IN", "TAKEAWAY"], default="DINE_IN")
+    table_id = serializers.UUIDField(required=False, allow_null=True)
+    idempotency_key = serializers.CharField(max_length=100, required=False)
+    items = OrderItemInputSerializer(many=True)
+    customer = GuestCustomerInputSerializer(required=False)
+    notes = serializers.CharField(required=False, allow_blank=True)
