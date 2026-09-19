@@ -5,6 +5,10 @@ from .models import Order, OrderItem
 from apps.products.models import Product
 from apps.orders.serializers import OrderSerializer
 from apps.realtime.events import dispatch_order_event
+from apps.customers.models import Customer
+import uuid
+
+
 
 ALLOWED_TRANSITIONS = {
     "PENDING": {"CONFIRMED", "CANCELLED"},
@@ -22,6 +26,36 @@ def _serialize_order_for_event(order: Order) -> dict:
         "created_at": order.created_at.isoformat(),
     }
 
+
+def _build_order_items(*, order: Order, branch, items: list[dict]) -> int:
+    if not items:
+        raise ProductNotAvailable("سفارش باید حداقل یک آیتم داشته باشد.")
+
+    subtotal = 0
+    order_items = []
+    for item in items:
+        product = Product.objects.select_for_update().filter(id=item["product_id"]).first()
+        if not product:
+            raise ProductNotAvailable(f"محصولی با شناسه {item['product_id']} پیدا نشد.")
+        if product.category.menu.branch_id != branch.id:
+            raise ProductNotAvailable(f"محصول «{product.name}» متعلق به این شعبه نیست.")
+        if not product.is_available:
+            raise ProductNotAvailable(f"محصول «{product.name}» در حال حاضر موجود نیست.")
+
+        quantity = int(item["quantity"])
+        if quantity < 1:
+            raise ProductNotAvailable("تعداد باید حداقل ۱ باشد.")
+
+        line_total = product.price * quantity
+        subtotal += line_total
+
+        order_items.append(OrderItem(
+            order=order, product=product, product_name=product.name,
+            unit_price=product.price, quantity=quantity, total_price=line_total,
+        ))
+
+    OrderItem.objects.bulk_create(order_items)
+    return subtotal
 
 @transaction.atomic
 def create_dine_in_order(*, tenant, branch, session_token: str, items: list[dict],
@@ -99,6 +133,60 @@ def create_dine_in_order(*, tenant, branch, session_token: str, items: list[dict
         order_data=_serialize_order_for_event(order),
     ))
     
+    return order
+
+
+@transaction.atomic
+def create_manual_order(*, tenant, branch, order_type: str, items: list[dict],
+                         idempotency_key: str | None = None, table=None,
+                         customer_data: dict | None = None, notes: str = "",
+                         created_by_membership=None):
+    if order_type not in ("DINE_IN", "TAKEAWAY"):
+        raise ProductNotAvailable("نوع سفارش نامعتبر است. فقط DINE_IN یا TAKEAWAY در دسترس است.")
+
+    if order_type == "TAKEAWAY" and table is not None:
+        raise ProductNotAvailable("سفارش بیرون‌بر نباید به میز وصل باشد.")
+
+    if table is not None and table.branch_id != branch.id:
+        raise ProductNotAvailable("این میز متعلق به این شعبه نیست.")
+
+    if idempotency_key:
+        existing = Order.objects.select_for_update().filter(
+            tenant=tenant, idempotency_key=idempotency_key
+        ).first()
+        if existing:
+            return existing
+    else:
+        idempotency_key = f"manual-{uuid.uuid4()}"
+
+    customer = None
+    if customer_data and (customer_data.get("name") or customer_data.get("phone")):
+
+        customer = Customer.objects.create(
+            tenant=tenant,
+            name=customer_data.get("name", ""),
+            phone=customer_data.get("phone", ""),
+            notes=customer_data.get("notes", ""),
+        )
+
+    order = Order.objects.create(
+        tenant=tenant, branch=branch, table=table, table_session=None,
+        customer=customer, order_type=order_type, status="PENDING",
+        idempotency_key=idempotency_key, subtotal=0, total=0, notes=notes,
+    )
+
+    subtotal = _build_order_items(order=order, branch=branch, items=items)
+
+    order.subtotal = subtotal
+    order.total = subtotal - order.discount
+    order.save(update_fields=["subtotal", "total", "updated_at"])
+
+    transaction.on_commit(
+        lambda: dispatch_order_event(
+            tenant_id=tenant.id, event_type="ORDER_CREATED",
+            order_data=_serialize_order_for_event(order),
+        )
+    )
     return order
 
 
