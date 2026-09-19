@@ -1,26 +1,47 @@
 "use client";
 
+import { useMemo } from "react";
+
+import { useGetMenusQuery } from "../../api/menuApi";
 import { useGetCategoriesQuery } from "../../api/categoryApi";
+
 import type { Category } from "../../types/categories/categories.type";
 
 import CategoriesPageCategoryCard from "./CategoriesPageCategoryCard";
 
 type Props = {
-  menuId: string;
   search: string;
   filter: "all" | "visible" | "hidden";
 };
 
-export default function CategoriesPageCategoryList({
-  menuId,
-  search,
-  filter,
-}: Props) {
-  const { data, isLoading, isError, refetch } = useGetCategoriesQuery({
-    menu: menuId,
-  });
+export default function CategoriesPageCategoryList({ search, filter }: Props) {
+  const {
+    data: menusData,
+    isLoading: isMenusLoading,
+    isError: isMenusError,
+  } = useGetMenusQuery();
 
-  if (isLoading) {
+  const activeMenu = useMemo(() => {
+    return menusData?.results.find((menu) => menu.is_active);
+  }, [menusData]);
+
+  const {
+    data,
+    isLoading: isCategoriesLoading,
+    isError: isCategoriesError,
+    refetch,
+  } = useGetCategoriesQuery(
+    activeMenu
+      ? {
+          menu: activeMenu.id,
+        }
+      : undefined,
+    {
+      skip: !activeMenu,
+    },
+  );
+
+  if (isMenusLoading || isCategoriesLoading) {
     return (
       <div className="flex min-h-60 items-center justify-center">
         <p className="text-sm text-gray-500">در حال دریافت دسته‌بندی‌ها...</p>
@@ -28,7 +49,15 @@ export default function CategoriesPageCategoryList({
     );
   }
 
-  if (isError) {
+  if (isMenusError || !activeMenu) {
+    return (
+      <div className="flex min-h-60 items-center justify-center">
+        <p className="text-sm text-red-500">منوی فعال پیدا نشد.</p>
+      </div>
+    );
+  }
+
+  if (isCategoriesError) {
     return (
       <div className="flex min-h-60 flex-col items-center justify-center gap-3">
         <p className="text-sm text-red-500">

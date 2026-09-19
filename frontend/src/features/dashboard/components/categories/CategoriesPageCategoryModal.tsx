@@ -1,15 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import {
   Button,
   Card,
+  CircularProgress,
   FormControlLabel,
   IconButton,
   Switch,
   TextField,
   Typography,
 } from "@mui/material";
+
 import {
   Coffee,
   CupSoda,
@@ -25,32 +28,76 @@ import {
   X,
 } from "lucide-react";
 
-import type { DashboardCategory } from "../../types/categories/categories.types";
-
 type CategoryModalProps = {
   open: boolean;
-  category?: DashboardCategory | null;
+
   onClose: () => void;
-  onSubmit: (
-    category: Omit<
-      DashboardCategory,
-      "id" | "created_at" | "product_count" | "sort_order"
-    >,
-  ) => void;
+
+  onSubmit: (data: {
+    name: string;
+    description?: string;
+    image?: string | null;
+  }) => void;
+
+  isSubmitting?: boolean;
 };
 
 const categoryIcons = [
-  { value: "pizza", label: "پیتزا", icon: Pizza },
-  { value: "burger", label: "برگر", icon: Sandwich },
-  { value: "utensils", label: "غذا", icon: Utensils },
-  { value: "drumstick", label: "مرغ", icon: Drumstick },
-  { value: "salad", label: "سالاد", icon: Salad },
-  { value: "leaf", label: "سالم", icon: Leaf },
-  { value: "coffee", label: "قهوه", icon: Coffee },
-  { value: "drink", label: "نوشیدنی", icon: CupSoda },
-  { value: "dessert", label: "دسر", icon: IceCreamBowl },
-  { value: "egg", label: "صبحانه", icon: Egg },
-  { value: "star", label: "ویژه", icon: Star },
+  {
+    value: "pizza",
+    label: "پیتزا",
+    icon: Pizza,
+  },
+  {
+    value: "burger",
+    label: "برگر",
+    icon: Sandwich,
+  },
+  {
+    value: "utensils",
+    label: "غذا",
+    icon: Utensils,
+  },
+  {
+    value: "drumstick",
+    label: "مرغ",
+    icon: Drumstick,
+  },
+  {
+    value: "salad",
+    label: "سالاد",
+    icon: Salad,
+  },
+  {
+    value: "leaf",
+    label: "سالم",
+    icon: Leaf,
+  },
+  {
+    value: "coffee",
+    label: "قهوه",
+    icon: Coffee,
+  },
+  {
+    value: "drink",
+    label: "نوشیدنی",
+    icon: CupSoda,
+  },
+  {
+    value: "dessert",
+    label: "دسر",
+    icon: IceCreamBowl,
+  },
+  {
+    value: "egg",
+    label: "صبحانه",
+    icon: Egg,
+  },
+  {
+    value: "star",
+    label: "ویژه",
+    icon: Star,
+  },
 ];
 
 const categoryColors = [
@@ -67,7 +114,7 @@ const categoryColors = [
 ];
 
 const defaultValues = {
-  title: "",
+  name: "",
   icon: "utensils",
   color: "#10B981",
   visible: true,
@@ -75,58 +122,54 @@ const defaultValues = {
 
 export default function CategoriesPageCategoryModal({
   open,
-  category,
   onClose,
   onSubmit,
+  isSubmitting = false,
 }: CategoryModalProps) {
-  const isEdit = Boolean(category);
-
-  const [title, setTitle] = useState(defaultValues.title);
+  const [name, setName] = useState(defaultValues.name);
   const [icon, setIcon] = useState(defaultValues.icon);
   const [color, setColor] = useState(defaultValues.color);
   const [visible, setVisible] = useState(defaultValues.visible);
 
   useEffect(() => {
-    if (category) {
-      setTitle(category.title);
-      setIcon(category.icon);
-      setColor(category.color);
-      setVisible(category.visible);
+    if (!open) {
       return;
     }
 
-    setTitle(defaultValues.title);
+    setName(defaultValues.name);
     setIcon(defaultValues.icon);
     setColor(defaultValues.color);
     setVisible(defaultValues.visible);
-  }, [category, open]);
+  }, [open]);
 
   const handleSubmit = () => {
-    const trimmedTitle = title.trim();
+    const trimmedName = name.trim();
 
-    if (!trimmedTitle) {
+    if (!trimmedName || isSubmitting) {
       return;
     }
 
     onSubmit({
-      title: trimmedTitle,
-      icon,
-      color,
-      visible,
+      name: trimmedName,
+      description: "",
+      image: icon,
     });
-
-    onClose();
   };
 
   if (!open) {
     return null;
   }
 
+  const selectedIcon =
+    categoryIcons.find((item) => item.value === icon) ?? categoryIcons[0];
+
+  const SelectedIcon = selectedIcon.icon;
+
   return (
     <div
       className="fixed inset-0 z-[1300] flex items-center justify-center bg-black/40 px-4"
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) {
+        if (event.target === event.currentTarget && !isSubmitting) {
           onClose();
         }
       }}
@@ -140,23 +183,26 @@ export default function CategoriesPageCategoryModal({
         <div className="flex items-start justify-between border-b border-gray-100 pb-4">
           <div>
             <Typography className="font-bold! text-gray-900!">
-              {isEdit ? "ویرایش دسته‌بندی" : "افزودن دسته‌بندی"}
+              افزودن دسته‌بندی
             </Typography>
 
             <Typography className="mt-1! text-xs! text-gray-400!">
-              {isEdit
-                ? "اطلاعات دسته‌بندی را ویرایش کنید."
-                : "دسته‌بندی جدیدی برای منوی خود ایجاد کنید."}
+              دسته‌بندی جدیدی برای منوی خود ایجاد کنید.
             </Typography>
           </div>
 
-          <IconButton size="small" onClick={onClose} className="text-gray-400!">
+          <IconButton
+            size="small"
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="text-gray-400!"
+          >
             <X size={19} />
           </IconButton>
         </div>
 
         <div className="space-y-6 py-6">
-          {/* Title */}
+          {/* Name */}
           <div>
             <Typography className="mb-2! text-sm! font-semibold! text-gray-700!">
               نام دسته‌بندی
@@ -165,12 +211,10 @@ export default function CategoriesPageCategoryModal({
             <TextField
               fullWidth
               size="small"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
+              value={name}
+              onChange={(event) => setName(event.target.value)}
               placeholder="مثلاً پیتزا"
-              inputProps={{
-                maxLength: 50,
-              }}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -189,6 +233,7 @@ export default function CategoriesPageCategoryModal({
                   <button
                     key={item.value}
                     type="button"
+                    disabled={isSubmitting}
                     onClick={() => setIcon(item.value)}
                     className={`flex h-16 flex-col items-center justify-center gap-1 rounded-xl border transition-all ${
                       selected
@@ -205,7 +250,7 @@ export default function CategoriesPageCategoryModal({
             </div>
           </div>
 
-          {/* Color */}
+          {/*
           <div>
             <Typography className="mb-3! text-sm! font-semibold! text-gray-700!">
               رنگ دسته‌بندی
@@ -219,6 +264,7 @@ export default function CategoriesPageCategoryModal({
                   <button
                     key={item}
                     type="button"
+                    disabled={isSubmitting}
                     onClick={() => setColor(item)}
                     className={`flex h-9 w-9 items-center justify-center rounded-full border-2 transition-transform ${
                       selected
@@ -237,7 +283,6 @@ export default function CategoriesPageCategoryModal({
                 );
               })}
 
-              {/* Custom color */}
               <label
                 className="relative flex h-9 w-9 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-gray-200 bg-gray-50"
                 title="انتخاب رنگ دلخواه"
@@ -245,6 +290,7 @@ export default function CategoriesPageCategoryModal({
                 <input
                   type="color"
                   value={color}
+                  disabled={isSubmitting}
                   onChange={(event) => setColor(event.target.value)}
                   className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                 />
@@ -265,24 +311,14 @@ export default function CategoriesPageCategoryModal({
                   backgroundColor: `${color}18`,
                 }}
               >
-                {(() => {
-                  const selectedIcon =
-                    categoryIcons.find((item) => item.value === icon) ??
-                    categoryIcons[0];
-
-                  const Icon = selectedIcon.icon;
-
-                  return (
-                    <div className="flex h-full w-full items-center justify-center">
-                      <Icon
-                        size={16}
-                        style={{
-                          color,
-                        }}
-                      />
-                    </div>
-                  );
-                })()}
+                <div className="flex h-full w-full items-center justify-center">
+                  <SelectedIcon
+                    size={16}
+                    style={{
+                      color,
+                    }}
+                  />
+                </div>
               </div>
 
               <Typography className="text-xs! text-gray-400!">
@@ -290,6 +326,7 @@ export default function CategoriesPageCategoryModal({
               </Typography>
             </div>
           </div>
+          */}
 
           {/* Visibility */}
           <div className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
@@ -308,28 +345,43 @@ export default function CategoriesPageCategoryModal({
                 <Switch
                   checked={visible}
                   onChange={(event) => setVisible(event.target.checked)}
+                  disabled={isSubmitting}
                   size="small"
                 />
               }
               label=""
-              sx={{ margin: 0 }}
+              sx={{
+                margin: 0,
+              }}
             />
           </div>
         </div>
 
         {/* Footer */}
         <div className="flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
-          <Button variant="outlined" onClick={onClose} className="rounded-xl!">
+          <Button
+            variant="outlined"
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="rounded-xl!"
+          >
             انصراف
           </Button>
 
           <Button
             variant="contained"
             onClick={handleSubmit}
-            disabled={!title.trim()}
+            disabled={!name.trim() || isSubmitting}
             className="rounded-xl!"
           >
-            {isEdit ? "ذخیره تغییرات" : "افزودن دسته‌بندی"}
+            {isSubmitting ? (
+              <>
+                <CircularProgress size={18} color="inherit" className="ml-2!" />
+                در حال ایجاد...
+              </>
+            ) : (
+              "افزودن دسته‌بندی"
+            )}
           </Button>
         </div>
       </Card>
