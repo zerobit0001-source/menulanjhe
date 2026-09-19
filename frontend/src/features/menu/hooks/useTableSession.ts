@@ -13,25 +13,21 @@ type TableInfo = {
   branch_id: string;
 };
 
-export function useTableSession(
-  qrToken?: string,
-) {
-  const [sessionToken, setSessionToken] =
-    useState<string | null>(null);
+export function useTableSession(qrToken?: string) {
+  // const [sessionToken, setSessionToken] =
+  //   useState<string | null>(null);
 
-  const [table, setTable] =
-    useState<TableInfo | null>(null);
+  const [table, setTable] = useState<TableInfo | null>(null);
 
-  const [error, setError] =
-    useState(false);
+  const [error, setError] = useState(false);
 
   const [resolveTable, { isFetching: isResolving }] =
     useLazyResolveTableQuery();
 
-  const [
-    createTableSession,
-    { isLoading: isCreating },
-  ] = useCreateTableSessionMutation();
+  // const [
+  //   createTableSession,
+  //   { isLoading: isCreating },
+  // ] = useCreateTableSessionMutation();
 
   useEffect(() => {
     if (!qrToken) {
@@ -44,13 +40,12 @@ export function useTableSession(
       try {
         setError(false);
 
-        const resolvedTable =
-          await resolveTable(qrToken).unwrap();
+        const resolvedTable = await resolveTable(qrToken).unwrap();
 
-        const session =
-          await createTableSession({
-            qr_token: qrToken,
-          }).unwrap();
+        // const session =
+        //   await createTableSession({
+        //     qr_token: qrToken,
+        //   }).unwrap();
 
         if (cancelled) {
           return;
@@ -62,18 +57,15 @@ export function useTableSession(
           branch_id: resolvedTable.branch_id,
         });
 
-        setSessionToken(
-          session.session_token,
-        );
+        // setSessionToken(
+        //   session.session_token,
+        // );
       } catch (error) {
         if (cancelled) {
           return;
         }
 
-        console.error(
-          "Table session initialization failed:",
-          error,
-        );
+        console.error("Table session initialization failed:", error);
 
         setError(true);
       }
@@ -87,15 +79,14 @@ export function useTableSession(
   }, [
     qrToken,
     resolveTable,
-    createTableSession,
+    // createTableSession,
   ]);
 
   return {
-    sessionToken,
+    // sessionToken,
     table,
 
-    isLoading:
-      isResolving || isCreating,
+    isLoading: isResolving,
 
     isError: error,
   };

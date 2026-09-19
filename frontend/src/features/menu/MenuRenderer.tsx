@@ -12,19 +12,24 @@ type MenuTemplate = keyof typeof menuTemplates;
 type MenuRendererProps = {
   template: MenuTemplate;
   menu: MenuData;
-  sessionToken?: string | null;
+  qrToken?: string | null;
+  // sessionToken?: string | null;
   tableName?: string | null;
 };
 
 export default function MenuRenderer({
   template,
   menu,
-  sessionToken,
+  // sessionToken,
+  qrToken,
   tableName,
 }: MenuRendererProps) {
   const Template = menuTemplates[template];
 
   return (
-    <Template menu={menu} sessionToken={sessionToken} tableName={tableName} />
+    <Template menu={menu} qrToken={qrToken} tableName={tableName} />
   );
 }
+
+// sessionToken={sessionToken}
+

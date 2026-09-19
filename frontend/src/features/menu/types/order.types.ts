@@ -4,7 +4,8 @@ export type CreateOrderItem = {
 };
 
 export type CreateOrderRequest = {
-  session_token: string;
+  // session_token: string;
+  qr_token: string;
   idempotency_key: string;
   items: CreateOrderItem[];
   customer?: {

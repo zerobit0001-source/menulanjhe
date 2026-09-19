@@ -5,8 +5,8 @@ import { useParams, useSearchParams } from "next/navigation";
 import MenuRenderer from "@/features/menu/MenuRenderer";
 import { publicMenuToMenuData } from "@/features/menu/utils/publicMenuAdapter";
 
-import { useTableSession } from "@/features/menu/hooks/useTableSession";
 import { useGetPublicMenuQuery } from "@/features/menu/api/menuPublicApi";
+import { useTableSession } from "@/features/menu/hooks/useTableSession";
 
 export default function PublicMenuPageClient() {
   const params = useParams<{ slug: string }>();
@@ -22,28 +22,29 @@ export default function PublicMenuPageClient() {
   } = useGetPublicMenuQuery(slug);
 
   const {
-    sessionToken,
+    // sessionToken,
     table,
     isLoading: isSessionLoading,
     isError: isSessionError,
   } = useTableSession(qrToken ?? undefined);
 
-  console.log(
-    "sessionToken",
-    sessionToken,
-    "table",
-    table,
-    "isSessionLoading",
-    isSessionLoading,
-    "isSessionError",
-    isSessionError,
-  );
+  // console.log(
+  //   "sessionToken",
+  //   sessionToken,
+  //   "table",
+  //   table,
+  //   "isSessionLoading",
+  //   isSessionLoading,
+  //   "isSessionError",
+  //   isSessionError,
+  // );
 
   // -------------------------
   // Loading
   // -------------------------
 
-  if (isMenuLoading || isSessionLoading) {
+  // || isSessionLoading
+  if (isMenuLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-white">
         <p className="text-sm text-gray-500">در حال آماده‌سازی منو...</p>
@@ -73,19 +74,19 @@ export default function PublicMenuPageClient() {
   // QR / Table session error
   // -------------------------
 
-  if (qrToken && (isSessionError || !sessionToken)) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
-        <div className="text-center">
-          <p className="text-sm font-bold text-gray-700">میز شناسایی نشد</p>
+  // if (qrToken && (isSessionError || !sessionToken)) {
+  //   return (
+  //     <div className="flex min-h-screen items-center justify-center bg-white">
+  //       <div className="text-center">
+  //         <p className="text-sm font-bold text-gray-700">میز شناسایی نشد</p>
 
-          <p className="mt-2 text-xs text-gray-400">
-            لطفاً QR Code میز را دوباره اسکن کنید.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  //         <p className="mt-2 text-xs text-gray-400">
+  //           لطفاً QR Code میز را دوباره اسکن کنید.
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   // -------------------------
   // Adapt backend → UI
@@ -97,8 +98,9 @@ export default function PublicMenuPageClient() {
     <MenuRenderer
       template="template_001"
       menu={menu}
-      sessionToken={sessionToken}
+      qrToken={qrToken}
       tableName={table?.table_name}
     />
   );
 }
+// sessionToken={sessionToken}

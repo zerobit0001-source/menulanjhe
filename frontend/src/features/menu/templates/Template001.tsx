@@ -19,12 +19,13 @@ import Template001OrderSuccess from "../components/Template001/Template001OrderS
 
 type Props = {
   menu: PublicMenuResponse;
-  sessionToken?: string | null;
+  // sessionToken?: string | null;
   tableName?: string | null;
+  qrToken?: string | null;
 };
 type MenuView = "menu" | "checkout" | "success";
 
-export default function Template001({ menu, sessionToken, tableName }: Props) {
+export default function Template001({ menu, tableName, qrToken }: Props) {
   const [search, setSearch] = useState("");
   const [quickSection, setQuickSection] = useState("popular");
   const [cartOpen, setCartOpen] = useState(false);
@@ -44,7 +45,10 @@ export default function Template001({ menu, sessionToken, tableName }: Props) {
       return;
     }
 
-    if (!sessionToken) {
+    // if (!sessionToken) {
+    //   return;
+    // }
+    if (!qrToken) {
       return;
     }
 
@@ -182,7 +186,8 @@ export default function Template001({ menu, sessionToken, tableName }: Props) {
       <Template001Checkout
         items={cartItems}
         total={cartTotal}
-        sessionToken={sessionToken}
+        qrToken={qrToken}
+        // sessionToken={sessionToken}
         onBack={() => setView("menu")}
         onSuccess={(order) => {
           setCreatedOrder(order);

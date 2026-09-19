@@ -17,14 +17,16 @@ type Props = {
   sessionToken?: string | null;
   onBack: () => void;
   onSuccess: (order: { id: string; total: number }) => void;
+  qrToken?: string | null;
 };
 
 export default function Template001Checkout({
   items,
   total,
-  sessionToken,
+  // sessionToken,
   onBack,
   onSuccess,
+  qrToken,
 }: Props) {
   const [name, setName] = useState("");
   const [notes, setNotes] = useState("");
@@ -36,17 +38,21 @@ export default function Template001Checkout({
   const [createOrder, { isLoading }] = useCreatePublicOrderMutation();
 
   const handleSubmit = async () => {
-    if (!items.length || !sessionToken) {
+    // || !sessionToken
+    if (!items.length) {
+      return;
+    }
+    if (!qrToken) {
       return;
     }
 
     setError("");
 
     try {
+      // session_token: sessionToken,
       const result = await createOrder({
-        session_token: sessionToken,
-
         idempotency_key: idempotencyKey,
+        qr_token: qrToken,
 
         items: items.map((item) => ({
           product_id: item.product.id,
