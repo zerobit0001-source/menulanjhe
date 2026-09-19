@@ -179,14 +179,14 @@ export default function OrdersPageOrderDetailsModal({
                 <div>
                   <Typography
                     variant="subtitle2"
-                    className="font-bold! text-gray-800!"
+                    className="font-bold! text-gray-800! "
                   >
                     توضیحات
                   </Typography>
 
                   <Typography
                     variant="body2"
-                    className="mt-2! leading-7! text-gray-600!"
+                    className="mt-2! leading-7! text-gray-600! max-w-full text-wrap"
                   >
                     {order.notes}
                   </Typography>

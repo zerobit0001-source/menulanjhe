@@ -8,7 +8,13 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
-import { Check, CircleX, Clock3, UserRound } from "lucide-react";
+import {
+  Check,
+  CircleX,
+  Clock3,
+  UserRound,
+  MessageSquareText,
+} from "lucide-react";
 import { useState } from "react";
 
 import {
@@ -150,16 +156,27 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
               </div>
             </div>
 
-            {/* Status */}
+            {/* Status + Note */}
 
-            <div
-              className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 ${statusInfo.className}`}
-            >
-              <StatusIcon size={14} />
+            <div className="flex shrink-0 items-center gap-2">
+              {order.notes?.trim() && (
+                <div
+                  title={order.notes}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-amber-600"
+                >
+                  <MessageSquareText size={15} />
+                </div>
+              )}
 
-              <Typography variant="caption" className="font-semibold!">
-                {statusInfo.label}
-              </Typography>
+              <div
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 ${statusInfo.className}`}
+              >
+                <StatusIcon size={14} />
+
+                <Typography variant="caption" className="font-semibold!">
+                  {statusInfo.label}
+                </Typography>
+              </div>
             </div>
           </div>
 

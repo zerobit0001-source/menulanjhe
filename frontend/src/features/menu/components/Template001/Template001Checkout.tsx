@@ -158,6 +158,7 @@ export default function Template001Checkout({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="توضیحات سفارش"
+            maxLength={150}
             rows={3}
             className="mt-4 w-full resize-none rounded-xl border border-gray-200 px-3 py-3 text-sm outline-none"
           />
