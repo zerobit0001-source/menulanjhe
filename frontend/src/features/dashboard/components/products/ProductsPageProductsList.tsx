@@ -17,6 +17,8 @@ export default function ProductsPageProductsList({ search, filter }: Props) {
     is_available: isAvailable,
   });
 
+  console.log("This is products : ", data);
+
   if (isLoading) {
     return (
       <div className="flex min-h-60 items-center justify-center">
