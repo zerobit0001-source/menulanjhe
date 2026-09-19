@@ -38,13 +38,13 @@ class GuestCustomerInputSerializer(serializers.Serializer):
     phone = serializers.CharField(required=False, allow_blank=True, max_length=20)
     notes = serializers.CharField(required=False, allow_blank=True)
 
-
-class CreateDineInOrderSerializer(serializers.Serializer):
-    session_token = serializers.CharField()
-    idempotency_key = serializers.CharField(max_length=100)
-    items = OrderItemInputSerializer(many=True)
-    customer = GuestCustomerInputSerializer(required=False)
-    notes = serializers.CharField(required=False, allow_blank=True)
+# for tb session phase 
+# class CreateDineInOrderSerializer(serializers.Serializer):
+#     session_token = serializers.CharField()
+#     idempotency_key = serializers.CharField(max_length=100)
+#     items = OrderItemInputSerializer(many=True)
+#     customer = GuestCustomerInputSerializer(required=False)
+#     notes = serializers.CharField(required=False, allow_blank=True)
 
 
 class CreateManualOrderSerializer(serializers.Serializer):
@@ -52,6 +52,14 @@ class CreateManualOrderSerializer(serializers.Serializer):
     order_type = serializers.ChoiceField(choices=["DINE_IN", "TAKEAWAY"], default="DINE_IN")
     table_id = serializers.UUIDField(required=False, allow_null=True)
     idempotency_key = serializers.CharField(max_length=100, required=False)
+    items = OrderItemInputSerializer(many=True)
+    customer = GuestCustomerInputSerializer(required=False)
+    notes = serializers.CharField(required=False, allow_blank=True)
+
+
+class CreateDineInOrderSerializer(serializers.Serializer):
+    qr_token = serializers.CharField()
+    idempotency_key = serializers.CharField(max_length=100)
     items = OrderItemInputSerializer(many=True)
     customer = GuestCustomerInputSerializer(required=False)
     notes = serializers.CharField(required=False, allow_blank=True)
