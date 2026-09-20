@@ -8,15 +8,18 @@ import { useGetMenusQuery } from "../../api/menuApi";
 import { useCreateCategoryMutation } from "../../api/categoryApi";
 
 import CategoriesPageCategoryModal from "./CategoriesPageCategoryModal";
+import { Category } from "../../types/categories/categories.type";
 
-export default function CategoriesPageAddCategoryButton() {
+
+
+export default function CategoriesPageAddCategoryButton({}: CategoryModalProps) {
   const [open, setOpen] = useState(false);
-
   const {
     data: menusData,
     isLoading: isMenusLoading,
     isError: isMenusError,
   } = useGetMenusQuery();
+
 
   const activeMenu = useMemo(() => {
     return menusData?.results.find((menu) => menu.is_active);
@@ -28,7 +31,7 @@ export default function CategoriesPageAddCategoryButton() {
   const handleSubmit = async (data: {
     name: string;
     description?: string;
-    image?: string | null;
+    icon_name?: string;
   }) => {
     if (!activeMenu) {
       return;
@@ -39,7 +42,7 @@ export default function CategoriesPageAddCategoryButton() {
         menu: activeMenu.id,
         name: data.name.trim(),
         description: data.description?.trim() || "",
-        // image: data.image ?? null,
+        icon_name: data.icon_name?.trim() || "",
       }).unwrap();
 
       setOpen(false);

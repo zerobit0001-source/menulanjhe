@@ -27,16 +27,19 @@ import {
   Utensils,
   X,
 } from "lucide-react";
+import { Category } from "../../types/categories/categories.type";
 
 type CategoryModalProps = {
   open: boolean;
 
   onClose: () => void;
 
+  category?: Category;
+
   onSubmit: (data: {
     name: string;
     description?: string;
-    image?: string | null;
+    icon_name?: string;
   }) => void;
 
   isSubmitting?: boolean;

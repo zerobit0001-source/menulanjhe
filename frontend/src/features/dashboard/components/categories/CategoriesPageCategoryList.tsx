@@ -41,6 +41,8 @@ export default function CategoriesPageCategoryList({ search, filter }: Props) {
     },
   );
 
+  console.log(data);
+
   if (isMenusLoading || isCategoriesLoading) {
     return (
       <div className="flex min-h-60 items-center justify-center">

@@ -23,6 +23,7 @@ export type CreateCategoryRequest = {
   name: string;
   description?: string;
   image?: string | null;
+  icon_name?: string;
 };
 
 export type UpdateCategoryRequest = {
