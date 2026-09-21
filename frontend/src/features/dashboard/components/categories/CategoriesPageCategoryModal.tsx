@@ -128,22 +128,31 @@ export default function CategoriesPageCategoryModal({
   onClose,
   onSubmit,
   isSubmitting = false,
+  category,
 }: CategoryModalProps) {
   const [name, setName] = useState(defaultValues.name);
   const [icon, setIcon] = useState(defaultValues.icon);
   const [color, setColor] = useState(defaultValues.color);
   const [visible, setVisible] = useState(defaultValues.visible);
+  const isEditMode = Boolean(category);
 
   useEffect(() => {
     if (!open) {
       return;
     }
 
-    setName(defaultValues.name);
-    setIcon(defaultValues.icon);
-    setColor(defaultValues.color);
-    setVisible(defaultValues.visible);
-  }, [open]);
+    if (isEditMode) {
+      setName(category.name);
+      setIcon(category.icon);
+      setColor(category.color);
+      setVisible(category.visible);
+    } else {
+      setName(defaultValues.name);
+      setIcon(defaultValues.icon);
+      setColor(defaultValues.color);
+      setVisible(defaultValues.visible);
+    }
+  }, [open, isEditMode, category]);
 
   const handleSubmit = () => {
     const trimmedName = name.trim();

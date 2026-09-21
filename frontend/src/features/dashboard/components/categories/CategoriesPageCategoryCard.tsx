@@ -20,7 +20,10 @@ import {
 
 import { useEffect, useState } from "react";
 
-import { useToggleCategoryActiveMutation } from "../../api/categoryApi";
+import {
+  useToggleCategoryActiveMutation,
+  useUpdateCategoryMutation,
+} from "../../api/categoryApi";
 
 import type { Category } from "../../types/categories/categories.type";
 
@@ -39,6 +42,9 @@ export default function CategoriesPageCategoryCard({ category }: Props) {
 
   const [toggleCategoryActive, { isLoading }] =
     useToggleCategoryActiveMutation();
+
+  const [updateCategory, { isLoading: isUpdating }] =
+    useUpdateCategoryMutation();
 
   const menuOpen = Boolean(menuAnchor);
 
@@ -60,6 +66,27 @@ export default function CategoriesPageCategoryCard({ category }: Props) {
   const handleEdit = () => {
     handleMenuClose();
     setEditOpen(true);
+  };
+
+  const handleUpdate = async (data: {
+    name: string;
+    description?: string;
+    icon_name?: string;
+  }) => {
+    try {
+      await updateCategory({
+        id: category.id,
+        body: {
+          name: data.name.trim(),
+          description: data.description?.trim() || "",
+          icon_name: data.icon_name?.trim() || "",
+        },
+      }).unwrap();
+
+      setEditOpen(false);
+    } catch (error) {
+      console.error("Update category failed:", error);
+    }
   };
 
   const handleToggle = async () => {
@@ -201,14 +228,8 @@ export default function CategoriesPageCategoryCard({ category }: Props) {
         open={editOpen}
         category={category}
         onClose={() => setEditOpen(false)}
-        onSubmit={(data) => {
-          console.log("Updated category:", {
-            ...category,
-            ...data,
-          });
-
-          setEditOpen(false);
-        }}
+        onSubmit={handleUpdate}
+        isSubmitting={isUpdating}
       />
     </Card>
   );

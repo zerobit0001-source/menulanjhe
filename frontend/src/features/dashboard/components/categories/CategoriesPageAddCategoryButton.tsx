@@ -28,6 +28,7 @@ export default function CategoriesPageAddCategoryButton({}: CategoryModalProps) 
   const [createCategory, { isLoading: isCreating }] =
     useCreateCategoryMutation();
 
+
   const handleSubmit = async (data: {
     name: string;
     description?: string;
