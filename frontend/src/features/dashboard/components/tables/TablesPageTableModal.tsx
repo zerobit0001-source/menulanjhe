@@ -4,81 +4,83 @@ import { useEffect, useState } from "react";
 import {
   Button,
   Card,
-  FormControl,
+  CircularProgress,
   IconButton,
-  MenuItem,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
 import { X } from "lucide-react";
-import { DashboardTable, TableStatus } from "../../types/tables/tables.type";
+
+import type { Table } from "../../types/tables/tables.type";
 
 type TableModalProps = {
   open: boolean;
-  table?: DashboardTable | null;
+  table?: Table | null;
   onClose: () => void;
-  onSubmit: (data: Pick<DashboardTable, "number" | "status">) => void;
+  onSubmit: (data: {
+    name: string;
+    number: number;
+    capacity: number;
+  }) => void;
+  isSubmitting?: boolean;
 };
 
 const defaultValues = {
+  name: "",
   number: "",
-  status: "AVAILABLE" as TableStatus,
+  capacity: "",
 };
-
-const statusOptions: {
-  value: TableStatus;
-  label: string;
-}[] = [
-  {
-    value: "AVAILABLE",
-    label: "آزاد",
-  },
-  {
-    value: "ORDERING",
-    label: "در حال سفارش",
-  },
-  {
-    value: "WAITING_PAYMENT",
-    label: "در انتظار پرداخت",
-  },
-];
 
 export default function TablesPageTableModal({
   open,
   table,
   onClose,
   onSubmit,
+  isSubmitting = false,
 }: TableModalProps) {
   const isEdit = Boolean(table);
 
-  const [number, setNumber] = useState("");
-  const [status, setStatus] = useState<TableStatus>(defaultValues.status);
+  const [name, setName] = useState(defaultValues.name);
+  const [number, setNumber] = useState(defaultValues.number);
+  const [capacity, setCapacity] = useState(defaultValues.capacity);
 
   useEffect(() => {
-    if (table) {
-      setNumber(String(table.number));
-      setStatus(table.status);
+    if (!open) {
       return;
     }
 
+    if (table) {
+      setName(table.name);
+      setNumber(String(table.number));
+      setCapacity(String(table.capacity));
+      return;
+    }
+
+    setName(defaultValues.name);
     setNumber(defaultValues.number);
-    setStatus(defaultValues.status);
-  }, [table, open]);
+    setCapacity(defaultValues.capacity);
+  }, [open, table]);
+
+  const parsedNumber = Number(number);
+  const parsedCapacity = Number(capacity);
+
+  const isValid =
+    name.trim().length > 0 &&
+    Number.isInteger(parsedNumber) &&
+    parsedNumber > 0 &&
+    Number.isInteger(parsedCapacity) &&
+    parsedCapacity > 0;
 
   const handleSubmit = () => {
-    const parsedNumber = Number(number);
-
-    if (!Number.isInteger(parsedNumber) || parsedNumber <= 0) {
+    if (!isValid || isSubmitting) {
       return;
     }
 
     onSubmit({
+      name: name.trim(),
       number: parsedNumber,
-      status,
+      capacity: parsedCapacity,
     });
-
-    onClose();
   };
 
   if (!open) {
@@ -100,6 +102,7 @@ export default function TablesPageTableModal({
         onMouseDown={(event) => event.stopPropagation()}
       >
         {/* Header */}
+
         <div className="flex items-start justify-between border-b border-gray-100 pb-4">
           <div>
             <Typography className="font-bold! text-gray-900!">
@@ -113,14 +116,38 @@ export default function TablesPageTableModal({
             </Typography>
           </div>
 
-          <IconButton size="small" onClick={onClose} className="text-gray-400!">
+          <IconButton
+            size="small"
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="text-gray-400!"
+          >
             <X size={19} />
           </IconButton>
         </div>
 
         {/* Form */}
+
         <div className="space-y-5 py-6">
-          {/* Table number */}
+          {/* Name */}
+
+          <div>
+            <Typography className="mb-2! text-sm! font-semibold! text-gray-700!">
+              نام میز
+            </Typography>
+
+            <TextField
+              fullWidth
+              size="small"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="مثلاً میز VIP"
+              disabled={isSubmitting}
+            />
+          </div>
+
+          {/* Number */}
+
           <div>
             <Typography className="mb-2! text-sm! font-semibold! text-gray-700!">
               شماره میز
@@ -132,7 +159,8 @@ export default function TablesPageTableModal({
               type="number"
               value={number}
               onChange={(event) => setNumber(event.target.value)}
-              placeholder="مثلاً ۱۲"
+              placeholder="مثلاً ۱"
+              disabled={isSubmitting}
               slotProps={{
                 htmlInput: {
                   min: 1,
@@ -141,46 +169,55 @@ export default function TablesPageTableModal({
             />
           </div>
 
-          {/* Status */}
+          {/* Capacity */}
+
           <div>
             <Typography className="mb-2! text-sm! font-semibold! text-gray-700!">
-              وضعیت میز
+              ظرفیت میز
             </Typography>
 
-            <FormControl fullWidth size="small">
-              <Select
-                value={status}
-                onChange={(event) =>
-                  setStatus(event.target.value as TableStatus)
-                }
-              >
-                {statusOptions.map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <TextField
+              fullWidth
+              size="small"
+              type="number"
+              value={capacity}
+              onChange={(event) => setCapacity(event.target.value)}
+              placeholder="مثلاً ۴"
+              disabled={isSubmitting}
+              slotProps={{
+                htmlInput: {
+                  min: 1,
+                },
+              }}
+            />
           </div>
         </div>
 
         {/* Footer */}
+
         <div className="flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end">
-          <Button variant="outlined" onClick={onClose} className="rounded-xl!">
+          <Button
+            variant="outlined"
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="rounded-xl!"
+          >
             انصراف
           </Button>
 
           <Button
             variant="contained"
             onClick={handleSubmit}
-            disabled={
-              !number ||
-              Number(number) <= 0 ||
-              !Number.isInteger(Number(number))
-            }
+            disabled={!isValid || isSubmitting}
             className="rounded-xl!"
           >
-            {isEdit ? "ذخیره تغییرات" : "افزودن میز"}
+            {isSubmitting ? (
+              <CircularProgress size={18} color="inherit" />
+            ) : isEdit ? (
+              "ذخیره تغییرات"
+            ) : (
+              "افزودن میز"
+            )}
           </Button>
         </div>
       </Card>
