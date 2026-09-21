@@ -23,6 +23,7 @@ class Category(UUIDTimeStampedModel):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, related_name="categories")
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    icon_name = models.CharField(max_length=100, blank=True)
     image = models.ImageField(upload_to="categories/", null=True, blank=True)
     sort_order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
