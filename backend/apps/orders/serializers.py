@@ -18,11 +18,12 @@ class OrderSerializer(serializers.ModelSerializer):
     subtotal = TomanPriceField()
     discount = TomanPriceField()
     total = TomanPriceField()
+    table_number = serializers.CharField(source="table.number")
 
     class Meta:
         model = Order
         fields = [
-            "id", "branch", "table", "table_session", "customer", "order_type", "status",
+            "id", "branch", "table", "table_number", "table_session", "customer", "order_type", "status",
             "subtotal", "discount", "total", "notes", "items", "created_at", "updated_at",
         ]
         read_only_fields = fields
