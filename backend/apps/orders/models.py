@@ -42,6 +42,7 @@ class Order(UUIDTimeStampedModel):
     notes = models.TextField(blank=True)
 
     class Meta:
+        ordering = ["-created_at"]
         constraints = [
             models.UniqueConstraint(fields=["tenant", "idempotency_key"], name="uniq_order_idempotency_per_tenant"),
         ]
