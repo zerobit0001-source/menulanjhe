@@ -39,7 +39,7 @@ class AdminMenuSerializer(serializers.ModelSerializer):
 class AdminCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["id", "menu", "name", "description", "icon_name" "image", "sort_order", "is_active",
+        fields = ["id", "menu", "name", "description", "icon_name", "image", "sort_order", "is_active",
                   "created_at", "updated_at"]
         read_only_fields = ["id", "created_at", "updated_at"]
 
@@ -64,7 +64,7 @@ class PublicCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ["id", "name", "description", "icon_name" "image", "sort_order", "products"]
+        fields = ["id", "name", "description", "icon_name", "image", "sort_order", "products"]
         read_only_fields = fields
 
     def get_products(self, category):
