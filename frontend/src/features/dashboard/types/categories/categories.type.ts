@@ -8,6 +8,7 @@ export type Category = {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  icon_name: string;
 };
 
 export type CategoryListResponse = {
@@ -30,4 +31,5 @@ export type UpdateCategoryRequest = {
   name?: string;
   description?: string;
   image?: string | null;
+  icon_name?: string;
 };

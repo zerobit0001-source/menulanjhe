@@ -1,12 +1,14 @@
 "use client";
 
 import {
+  Ban,
   Eye,
   EyeOff,
   Folder,
   GripVertical,
   MoreVertical,
   Pencil,
+  Utensils,
 } from "lucide-react";
 
 import {
@@ -28,6 +30,7 @@ import {
 import type { Category } from "../../types/categories/categories.type";
 
 import CategoriesPageCategoryModal from "./CategoriesPageCategoryModal";
+import { categoryIcons } from "../Icons";
 
 type Props = {
   category: Category;
@@ -104,6 +107,12 @@ export default function CategoriesPageCategoryCard({ category }: Props) {
     }
   };
 
+  const categoryIcon =
+    categoryIcons.find((item) => item.value === category.icon_name) ??
+    categoryIcons.find((item) => item.value === "ban");
+
+  const CategoryIcon = categoryIcon?.icon ?? Ban;
+
   return (
     <Card
       elevation={0}
@@ -119,17 +128,16 @@ export default function CategoriesPageCategoryCard({ category }: Props) {
           <GripVertical size={19} />
         </div>
 
-        {/* Category Image / Icon */}
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-100 text-gray-400">
-          {category.image ? (
-            <img
-              src={category.image}
-              alt={category.name}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <Folder size={20} />
-          )}
+        {/* Category Icon */}
+
+        <div
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
+            checked
+              ? "bg-gray-100 text-gray-600"
+              : "bg-gray-100/70 text-gray-300"
+          }`}
+        >
+          <CategoryIcon size={20} />
         </div>
 
         {/* Category Info */}

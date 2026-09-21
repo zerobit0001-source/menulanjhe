@@ -13,21 +13,9 @@ import {
   Typography,
 } from "@mui/material";
 
-import {
-  Coffee,
-  CupSoda,
-  Drumstick,
-  Egg,
-  IceCreamBowl,
-  Leaf,
-  Pizza,
-  Salad,
-  Sandwich,
-  Star,
-  Utensils,
-  X,
-} from "lucide-react";
+import { X } from "lucide-react";
 import { Category } from "../../types/categories/categories.type";
+import { categoryIcons } from "../Icons";
 
 type CategoryModalProps = {
   open: boolean;
@@ -44,64 +32,6 @@ type CategoryModalProps = {
 
   isSubmitting?: boolean;
 };
-
-const categoryIcons = [
-  {
-    value: "pizza",
-    label: "پیتزا",
-    icon: Pizza,
-  },
-  {
-    value: "burger",
-    label: "برگر",
-    icon: Sandwich,
-  },
-  {
-    value: "utensils",
-    label: "غذا",
-    icon: Utensils,
-  },
-  {
-    value: "drumstick",
-    label: "مرغ",
-    icon: Drumstick,
-  },
-  {
-    value: "salad",
-    label: "سالاد",
-    icon: Salad,
-  },
-  {
-    value: "leaf",
-    label: "سالم",
-    icon: Leaf,
-  },
-  {
-    value: "coffee",
-    label: "قهوه",
-    icon: Coffee,
-  },
-  {
-    value: "drink",
-    label: "نوشیدنی",
-    icon: CupSoda,
-  },
-  {
-    value: "dessert",
-    label: "دسر",
-    icon: IceCreamBowl,
-  },
-  {
-    value: "egg",
-    label: "صبحانه",
-    icon: Egg,
-  },
-  {
-    value: "star",
-    label: "ویژه",
-    icon: Star,
-  },
-];
 
 const categoryColors = [
   "#EF4444",
@@ -164,7 +94,7 @@ export default function CategoriesPageCategoryModal({
     onSubmit({
       name: trimmedName,
       description: "",
-      image: icon,
+      icon_name: icon,
     });
   };
 

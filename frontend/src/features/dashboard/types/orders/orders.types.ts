@@ -20,6 +20,7 @@ export type Order = {
   id: string;
   branch: string;
   table: string;
+  table_number: number;
   table_session: string;
   customer: OrderCustomer;
   order_type: OrderType;

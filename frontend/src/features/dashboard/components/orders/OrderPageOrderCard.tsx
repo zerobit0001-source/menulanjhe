@@ -191,7 +191,7 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
               variant="caption"
               className="font-medium! text-gray-700!"
             >
-              {order.table.slice(0, 8)}
+              شماره {order.table_number.toLocaleString("fa")}
             </Typography>
           </div>
 
