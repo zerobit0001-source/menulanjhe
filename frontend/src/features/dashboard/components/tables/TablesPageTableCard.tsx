@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Edit3, Eye, Users } from "lucide-react";
 
 import type { Table } from "@/features/dashboard/types/tables/tables.type";
+import { useUpdateTableMutation } from "@/features/dashboard/api/tableApi";
+
 import TablesPageTableModal from "./TablesPageTableModal";
 
 type Props = {
@@ -13,6 +15,29 @@ type Props = {
 
 export default function TablesPageTableCard({ table }: Props) {
   const [editOpen, setEditOpen] = useState(false);
+
+  const [updateTable, { isLoading: isUpdating }] = useUpdateTableMutation();
+
+  const handleUpdate = async (data: {
+    name: string;
+    number: number;
+    capacity: number;
+  }) => {
+    try {
+      await updateTable({
+        id: table.id,
+        body: {
+          name: data.name.trim(),
+          number: data.number,
+          capacity: data.capacity,
+        },
+      }).unwrap();
+
+      setEditOpen(false);
+    } catch (error) {
+      console.error("Update table failed:", error);
+    }
+  };
 
   return (
     <>
@@ -65,7 +90,8 @@ export default function TablesPageTableCard({ table }: Props) {
           <button
             type="button"
             onClick={() => setEditOpen(true)}
-            className="flex h-10 items-center justify-center gap-2 rounded-xl bg-gray-100 text-sm font-bold text-gray-700 transition hover:bg-gray-200"
+            disabled={isUpdating}
+            className="flex h-10 items-center justify-center gap-2 rounded-xl bg-gray-100 text-sm font-bold text-gray-700 transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Edit3 size={16} />
             ویرایش
@@ -85,6 +111,8 @@ export default function TablesPageTableCard({ table }: Props) {
         open={editOpen}
         onClose={() => setEditOpen(false)}
         table={table}
+        onSubmit={handleUpdate}
+        isSubmitting={isUpdating}
       />
     </>
   );
