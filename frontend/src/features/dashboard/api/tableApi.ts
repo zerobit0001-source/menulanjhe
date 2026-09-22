@@ -51,8 +51,10 @@ export const tableApi = baseApi.injectEndpoints({
         url: `admin/tables/${id}/regenerate_token/`,
         method: "POST",
       }),
-
-      invalidatesTags: ["Table"],
+      invalidatesTags: (_result, _error, id) => [
+        "Table",
+        { type: "Table", id },
+      ],
     }),
     getTable: builder.query<Table, string>({
       query: (id) => ({

@@ -1,12 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Button, CircularProgress } from "@mui/material";
-import { ArrowRight, Copy, ExternalLink, QrCode, Users } from "lucide-react";
 import Link from "next/link";
+import { Button, CircularProgress } from "@mui/material";
+import {
+  ArrowRight,
+  Copy,
+  ExternalLink,
+  QrCode,
+  RefreshCw,
+  Users,
+} from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
-import { useGetTableQuery } from "../../api/tableApi";
+import {
+  useGetTableQuery,
+  useRegenerateTableTokenMutation,
+} from "../../api/tableApi";
 
 type Props = {
   tableId: string;
@@ -15,11 +25,10 @@ type Props = {
 export default function TableDetailsPage({ tableId }: Props) {
   const [copied, setCopied] = useState(false);
 
-  console.log(tableId);
+  const { data: table, isLoading, isError } = useGetTableQuery(tableId);
 
-  const { data: table, isLoading, isError, error } = useGetTableQuery(tableId);
-
-  console.log(error);
+  const [regenerateTableToken, { isLoading: isRegenerating }] =
+    useRegenerateTableTokenMutation();
 
   const handleCopy = async () => {
     if (!table?.public_url) {
@@ -36,6 +45,54 @@ export default function TableDetailsPage({ tableId }: Props) {
       }, 2000);
     } catch (error) {
       console.error("Copy failed:", error);
+    }
+  };
+
+  const handleDownload = () => {
+    const svg = document.getElementById("table-qr-code");
+
+    if (!svg) {
+      return;
+    }
+
+    const serializer = new XMLSerializer();
+    const source = serializer.serializeToString(svg);
+
+    const svgBlob = new Blob([source], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+
+    const url = URL.createObjectURL(svgBlob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `table-${table?.number}-qr.svg`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+  };
+
+  const handleRegenerateToken = async () => {
+    if (!table) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "با تولید QR جدید، QR قبلی دیگر قابل استفاده نخواهد بود. ادامه می‌دهید؟",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await regenerateTableToken(table.id).unwrap();
+    } catch (error) {
+      console.error("Regenerate table token failed:", error);
     }
   };
 
@@ -56,7 +113,7 @@ export default function TableDetailsPage({ tableId }: Props) {
 
         <Link
           href="/dashboard/tables"
-          className="mt-4 text-sm font-semibold text-gray-600 hover:text-gray-900"
+          className="mt-4 text-sm font-semibold text-gray-600 transition hover:text-gray-900"
         >
           بازگشت به میزها
         </Link>
@@ -115,6 +172,8 @@ export default function TableDetailsPage({ tableId }: Props) {
             </div>
           </div>
 
+          {/* Basic Info */}
+
           <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
             <InfoItem label="نام میز" value={table.name} />
 
@@ -152,26 +211,17 @@ export default function TableDetailsPage({ tableId }: Props) {
             </div>
           </div>
 
-          {/* Actions */}
+          {/* Open Public URL */}
 
-          <div className="mt-6 flex flex-col gap-2 sm:flex-row">
-            <a
-              href={table.public_url}
-              target="_blank"
-              rel="noreferrer"
-              className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-gray-900 text-sm font-bold text-white transition hover:opacity-90"
-            >
-              <ExternalLink size={16} />
-              باز کردن لینک میز
-            </a>
-
-            <Link
-              href={`/dashboard/tables/${table.id}/edit`}
-              className="flex h-11 flex-1 items-center justify-center rounded-xl border border-gray-200 bg-white text-sm font-bold text-gray-700 transition hover:bg-gray-50"
-            >
-              ویرایش میز
-            </Link>
-          </div>
+          <a
+            href={table.public_url}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gray-900 text-sm font-bold text-white transition hover:opacity-90"
+          >
+            <ExternalLink size={16} />
+            باز کردن لینک میز
+          </a>
         </div>
 
         {/* QR */}
@@ -185,15 +235,21 @@ export default function TableDetailsPage({ tableId }: Props) {
             <div>
               <h2 className="text-sm font-bold text-gray-900">QR Code میز</h2>
 
-              <p className="mt-0.5 text-xs text-gray-400">
-                مشتری با اسکن این QR وارد منوی میز می‌شود.
-              </p>
+              <p className="mt-0.5 text-xs text-gray-400">QR مخصوص این میز</p>
             </div>
           </div>
 
+          {/* QR */}
+
           <div className="flex flex-col items-center pt-6">
             <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-              <QRCodeSVG value={table.public_url} size={220} level="H" />
+              <QRCodeSVG
+                id="table-qr-code"
+                value={table.public_url}
+                size={220}
+                level="H"
+                marginSize={2}
+              />
             </div>
 
             <p className="mt-4 text-sm font-bold text-gray-800">
@@ -202,14 +258,34 @@ export default function TableDetailsPage({ tableId }: Props) {
 
             <p className="mt-1 text-xs text-gray-400">{table.name}</p>
 
-            <Button
-              variant="contained"
-              fullWidth
-              className="mt-5 rounded-xl!"
-              startIcon={<QrCode size={17} />}
-            >
-              دانلود QR
-            </Button>
+            {/* QR Actions */}
+
+            <div className="mt-5 grid w-full grid-cols-1 gap-2 sm:grid-cols-2">
+              <Button
+                variant="contained"
+                onClick={handleDownload}
+                startIcon={<QrCode size={17} />}
+                className="rounded-xl!"
+              >
+                دانلود QR
+              </Button>
+
+              <Button
+                variant="outlined"
+                onClick={handleRegenerateToken}
+                disabled={isRegenerating}
+                startIcon={
+                  isRegenerating ? (
+                    <CircularProgress size={16} />
+                  ) : (
+                    <RefreshCw size={17} />
+                  )
+                }
+                className="rounded-xl!"
+              >
+                {isRegenerating ? "در حال تولید..." : "تولید QR جدید"}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

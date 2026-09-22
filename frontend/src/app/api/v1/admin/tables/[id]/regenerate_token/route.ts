@@ -6,14 +6,13 @@ if (!BACKEND_API_URL) {
   throw new Error("BACKEND_API_URL is not defined");
 }
 
-export async function POST(
-  req: NextRequest,
-  {
-    params,
-  }: {
-    params: Promise<{ id: string }>;
-  },
-) {
+type RouteContext = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export async function POST(req: NextRequest, { params }: RouteContext) {
   try {
     const accessToken = req.cookies.get("access_token")?.value;
 
@@ -49,7 +48,7 @@ export async function POST(
     return NextResponse.json(
       {
         code: "TABLE_TOKEN_REGENERATE_FAILED",
-        message: "تغییر QR میز با خطا مواجه شد.",
+        message: "تولید مجدد QR میز با خطا مواجه شد.",
       },
       { status: 500 },
     );
