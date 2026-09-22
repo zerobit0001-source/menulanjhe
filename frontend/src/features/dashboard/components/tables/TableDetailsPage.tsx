@@ -15,7 +15,11 @@ type Props = {
 export default function TableDetailsPage({ tableId }: Props) {
   const [copied, setCopied] = useState(false);
 
-  const { data: table, isLoading, isError } = useGetTableQuery(tableId);
+  console.log(tableId);
+
+  const { data: table, isLoading, isError, error } = useGetTableQuery(tableId);
+
+  console.log(error);
 
   const handleCopy = async () => {
     if (!table?.public_url) {
