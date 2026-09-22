@@ -54,6 +54,13 @@ export const tableApi = baseApi.injectEndpoints({
 
       invalidatesTags: ["Table"],
     }),
+    getTable: builder.query<Table, string>({
+      query: (id) => ({
+        url: `admin/tables/${id}/`,
+        method: "GET",
+      }),
+      providesTags: (_result, _error, id) => [{ type: "Table", id }],
+    }),
   }),
 });
 
@@ -62,4 +69,5 @@ export const {
   useCreateTableMutation,
   useUpdateTableMutation,
   useRegenerateTableTokenMutation,
+  useGetTableQuery,
 } = tableApi;
