@@ -71,7 +71,7 @@ export default function EditProductPage({ productId }: Props) {
     if (!product) return;
 
     setName(product.name);
-    setPrice(product.price);
+    setPrice(String(product.price));
     setDescription(product.description ?? "");
     setCategory(product.category);
     setImage(product.image ?? "");
