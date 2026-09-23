@@ -7,6 +7,7 @@ import { baseApi } from "@/features/api/baseApi";
 import type { AppDispatch } from "@/store";
 
 import { createOrdersSocket, type OrderRealtimeMessage } from "./ordersSocket";
+import { toast } from "react-toastify";
 
 type ConnectionState =
   | "idle"
@@ -118,10 +119,21 @@ export function useOrdersRealtime(enabled = true) {
           },
 
           onMessage: (message: OrderRealtimeMessage) => {
+            console.log("🔥 ORDER REALTIME EVENT:", message);
+
             switch (message.event) {
               case "ORDER_CREATED":
+                toast.success("سفارش جدید دریافت شد 🛎️");
+                invalidateOrders();
+                break;
+
               case "ORDER_UPDATED":
+                toast.info("وضعیت یک سفارش تغییر کرد");
+                invalidateOrders();
+                break;
+
               case "ORDER_CANCELLED":
+                toast.warning("یک سفارش لغو شد");
                 invalidateOrders();
                 break;
 
