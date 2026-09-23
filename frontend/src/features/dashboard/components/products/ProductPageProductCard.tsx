@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { useToggleProductActiveMutation } from "../../api/productApi";
 import { Product } from "../../types/products/products.type";
+import Link from "next/link";
 
 export default function ProductPageProductCard({
   product,
@@ -146,7 +147,13 @@ export default function ProductPageProductCard({
         </Box>
 
         {/* Details button */}
-        <Button variant="text" fullWidth size="small">
+        <Button
+          component={Link}
+          href={`/dashboard/products/${product.id}`}
+          variant="text"
+          fullWidth
+          size="small"
+        >
           مشاهده
         </Button>
       </div>

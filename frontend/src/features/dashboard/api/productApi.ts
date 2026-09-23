@@ -43,12 +43,22 @@ export const productApi = baseApi.injectEndpoints({
       providesTags: ["Product"],
     }),
 
+    getProduct: builder.query<Product, string>({
+      query: (id) => ({
+        url: `admin/products/${id}/`,
+        method: "GET",
+      }),
+
+      providesTags: (_result, _error, id) => [{ type: "Product", id }],
+    }),
+
     createProduct: builder.mutation<Product, CreateProductRequest>({
       query: (body) => ({
         url: "admin/products/",
         method: "POST",
         body,
       }),
+
       invalidatesTags: ["Product"],
     }),
 
@@ -64,7 +74,11 @@ export const productApi = baseApi.injectEndpoints({
         method: "PATCH",
         body,
       }),
-      invalidatesTags: ["Product"],
+
+      invalidatesTags: (_result, _error, { id }) => [
+        "Product",
+        { type: "Product", id },
+      ],
     }),
 
     toggleProductActive: builder.mutation<Product, string>({
@@ -72,13 +86,18 @@ export const productApi = baseApi.injectEndpoints({
         url: `admin/products/${id}/toggle_active/`,
         method: "POST",
       }),
-      invalidatesTags: ["Product"],
+
+      invalidatesTags: (_result, _error, id) => [
+        "Product",
+        { type: "Product", id },
+      ],
     }),
   }),
 });
 
 export const {
   useGetProductsQuery,
+  useGetProductQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   useToggleProductActiveMutation,
