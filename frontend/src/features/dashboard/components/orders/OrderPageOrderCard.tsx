@@ -283,6 +283,7 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
             {order.status === "PENDING" && (
               <>
                 <Button
+                  size="small"
                   variant="outlined"
                   fullWidth
                   disabled={isActionLoading}
@@ -297,6 +298,7 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
                 </Button>
 
                 <Button
+                  size="small"
                   variant="contained"
                   fullWidth
                   disabled={isActionLoading}
@@ -315,6 +317,7 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
             {order.status === "CONFIRMED" && (
               <>
                 <Button
+                  size="small"
                   variant="outlined"
                   fullWidth
                   disabled={isActionLoading}
@@ -329,6 +332,7 @@ export default function OrderPageOrderCard({ order }: OrderCardProps) {
                 </Button>
 
                 <Button
+                  size="small"
                   variant="contained"
                   fullWidth
                   disabled={isActionLoading}

@@ -24,6 +24,7 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-redux": "^9.3.0",
+    "react-toastify": "^11.1.0",
     "stylis": "^4.4.0",
     "stylis-plugin-rtl": "^2.1.1"
   },

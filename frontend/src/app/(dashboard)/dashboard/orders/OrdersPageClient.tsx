@@ -10,6 +10,7 @@ import OrderPageOrdersList from "@/features/dashboard/components/orders/OrderPag
 import { useGetOrdersQuery } from "@/features/dashboard/api/orderApi";
 
 import type { OrderStatus } from "@/features/dashboard/types/orders/orders.types";
+import { useOrdersRealtime } from "@/features/dashboard/realtime/useOrdersRealtime";
 
 type FilterValue = "ALL" | OrderStatus;
 
@@ -17,6 +18,13 @@ export default function OrdersPageClient() {
   const [filter, setFilter] = useState<FilterValue>("ALL");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+
+  const { connectionState, isConnected } = useOrdersRealtime();
+
+  console.log("Orders realtime:", {
+    connectionState,
+    isConnected,
+  });
 
   const status = filter === "ALL" ? undefined : filter;
 
