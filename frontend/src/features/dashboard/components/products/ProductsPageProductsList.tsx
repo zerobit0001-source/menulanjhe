@@ -9,12 +9,14 @@ type Props = {
   search: string;
   filter: "all" | "DISABLED" | "VISIBLE";
   page: number;
+  category: string;
 };
 
 export default function ProductsPageProductsList({
   search,
   filter,
   page,
+  category,
 }: Props) {
   const isAvailable =
     filter === "VISIBLE" ? true : filter === "DISABLED" ? false : undefined;
@@ -24,6 +26,7 @@ export default function ProductsPageProductsList({
       search: search || undefined,
       is_available: isAvailable,
       page,
+      category: category || undefined,
     },
   );
 

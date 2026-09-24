@@ -14,9 +14,10 @@ type Props = {
   search: string;
   filter: FilterValue;
   page: number;
+  category: string;
 };
 
-export default function ProductsPageClient({ search, filter, page }: Props) {
+export default function ProductsPageClient({ search, filter, page, category }: Props) {
   return (
     <>
       <SectionTitle
@@ -31,7 +32,7 @@ export default function ProductsPageClient({ search, filter, page }: Props) {
 
       <ProductsPageToolbar search={search} filter={filter} />
 
-      <ProductsPageProductsList search={search} filter={filter} page={page} />
+      <ProductsPageProductsList search={search} filter={filter} page={page} category={category} />
     </>
   );
 }

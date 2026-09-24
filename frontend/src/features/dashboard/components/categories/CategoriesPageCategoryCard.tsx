@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import {
+  Button,
   Card,
   IconButton,
   Menu,
@@ -31,6 +32,7 @@ import type { Category } from "../../types/categories/categories.type";
 
 import CategoriesPageCategoryModal from "./CategoriesPageCategoryModal";
 import { categoryIcons } from "../Icons";
+import Link from "next/link";
 
 type Props = {
   category: Category;
@@ -227,6 +229,13 @@ export default function CategoriesPageCategoryCard({ category }: Props) {
                 نمایش دادن
               </>
             )}
+          </MenuItem>
+          <MenuItem
+            component={Link}
+            href={`/dashboard/categories/${category.id}`}
+            className="gap-2! text-sm!"
+          >
+            مشاهده
           </MenuItem>
         </Menu>
       </div>

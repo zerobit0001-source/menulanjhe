@@ -6,6 +6,7 @@ interface ProductsPageProps {
     search?: string;
     filter?: "all" | "DISABLED" | "VISIBLE";
     page?: string;
+    category?: string;
   }>;
 }
 
@@ -18,9 +19,16 @@ export default async function ProductsPage({
   const filter = params.filter ?? "all";
   const page = Number(params.page) || 1;
 
+  const category = params.category ?? "";
+
   return (
     <DashboardContainer>
-      <ProductsPageClient search={search} filter={filter} page={page} />
+      <ProductsPageClient
+        search={search}
+        filter={filter}
+        page={page}
+        category={category}
+      />
     </DashboardContainer>
   );
 }

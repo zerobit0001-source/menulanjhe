@@ -27,12 +27,24 @@ export const categoryApi = baseApi.injectEndpoints({
       providesTags: ["Category"],
     }),
 
+    getCategory: builder.query<Category, string>({
+      query: (id) => ({
+        url: `admin/categories/${id}/`,
+        method: "GET",
+      }),
+
+      providesTags: (_result, _error, id) => [
+        { type: "Category", id },
+      ],
+    }),
+
     createCategory: builder.mutation<Category, CreateCategoryRequest>({
       query: (body) => ({
         url: "admin/categories/",
         method: "POST",
         body,
       }),
+
       invalidatesTags: ["Category"],
     }),
 
@@ -48,7 +60,11 @@ export const categoryApi = baseApi.injectEndpoints({
         method: "PATCH",
         body,
       }),
-      invalidatesTags: ["Category"],
+
+      invalidatesTags: (_result, _error, { id }) => [
+        "Category",
+        { type: "Category", id },
+      ],
     }),
 
     toggleCategoryActive: builder.mutation<Category, string>({
@@ -56,13 +72,18 @@ export const categoryApi = baseApi.injectEndpoints({
         url: `admin/categories/${id}/toggle_active/`,
         method: "POST",
       }),
-      invalidatesTags: ["Category"],
+
+      invalidatesTags: (_result, _error, id) => [
+        "Category",
+        { type: "Category", id },
+      ],
     }),
   }),
 });
 
 export const {
   useGetCategoriesQuery,
+  useGetCategoryQuery,
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useToggleCategoryActiveMutation,
