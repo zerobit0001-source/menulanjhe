@@ -103,9 +103,16 @@ export default function CategoryDetailsPage({ categoryId }: Props) {
   }
 
   function getCategoryIcon(iconName: string) {
-    return categoryIcons.find((item) => item.value === iconName)?.icon ?? Tag;
+    return (
+      categoryIcons.find((item) => item.value === iconName) ?? {
+        value: "default",
+        label: "بدون آیکون",
+        icon: Tag,
+      }
+    );
   }
-  const CategoryIcon = getCategoryIcon(category.icon_name);
+  const selectedIcon = getCategoryIcon(category.icon_name);
+  const CategoryIcon = selectedIcon.icon; 
 
   return (
     <div className="flex flex-col gap-5">
