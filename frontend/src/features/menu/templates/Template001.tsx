@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useMenuCart } from "@/features/menu/hooks/useMenuCart";
 import type { MenuData, MenuProduct } from "@/features/menu/types/menu.types";
 import Template001Header from "../components/Template001/Template001Header";
 import Template001Search from "../components/Template001/Template001Search";
@@ -12,7 +13,6 @@ import Template001ProductList from "../components/Template001/Template001Product
 import Template001CartDrawer from "../components/Template001/Template001CartDrawer";
 import Template001Checkout from "../components/Template001/Template001Checkout";
 import Template001OrderSuccess from "../components/Template001/Template001OrderSuccess";
-import { MenuProduct } from "../types/menu.types";
 
 type Props = {
   menu: MenuData;
@@ -54,37 +54,21 @@ export default function Template001({ menu, tableName, qrToken }: Props) {
     setView("checkout");
   };
 
-  const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const allProducts = menu.categories.flatMap((category) => category.products);
 
-  const addProduct = (product: MenuProduct) => {
-    if (!product.available) return;
+  const {
+    quantities,
+    cartItems,
+    cartCount,
+    cartTotal,
 
-    setQuantities((prev) => ({
-      ...prev,
-      [product.id]: (prev[product.id] ?? 0) + 1,
-    }));
-  };
+    addProduct,
+    increaseProduct,
+    decreaseProduct,
+    removeProduct,
 
-  const increaseProduct = (product: MenuProduct) => {
-    addProduct(product);
-  };
-
-  const decreaseProduct = (product: MenuProduct) => {
-    setQuantities((prev) => {
-      const current = prev[product.id] ?? 0;
-
-      if (current <= 1) {
-        const next = { ...prev };
-        delete next[product.id];
-        return next;
-      }
-
-      return {
-        ...prev,
-        [product.id]: current - 1,
-      };
-    });
-  };
+    clearCart,
+  } = useMenuCart(allProducts);
 
   const filteredCategories = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -119,53 +103,6 @@ export default function Template001({ menu, tableName, qrToken }: Props) {
     menu.quickSections.find((section) => section.id === quickSection)
       ?.products ?? [];
 
-  const cartCount = Object.values(quantities).reduce(
-    (sum, quantity) => sum + quantity,
-    0,
-  );
-
-  const allProducts = menu.categories.flatMap((category) => category.products);
-
-  const cartItems = Object.entries(quantities)
-    .map(([productId, quantity]) => {
-      const product = allProducts.find((item) => item.id === productId);
-
-      if (!product) return null;
-
-      return {
-        product,
-        quantity,
-      };
-    })
-    .filter(
-      (
-        item,
-      ): item is {
-        product: MenuProduct;
-        quantity: number;
-      } => item !== null,
-    );
-
-  const cartTotal = Object.entries(quantities).reduce(
-    (total, [productId, quantity]) => {
-      const product = allProducts.find((item) => item.id === productId);
-
-      if (!product) return total;
-
-      return total + product.price * quantity;
-    },
-    0,
-  );
-  const removeProduct = (product: MenuProduct) => {
-    setQuantities((prev) => {
-      const next = { ...prev };
-
-      delete next[product.id];
-
-      return next;
-    });
-  };
-
   const handleCategoryChange = (id: string) => {
     setSearch("");
     setActiveCategory(id);
@@ -188,7 +125,7 @@ export default function Template001({ menu, tableName, qrToken }: Props) {
         onBack={() => setView("menu")}
         onSuccess={(order) => {
           setCreatedOrder(order);
-          setQuantities({});
+          clearCart();
           setView("success");
         }}
       />
