@@ -1,44 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
-const BACKEND_API_URL = process.env.BACKEND_API_URL;
+const BACKEND_API_URL = process.env.BACKEND_API_URL!;
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+type RouteContext = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export async function GET(_request: NextRequest, { params }: RouteContext) {
   try {
-    if (!BACKEND_API_URL) {
-      return NextResponse.json(
-        {
-          code: "BACKEND_API_URL_MISSING",
-          message: "آدرس Backend تنظیم نشده است.",
-        },
-        { status: 500 },
-      );
-    }
+    const { id } = await params;
 
-    const accessToken = req.cookies.get("access_token")?.value;
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("access_token")?.value;
 
     if (!accessToken) {
       return NextResponse.json(
         {
-          code: "UNAUTHENTICATED",
-          message: "احراز هویت انجام نشده است.",
+          code: "UNAUTHORIZED",
+          message: "Authentication required",
         },
         { status: 401 },
       );
     }
 
-    const { id } = await params;
-    const body = await req.json();
-
     const response = await fetch(`${BACKEND_API_URL}/admin/menus/${id}/`, {
-      method: "PATCH",
+      method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
       cache: "no-store",
     });
 
@@ -47,13 +40,55 @@ export async function PATCH(
     return NextResponse.json(data, {
       status: response.status,
     });
-  } catch (error) {
-    console.error("Update menu route error:", error);
-
+  } catch {
     return NextResponse.json(
       {
-        code: "SERVER_ERROR",
-        message: "خطا در ارتباط با سرور.",
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Something went wrong",
+      },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PATCH(request: NextRequest, { params }: RouteContext) {
+  try {
+    const { id } = await params;
+
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("access_token")?.value;
+
+    if (!accessToken) {
+      return NextResponse.json(
+        {
+          code: "UNAUTHORIZED",
+          message: "Authentication required",
+        },
+        { status: 401 },
+      );
+    }
+
+    const body = await request.json();
+
+    const response = await fetch(`${BACKEND_API_URL}/admin/menus/${id}/`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+
+    return NextResponse.json(data, {
+      status: response.status,
+    });
+  } catch {
+    return NextResponse.json(
+      {
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Something went wrong",
       },
       { status: 500 },
     );

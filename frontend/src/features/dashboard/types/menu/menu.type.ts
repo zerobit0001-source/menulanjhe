@@ -1,15 +1,26 @@
-export type DashboardMenu = {
+export type Menu = {
   id: string;
-  shop_name: string;
+  branch: string;
+  name: string;
   slug: string;
-  active_template: string;
+  description: string;
+  is_active: boolean;
   is_published: boolean;
+  created_at: string;
   updated_at: string;
 };
-export type MenuTemplate = {
-  id: string;
-  name: string;
-  description: string;
-  preview: string;
-  available: boolean;
+
+export type MenuListResponse = {
+  ok: boolean;
+  count: number;
+  total_pages: number;
+  current_page: number;
+  results: Menu[];
+};
+
+export type UpdateMenuRequest = {
+  name?: string;
+  description?: string;
+  is_active?: boolean;
+  is_published?: boolean;
 };

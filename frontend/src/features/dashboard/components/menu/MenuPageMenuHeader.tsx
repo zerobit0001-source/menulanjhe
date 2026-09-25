@@ -4,13 +4,19 @@ import { ExternalLink } from "lucide-react";
 import { Button, Typography } from "@mui/material";
 
 type Props = {
-  menuUrl: string;
+  menu: {
+    slug: string;
+  };
 };
 
-export default function MenuPageMenuHeader({ menuUrl }: Props) {
+export default function MenuPageMenuHeader({ menu }: Props) {
+    const menuUrl = `/menu/${menu.slug}`;
+  
   const handleOpenMenu = () => {
     window.open(menuUrl, "_blank", "noopener,noreferrer");
   };
+
+
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

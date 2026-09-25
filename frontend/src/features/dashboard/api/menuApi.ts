@@ -1,5 +1,11 @@
 import { baseApi } from "@/features/api/baseApi";
 
+import type {
+  Menu,
+  MenuListResponse,
+  UpdateMenuRequest,
+} from "@/features/dashboard/types/menu/menu.type";
+
 export const menuApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getMenus: builder.query<MenuListResponse, { page?: number } | void>({
@@ -11,30 +17,33 @@ export const menuApi = baseApi.injectEndpoints({
       providesTags: ["Menu"],
     }),
 
-    createMenu: builder.mutation<Menu, CreateMenuRequest>({
-      query: (body) => ({
-        url: "admin/menus/",
-        method: "POST",
-        body,
+    getMenu: builder.query<Menu, string>({
+      query: (id) => ({
+        url: `admin/menus/${id}/`,
+        method: "GET",
       }),
-      invalidatesTags: ["Menu"],
+      providesTags: (_result, _error, id) => [{ type: "Menu", id }],
     }),
 
-    updateMenu: builder.mutation<Menu, { id: string; body: UpdateMenuRequest }>(
+    updateMenu: builder.mutation<
+      Menu,
       {
-        query: ({ id, body }) => ({
-          url: `admin/menus/${id}/`,
-          method: "PATCH",
-          body,
-        }),
-        invalidatesTags: ["Menu"],
-      },
-    ),
+        id: string;
+        body: UpdateMenuRequest;
+      }
+    >({
+      query: ({ id, body }) => ({
+        url: `admin/menus/${id}/`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: (_result, _error, { id }) => [
+        "Menu",
+        { type: "Menu", id },
+      ],
+    }),
   }),
 });
 
-export const {
-  useGetMenusQuery,
-  useCreateMenuMutation,
-  useUpdateMenuMutation,
-} = menuApi;
+export const { useGetMenusQuery, useGetMenuQuery, useUpdateMenuMutation } =
+  menuApi;

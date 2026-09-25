@@ -55,13 +55,13 @@ export default function MenuPage() {
       </DashboardContainer>
     );
   }
-
   const menuUrl = `/menu/${menu.slug}`;
+
   const qrUrl = `${window.location.origin}${menuUrl}`;
 
   return (
     <DashboardContainer>
-      <MenuPageMenuHeader menuUrl={menuUrl} />
+      <MenuPageMenuHeader menu={menu} />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <MenuPageMenuLinkCard
