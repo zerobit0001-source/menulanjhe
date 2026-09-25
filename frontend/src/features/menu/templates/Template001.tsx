@@ -1,11 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
-import type {
-  PublicMenuProduct,
-  PublicMenuResponse,
-} from "../types/menu.types";
+import type { MenuData, MenuProduct } from "@/features/menu/types/menu.types";
 import Template001Header from "../components/Template001/Template001Header";
 import Template001Search from "../components/Template001/Template001Search";
 import Template001QuickCategories from "../components/Template001/Template001QuickCategories";
@@ -16,9 +12,10 @@ import Template001ProductList from "../components/Template001/Template001Product
 import Template001CartDrawer from "../components/Template001/Template001CartDrawer";
 import Template001Checkout from "../components/Template001/Template001Checkout";
 import Template001OrderSuccess from "../components/Template001/Template001OrderSuccess";
+import { MenuProduct } from "../types/menu.types";
 
 type Props = {
-  menu: PublicMenuResponse;
+  menu: MenuData;
   // sessionToken?: string | null;
   tableName?: string | null;
   qrToken?: string | null;
@@ -59,7 +56,7 @@ export default function Template001({ menu, tableName, qrToken }: Props) {
 
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
-  const addProduct = (product: PublicMenuProduct) => {
+  const addProduct = (product: MenuProduct) => {
     if (!product.available) return;
 
     setQuantities((prev) => ({
@@ -68,11 +65,11 @@ export default function Template001({ menu, tableName, qrToken }: Props) {
     }));
   };
 
-  const increaseProduct = (product: PublicMenuProduct) => {
+  const increaseProduct = (product: MenuProduct) => {
     addProduct(product);
   };
 
-  const decreaseProduct = (product: PublicMenuProduct) => {
+  const decreaseProduct = (product: MenuProduct) => {
     setQuantities((prev) => {
       const current = prev[product.id] ?? 0;
 
@@ -144,7 +141,7 @@ export default function Template001({ menu, tableName, qrToken }: Props) {
       (
         item,
       ): item is {
-        product: PublicMenuProduct;
+        product: MenuProduct;
         quantity: number;
       } => item !== null,
     );
@@ -159,7 +156,7 @@ export default function Template001({ menu, tableName, qrToken }: Props) {
     },
     0,
   );
-  const removeProduct = (product: PublicMenuProduct) => {
+  const removeProduct = (product: MenuProduct) => {
     setQuantities((prev) => {
       const next = { ...prev };
 

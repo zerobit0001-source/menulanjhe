@@ -1,39 +1,41 @@
-export type PublicMenuProduct = {
+export type MenuData = {
+  shop: {
+    name: string;
+    description?: string;
+    logo?: string;
+  };
+
+  quickSections: MenuQuickSection[];
+
+  categories: MenuCategory[];
+};
+
+
+export type MenuQuickSection = {
+  id: string;
+  title: string;
+  type: string;
+  products: MenuProduct[];
+};
+
+
+export type MenuCategory = {
   id: string;
   name: string;
-  slug: string;
-  description: string;
-  image: string | null;
+  products: MenuProduct[];
+};
+
+
+export type MenuProduct = {
+  id: string;
+  name: string;
+  description?: string;
+  image?: string;
   price: number;
-  category_name: string;
-  is_available: boolean;
-  is_featured: boolean;
-};
 
-export type PublicMenuCategory = {
-  id: string;
-  name: string;
-  description: string;
-  image: string | null;
-  sort_order: number;
-  products: PublicMenuProduct[];
-};
+  available: boolean;
 
-export type PublicMenu = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  restaurant_name: string;
-  categories: PublicMenuCategory[];
-};
-
-export type PublicMenuResponse = {
-  ok: boolean;
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  restaurant_name: string;
-  categories: PublicMenuCategory[];
+  // برای آینده
+  discountPercent?: number;
+  originalPrice?: number;
 };
