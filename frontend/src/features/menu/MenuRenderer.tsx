@@ -1,10 +1,12 @@
 import type { MenuData } from "./types/menu.types";
 import ModernMenu from "./templates/ModernMenu";
 import Template001 from "./templates/Template001";
+import Template002 from "./templates/Template002";
 
 const menuTemplates = {
   modern: ModernMenu,
-  template_001: Template001,
+  template001: Template001,
+  template002: Template002,
 };
 
 type MenuTemplate = keyof typeof menuTemplates;
