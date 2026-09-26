@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { useCreatePublicOrderMutation } from "../api/menuPublicApi";
 import type { MenuProduct } from "../types/menu.types";
 
@@ -7,7 +8,7 @@ type CartItem = {
   quantity: number;
 };
 
-type CreateOrderParams = {
+type SubmitOrderParams = {
   items: CartItem[];
   qrToken?: string | null;
   name?: string;
@@ -24,23 +25,21 @@ export function useMenuOrder() {
     qrToken,
     name,
     notes,
-  }: CreateOrderParams) => {
+  }: SubmitOrderParams) => {
     if (!items.length) {
       return null;
     }
 
     if (!qrToken) {
+      setError("اطلاعات میز معتبر نیست.");
       return null;
     }
 
     setError("");
 
     try {
-      const idempotencyKey = crypto.randomUUID();
-
       const result = await createOrder({
-        idempotency_key: idempotencyKey,
-
+        idempotency_key: crypto.randomUUID(),
         qr_token: qrToken,
 
         items: items.map((item) => ({
@@ -57,7 +56,10 @@ export function useMenuOrder() {
         notes: notes?.trim() ? notes.trim() : undefined,
       }).unwrap();
 
-      return result;
+      return {
+        id: result.id,
+        total: result.total,
+      };
     } catch (error) {
       console.error(error);
 

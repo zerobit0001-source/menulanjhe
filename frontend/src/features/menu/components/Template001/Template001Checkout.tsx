@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
-import { useCreatePublicOrderMutation } from "../../api/menuPublicApi";
-import { PublicMenuProduct } from "../../types/menu.types";
+import { useMenuOrder } from "@/features/menu/hooks/useMenuOrder";
+import type { MenuProduct } from "@/features/menu/types/menu.types";
 
 type CartItem = {
-  product: PublicMenuProduct;
+  product: MenuProduct;
   quantity: number;
 };
 
@@ -31,52 +31,21 @@ export default function Template001Checkout({
   const [name, setName] = useState("");
   const [notes, setNotes] = useState("");
 
-  const [error, setError] = useState("");
-
-  const [idempotencyKey] = useState(() => crypto.randomUUID());
-
-  const [createOrder, { isLoading }] = useCreatePublicOrderMutation();
+  const { submitOrder, error, isLoading } = useMenuOrder();
 
   const handleSubmit = async () => {
-    // || !sessionToken
-    if (!items.length) {
+    const result = await submitOrder({
+      items,
+      qrToken,
+      name,
+      notes,
+    });
+
+    if (!result) {
       return;
     }
-    if (!qrToken) {
-      return;
-    }
 
-    setError("");
-
-    try {
-      // session_token: sessionToken,
-      const result = await createOrder({
-        idempotency_key: idempotencyKey,
-        qr_token: qrToken,
-
-        items: items.map((item) => ({
-          product_id: item.product.id,
-          quantity: item.quantity,
-        })),
-
-        customer: name.trim()
-          ? {
-              name: name.trim(),
-            }
-          : undefined,
-
-        notes: notes.trim() ? notes.trim() : undefined,
-      }).unwrap();
-
-      onSuccess({
-        id: result.id,
-        total: result.total,
-      });
-    } catch (error) {
-      console.error(error);
-
-      setError("ثبت سفارش انجام نشد. لطفاً دوباره تلاش کنید.");
-    }
+    onSuccess(result);
   };
 
   return (
@@ -149,14 +118,14 @@ export default function Template001Checkout({
 
           <input
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(event) => setName(event.target.value)}
             placeholder="نام شما"
             className="h-11 w-full rounded-xl border border-gray-200 px-3 text-sm outline-none"
           />
 
           <textarea
             value={notes}
-            onChange={(e) => setNotes(e.target.value)}
+            onChange={(event) => setNotes(event.target.value)}
             placeholder="توضیحات سفارش"
             maxLength={150}
             rows={3}
@@ -169,24 +138,23 @@ export default function Template001Checkout({
         {/* Submit */}
 
         <button
+          type="button"
           disabled={isLoading || !items.length}
-
           onClick={handleSubmit}
-
           className="
-          mt-4
-          flex
-          h-12
-          w-full
-          items-center
-          justify-center
-          gap-2
-          rounded-xl
-          bg-gray-900
-          text-sm
-          font-bold
-          text-white
-          disabled:opacity-50
+            mt-4
+            flex
+            h-12
+            w-full
+            items-center
+            justify-center
+            gap-2
+            rounded-xl
+            bg-gray-900
+            text-sm
+            font-bold
+            text-white
+            disabled:opacity-50
           "
         >
           {isLoading ? (

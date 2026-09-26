@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import { useMenuSearch } from "@/features/menu/hooks/useMenuSearch";
 import { useMenuCart } from "@/features/menu/hooks/useMenuCart";
 import type { MenuData, MenuProduct } from "@/features/menu/types/menu.types";
 import Template001Header from "../components/Template001/Template001Header";
@@ -23,7 +24,6 @@ type Props = {
 type MenuView = "menu" | "checkout" | "success";
 
 export default function Template001({ menu, tableName, qrToken }: Props) {
-  const [search, setSearch] = useState("");
   const [quickSection, setQuickSection] = useState("popular");
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -36,6 +36,14 @@ export default function Template001({ menu, tableName, qrToken }: Props) {
   const [activeCategory, setActiveCategory] = useState(
     menu.categories[0]?.id ?? "",
   );
+
+  const {
+    search,
+    setSearch,
+    isSearching,
+    filteredCategories,
+    searchResultCount,
+  } = useMenuSearch(menu.categories);
 
   const handleCheckout = () => {
     if (!cartItems.length) {
@@ -70,34 +78,9 @@ export default function Template001({ menu, tableName, qrToken }: Props) {
     clearCart,
   } = useMenuCart(allProducts);
 
-  const filteredCategories = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
-
-    if (!normalizedSearch) {
-      return menu.categories;
-    }
-
-    return menu.categories
-      .map((category) => ({
-        ...category,
-        products: category.products.filter((product) =>
-          `${product.name} ${product.description ?? ""}`
-            .toLowerCase()
-            .includes(normalizedSearch),
-        ),
-      }))
-      .filter((category) => category.products.length > 0);
-  }, [menu.categories, search]);
-
-  const currentCategory = useMemo(() => {
-    if (search.trim()) {
-      return filteredCategories[0];
-    }
-
-    return filteredCategories.find(
-      (category) => category.id === activeCategory,
-    );
-  }, [activeCategory, filteredCategories, search]);
+  const currentCategory = filteredCategories.find(
+    (category) => category.id === activeCategory,
+  );
 
   const featuredProducts =
     menu.quickSections.find((section) => section.id === quickSection)
