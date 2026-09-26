@@ -9,6 +9,7 @@ const menuTemplates = {
   template001: Template001,
   template002: Template002,
   template003: Template003,
+  template003: Template003,
 };
 
 type MenuTemplate = keyof typeof menuTemplates;
