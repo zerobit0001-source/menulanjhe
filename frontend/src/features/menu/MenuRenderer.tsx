@@ -4,6 +4,7 @@ import Template001 from "./templates/Template001";
 import Template002 from "./templates/Template002";
 import Template003 from "./templates/Template003";
 import Template004 from "./templates/Template004";
+import Template005 from "./templates/Template005";
 
 const menuTemplates = {
   modern: ModernMenu,
@@ -11,6 +12,7 @@ const menuTemplates = {
   template002: Template002,
   template003: Template003,
   template004: Template004,
+  template005: Template005,
 };
 
 type MenuTemplate = keyof typeof menuTemplates;
