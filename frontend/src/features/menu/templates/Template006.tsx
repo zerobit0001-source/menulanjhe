@@ -5,6 +5,16 @@ import { useState } from "react";
 import { useMenuCart } from "@/features/menu/hooks/useMenuCart";
 import { useMenuSearch } from "@/features/menu/hooks/useMenuSearch";
 import type { MenuData } from "@/features/menu/types/menu.types";
+import Template006Checkout from "../components/Template006/Template006Checkout";
+import Template006OrderSuccess from "../components/Template006/Template006OrderSuccess";
+import Template006Header from "../components/Template006/Template006Header";
+import Template006Hero from "../components/Template006/Template006Hero";
+import Template006Search from "../components/Template006/Template006Search";
+import Template006CategoryNav from "../components/Template006/Template006CategoryNav";
+import Template006FeaturedProducts from "../components/Template006/Template006FeaturedProducts";
+import Template006ProductList from "../components/Template006/Template006ProductList";
+import Template006CartButton from "../components/Template006/Template006CartButton";
+import Template006CartDrawer from "../components/Template006/Template006CartDrawer";
 
 type Props = {
   menu: MenuData;
