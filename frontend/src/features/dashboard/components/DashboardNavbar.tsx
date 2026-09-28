@@ -1,16 +1,14 @@
 "use client";
 
-import {
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  InputBase,
-  Typography,
-} from "@mui/material";
-import { Bell, Search, ChevronDown } from "lucide-react";
+import { Avatar, Box, Button, IconButton, Typography } from "@mui/material";
 
-export default function DashboardNavbar() {
+import { Bell, ChevronDown, Menu } from "lucide-react";
+
+type DashboardNavbarProps = {
+  onMenuClick: () => void;
+};
+
+export default function DashboardNavbar({ onMenuClick }: DashboardNavbarProps) {
   return (
     <Box
       component="header"
@@ -25,21 +23,64 @@ export default function DashboardNavbar() {
       <Box
         sx={{
           height: "100%",
-          px: 3,
+
+          px: {
+            xs: 1.5,
+            sm: 2,
+            md: 3,
+          },
+
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
         }}
       >
-        {/* Shop */}
+        {/* =========================
+            Mobile Menu Button
+        ========================== */}
+        <IconButton
+          onClick={onMenuClick}
+          aria-label="باز کردن منو"
+          sx={{
+            display: {
+              xs: "flex",
+              md: "none",
+            },
+
+            width: 40,
+            height: 40,
+
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: 2,
+
+            color: "text.secondary",
+
+            "&:hover": {
+              bgcolor: "action.hover",
+            },
+          }}
+        >
+          <Menu size={20} strokeWidth={1.8} />
+        </IconButton>
+
+        {/* =========================
+            Shop
+        ========================== */}
         <Button
           variant="text"
           color="inherit"
           sx={{
-            p: 1,
+            p: {
+              xs: 0.5,
+              sm: 1,
+            },
+
             minWidth: 0,
+
             textTransform: "none",
             borderRadius: 1,
+
             "&:hover": {
               bgcolor: "action.hover",
             },
@@ -49,15 +90,26 @@ export default function DashboardNavbar() {
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: 1,
+              gap: {
+                xs: 0.75,
+                sm: 1,
+              },
             }}
           >
             {/* Shop Avatar */}
             <Avatar
               variant="rounded"
               sx={{
-                width: 36,
-                height: 36,
+                width: {
+                  xs: 34,
+                  sm: 36,
+                },
+
+                height: {
+                  xs: 34,
+                  sm: 36,
+                },
+
                 bgcolor: "grey.900",
                 fontSize: 14,
                 fontWeight: 700,
@@ -67,37 +119,70 @@ export default function DashboardNavbar() {
             </Avatar>
 
             {/* Shop Info */}
-            <Box sx={{ textAlign: "right" }}>
-              <Typography variant="body2">فروشگاه من</Typography>
+            <Box
+              sx={{
+                display: {
+                  xs: "none",
+                  sm: "block",
+                },
 
-              <Typography variant="caption">فروشگاه فعال</Typography>
+                textAlign: "right",
+              }}
+            >
+              <Typography
+                variant="body2"
+                sx={{
+                  fontWeight: 500,
+                }}
+              >
+                فروشگاه من
+              </Typography>
+
+              <Typography variant="caption" color="text.secondary">
+                فروشگاه فعال
+              </Typography>
             </Box>
 
             <ChevronDown size={16} color="currentColor" />
           </Box>
         </Button>
 
-        {/* Right */}
+        {/* =========================
+            Right Actions
+        ========================== */}
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 1.5,
+
+            gap: {
+              xs: 0.75,
+              sm: 1.5,
+            },
           }}
         >
-          {/* Search */}
-
           {/* Notification */}
           <IconButton
+            aria-label="اعلان‌ها"
             sx={{
-              width: 40,
-              height: 40,
+              width: {
+                xs: 38,
+                sm: 40,
+              },
+
+              height: {
+                xs: 38,
+                sm: 40,
+              },
+
               border: "1px solid",
               borderColor: "divider",
               borderRadius: 3,
+
               color: "text.secondary",
+
               "&:hover": {
-                bgcolor: "grey.50",
+                bgcolor: "action.hover",
               },
             }}
           >
@@ -107,10 +192,19 @@ export default function DashboardNavbar() {
           {/* Avatar */}
           <Avatar
             sx={{
-              width: 40,
-              height: 40,
+              width: {
+                xs: 36,
+                sm: 40,
+              },
+
+              height: {
+                xs: 36,
+                sm: 40,
+              },
+
               bgcolor: "grey.200",
               color: "grey.700",
+
               fontSize: 14,
               fontWeight: 600,
             }}
