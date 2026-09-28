@@ -1,7 +1,6 @@
 from django.db.models import Count, Q
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from apps.menus.models import Category
 from apps.menus.serializers import AdminCategorySerializer
 from apps.orders.models import Order
@@ -9,6 +8,7 @@ from apps.orders.serializers import OrderSerializer
 from apps.products.models import Product
 from apps.products.serializers import AdminProductSerializer
 from apps.tenants.permissions import HasTenantPermission
+from .serializers import DashboardCategorySerializer
 
 
 class DashboardView(APIView):
@@ -35,7 +35,13 @@ class DashboardView(APIView):
             "pending_order_count": orders_qs.filter(status="PENDING").count(),
         }
 
-        categories = categories_qs.select_related("menu").order_by("-created_at")[:5]
+        # categories = categories_qs.select_related("menu").order_by("-created_at")[:5]
+
+        categories = (
+            categories_qs.select_related("menu")
+            .annotate(product_count=Count("products"))
+            .order_by("-created_at")[:5]
+        )
         products = products_qs.select_related("category").order_by("-created_at")[:10]
         recent_orders = (
             orders_qs.select_related("branch", "table", "customer")
@@ -46,7 +52,8 @@ class DashboardView(APIView):
         return Response(
             {
                 "summary": summary,
-                "categories": AdminCategorySerializer(categories, many=True, context=context).data,
+                # "categories": AdminCategorySerializer(categories, many=True, context=context).data,
+                "categories": DashboardCategorySerializer(categories, many=True, context=context).data,
                 "products": AdminProductSerializer(products, many=True, context=context).data,
                 "recent_orders": OrderSerializer(recent_orders, many=True, context=context).data,
             }
