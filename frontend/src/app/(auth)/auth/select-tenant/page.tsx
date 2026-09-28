@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, ChevronLeft, Loader2, Store } from "lucide-react";
 
@@ -22,7 +22,13 @@ export default function SelectTenantPage() {
 
   const [selectTenant, { isLoading: isSelecting }] = useSelectTenantMutation();
 
+  const hasLoaded = useRef(false);
+
   useEffect(() => {
+    if (hasLoaded.current) return;
+
+    hasLoaded.current = true;
+
     const loadMemberships = async () => {
       try {
         const me = await getMe().unwrap();
@@ -36,8 +42,6 @@ export default function SelectTenantPage() {
           return;
         }
 
-        // اگر فقط یک مجموعه باقی مانده بود،
-        // نیازی به ماندن در این صفحه نیست.
         if (activeMemberships.length === 1) {
           await selectTenant({
             tenant_id: activeMemberships[0].tenant_id,

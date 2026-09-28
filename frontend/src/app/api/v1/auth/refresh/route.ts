@@ -31,6 +31,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.log("========== REFRESH ==========");
+    console.log("refresh token exists:", Boolean(refreshToken));
+
     const response = await fetch(`${BACKEND_API_URL}/auth/refresh/`, {
       method: "POST",
       headers: {
@@ -48,6 +51,7 @@ export async function POST(req: NextRequest) {
       const nextResponse = NextResponse.json(data, {
         status: response.status,
       });
+      console.log("❌ REFRESH TOKEN INVALID - DELETING COOKIES");
 
       // اگر refresh token هم معتبر نباشد،
       // session سمت frontend را پاک می‌کنیم.
@@ -58,6 +62,8 @@ export async function POST(req: NextRequest) {
 
       return nextResponse;
     }
+
+    console.log("refresh backend status:", response.status);
 
     if (!data.ok || !data.access) {
       return NextResponse.json(

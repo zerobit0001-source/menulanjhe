@@ -23,6 +23,15 @@ export default async function DashboardLayout({
     redirect("/auth");
   }
 
+  console.log("DASHBOARD CURRENT USER:", currentUser?.user?.full_name);
+
+  if (!currentUser) {
+    console.log("❌ DASHBOARD REDIRECT TO AUTH");
+    redirect("/auth");
+  }
+
+  // اگر کاربر وارد نشده باشد یا عضویت فعال نداشته باشد، به صفحه ورود هدایت می‌شود.
+
   return (
     <DashboardThemeProvider>
       <DashboardLayoutClient>
