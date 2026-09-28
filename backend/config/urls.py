@@ -18,4 +18,5 @@ urlpatterns = [
     # path("api/v1/admin/", include("apps.table_sessions.urls")),
     path("api/v1/public/", include("apps.tables.urls_public")),
     path("api/v1/public/", include("apps.orders.urls_public")),
+    path("api/v1/admin/", include("apps.reports.urls")),
 ]
