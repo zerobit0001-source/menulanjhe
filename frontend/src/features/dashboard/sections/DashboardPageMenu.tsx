@@ -1,13 +1,21 @@
 "use client";
 
-import { Eye, EyeOff, Package, Plus } from "lucide-react";
-import { Box, Button, Card, Typography } from "@mui/material";
+import { Package, Plus } from "lucide-react";
+import { Box, Button, Typography } from "@mui/material";
+
 import { SectionTitle } from "../components/SectionTitle";
 import DashboardMenuToolbar from "../components/DashboardMenuToolbar";
-import { dashboardProducts } from "../data/demoDashboard";
 import DashboardMenuProductCard from "../components/DashboardMenuProductCard";
+import { DashboardProduct } from "../types/dasboars.types";
 
-export default function DashboardPageMenu() {
+
+type DashboardPageMenuProps = {
+  products: DashboardProduct[];
+};
+
+export default function DashboardPageMenu({
+  products,
+}: DashboardPageMenuProps) {
   return (
     <section>
       <SectionTitle
@@ -18,6 +26,8 @@ export default function DashboardPageMenu() {
       <DashboardMenuToolbar />
 
       <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+        {/* Add Product */}
+
         <Button
           variant="contained"
           className="
@@ -38,7 +48,9 @@ export default function DashboardPageMenu() {
           </Box>
         </Button>
 
-        {dashboardProducts.map((product) => (
+        {/* Products */}
+
+        {products.map((product) => (
           <DashboardMenuProductCard product={product} key={product.id} />
         ))}
       </div>

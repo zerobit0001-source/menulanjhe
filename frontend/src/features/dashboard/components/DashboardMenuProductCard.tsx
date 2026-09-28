@@ -9,76 +9,33 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import {
-  Eye,
-  EyeOff,
-  Package,
-  Tag,
-  CircleCheck,
-  CircleX,
-  Trash,
-  SquarePen,
-} from "lucide-react";
+
+import { Eye, EyeOff, Package, Trash, SquarePen } from "lucide-react";
+
 import { useState } from "react";
+import { DashboardProduct } from "../types/dasboars.types";
 
-const AntSwitch = styled(Switch)(({ theme }) => ({
-  width: 28,
-  height: 16,
-  padding: 0,
-  display: "flex",
-  "&:active": {
-    "& .MuiSwitch-thumb": {
-      width: 15,
-    },
-    "& .MuiSwitch-switchBase.Mui-checked": {
-      transform: "translateX(9px)",
-    },
-  },
-  "& .MuiSwitch-switchBase": {
-    padding: 2,
-    "&.Mui-checked": {
-      transform: "translateX(12px)",
-      color: "#fff",
-      "& + .MuiSwitch-track": {
-        opacity: 1,
-        backgroundColor: "#1890ff",
-        ...theme.applyStyles("dark", {
-          backgroundColor: "#177ddc",
-        }),
-      },
-    },
-  },
-  "& .MuiSwitch-thumb": {
-    boxShadow: "0 2px 4px 0 rgb(0 35 11 / 20%)",
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    transition: theme.transitions.create(["width"], {
-      duration: 200,
-    }),
-  },
-  "& .MuiSwitch-track": {
-    borderRadius: 16 / 2,
-    opacity: 1,
-    backgroundColor: "rgba(0,0,0,.25)",
-    boxSizing: "border-box",
-    ...theme.applyStyles("dark", {
-      backgroundColor: "rgba(255,255,255,.35)",
-    }),
-  },
-}));
+type DashboardMenuProductCardProps = {
+  product: DashboardProduct;
+};
 
-export default function DashboardMenuProductCard({ product }) {
-  const [open, setOpen] = useState<boolean>(false);
+export default function DashboardMenuProductCard({
+  product,
+}: DashboardMenuProductCardProps) {
+  const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
+      {/* Product Card */}
       <Card
-        key={product.id}
         elevation={1}
         className={`
           min-h-[180px]!
@@ -88,7 +45,7 @@ export default function DashboardMenuProductCard({ product }) {
           shadow-sm!
           transition
           hover:shadow-md!
-          ${product.visible ? "" : "opacity-60"}
+          ${product.is_available ? "" : "opacity-60"}
         `}
         onClick={handleOpen}
       >
@@ -101,7 +58,7 @@ export default function DashboardMenuProductCard({ product }) {
                 <Box
                   component="img"
                   src={product.image}
-                  alt={product.title}
+                  alt={product.name}
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -109,7 +66,7 @@ export default function DashboardMenuProductCard({ product }) {
               )}
             </Box>
 
-            {/* Visibility */}
+            {/* Availability */}
             <Box
               className={`
                 flex items-center gap-1
@@ -117,25 +74,25 @@ export default function DashboardMenuProductCard({ product }) {
                 px-2.5 py-1
                 text-xs font-semibold
                 ${
-                  product.visible
+                  product.is_available
                     ? "bg-emerald-50 text-emerald-600"
                     : "bg-gray-100 text-gray-500"
                 }
               `}
             >
-              {product.visible ? <Eye size={14} /> : <EyeOff size={14} />}
+              {product.is_available ? <Eye size={14} /> : <EyeOff size={14} />}
 
               <Typography className="text-xs! font-semibold!">
-                {product.visible ? "نمایش داده می‌شود" : "مخفی"}
+                {product.is_available ? "نمایش داده می‌شود" : "مخفی"}
               </Typography>
             </Box>
           </Box>
 
-          {/* Product info */}
+          {/* Product Info */}
           <Box className="mt-4 flex items-end justify-between gap-3">
             <Box className="min-w-0">
               <Typography variant="body1" className="truncate! font-bold!">
-                {product.title}
+                {product.name}
               </Typography>
 
               <Typography variant="caption" className="text-gray-500!">
@@ -154,7 +111,7 @@ export default function DashboardMenuProductCard({ product }) {
             </Box>
           </Box>
 
-          {/* Stock */}
+          {/* Availability Status */}
           <Box className="mt-4 flex items-center justify-between">
             <Typography variant="caption" className="text-gray-500!">
               وضعیت موجودی
@@ -164,10 +121,10 @@ export default function DashboardMenuProductCard({ product }) {
               variant="caption"
               className={`
                 font-semibold!
-                ${product.stock ? "text-emerald-600!" : "text-red-500!"}
+                ${product.is_available ? "text-emerald-600!" : "text-red-500!"}
               `}
             >
-              {product.stock ? "موجود" : "ناموجود"}
+              {product.is_available ? "موجود" : "ناموجود"}
             </Typography>
           </Box>
         </Box>
@@ -180,17 +137,18 @@ export default function DashboardMenuProductCard({ product }) {
             absolute
             left-1/2
             top-1/2
+            flex
             w-[calc(100%-32px)]
             max-w-[400px]
             -translate-x-1/2
             -translate-y-1/2
+            flex-col
+            gap-6
             rounded-2xl
             bg-white
             p-4
             shadow-2xl
             outline-none
-            flex flex-col
-            gap-6
           "
         >
           {/* Image */}
@@ -199,7 +157,7 @@ export default function DashboardMenuProductCard({ product }) {
               <Box
                 component="img"
                 src={product.image}
-                alt={product.title}
+                alt={product.name}
                 className="h-full w-full object-cover"
               />
             ) : (
@@ -211,7 +169,7 @@ export default function DashboardMenuProductCard({ product }) {
           <Box className="flex items-center justify-between gap-4">
             <Box className="min-w-0">
               <Typography variant="h6" className="font-bold!">
-                {product.title}
+                {product.name}
               </Typography>
 
               <Typography variant="caption" className="text-gray-500!">
@@ -230,7 +188,7 @@ export default function DashboardMenuProductCard({ product }) {
           </Box>
 
           {/* Description */}
-          <Box className="">
+          <Box>
             <Typography
               variant="caption"
               className="mb-1 block! font-semibold! text-gray-500!"
@@ -244,13 +202,14 @@ export default function DashboardMenuProductCard({ product }) {
           </Box>
 
           {/* Details */}
-          <Box className="w-full grid grid-cols-3 border border-gray-300 rounded-2xl">
+          <Box className="grid w-full grid-cols-3 overflow-hidden rounded-2xl border border-gray-300">
             {/* Category */}
-            <Box className="flex items-center gap-2 rounded-r-2xl bg-gray-50">
-              <Box className=" w-full text-center">
+            <Box className="flex items-center bg-gray-50 p-3">
+              <Box className="w-full text-center">
                 <Typography variant="body2" className="font-semibold!">
                   {product.category_name}
                 </Typography>
+
                 <Typography variant="caption" className="block! text-gray-400!">
                   دسته‌بندی
                 </Typography>
@@ -258,47 +217,49 @@ export default function DashboardMenuProductCard({ product }) {
             </Box>
 
             {/* Visibility */}
-            <Box className="flex items-center gap-2 bg-gray-50 p-3 border-x border-gray-300 border-dashed">
-              <Box className=" w-full text-center">
-                <Typography
-                  variant="body2"
+            <Box className="flex items-center border-x border-dashed border-gray-300 bg-gray-50 p-3">
+              <Box className="w-full text-center">
+                <Box
                   className={`
-                      font-semibold!
-                      ${
-                        product.visible ? "text-emerald-600!" : "text-gray-500!"
-                      }
-                    `}
+                    flex
+                    justify-center
+                    ${
+                      product.is_available
+                        ? "text-emerald-600"
+                        : "text-gray-400"
+                    }
+                  `}
                 >
-                  <Box
-                    className={`
-                        flex
-                        justify-center
-                        ${
-                          product.visible ? "text-emerald-600" : "text-gray-400"
-                        }
-                        `}
-                  >
-                    {product.visible ? <Eye size={17} /> : <EyeOff size={17} />}
-                  </Box>
-                </Typography>
+                  {product.is_available ? (
+                    <Eye size={17} />
+                  ) : (
+                    <EyeOff size={17} />
+                  )}
+                </Box>
+
                 <Typography variant="caption" className="block! text-gray-400!">
                   وضعیت نمایش
                 </Typography>
               </Box>
             </Box>
 
-            {/* Stock */}
-            <Box className="flex items-center gap-2 rounded-l-2xl bg-gray-50 p-3">
-              <Box className=" w-full text-center">
+            {/* Availability */}
+            <Box className="flex items-center bg-gray-50 p-3">
+              <Box className="w-full text-center">
                 <Typography
                   variant="body2"
                   className={`
-                      font-semibold!
-                      ${product.stock ? "text-emerald-600!" : "text-red-500!"}
-                    `}
+                    font-semibold!
+                    ${
+                      product.is_available
+                        ? "text-emerald-600!"
+                        : "text-red-500!"
+                    }
+                  `}
                 >
-                  {product.stock ? "موجود" : "ناموجود"}
+                  {product.is_available ? "موجود" : "ناموجود"}
                 </Typography>
+
                 <Typography variant="caption" className="block! text-gray-400!">
                   موجودی
                 </Typography>
@@ -306,6 +267,7 @@ export default function DashboardMenuProductCard({ product }) {
             </Box>
           </Box>
 
+          {/* Visibility */}
           <Box className="flex items-center justify-between gap-4">
             <Box className="min-w-0">
               <Typography variant="body1" className="font-bold!">
@@ -316,26 +278,14 @@ export default function DashboardMenuProductCard({ product }) {
                 دیده شدن محصول در منو
               </Typography>
             </Box>
-            <Switch defaultChecked={product.visible} />
-          </Box>
 
-          <div className="flex gap-2">
-            <Button
-              color="primary"
-              variant="contained"
-              className="rounded-full! flex-1"
-            >
-              ثبت
-            </Button>
-            <span className="py-0 px-4 rounded-full">
-              <IconButton color="error">
-                <Trash />
-              </IconButton>
-              <IconButton color="info">
-                <SquarePen />
-              </IconButton>
-            </span>
-          </div>
+            <Switch
+              checked={product.is_available}
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+            />
+          </Box>
         </Box>
       </Modal>
     </>
