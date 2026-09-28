@@ -18,7 +18,7 @@ class OrderSerializer(serializers.ModelSerializer):
     subtotal = TomanPriceField()
     discount = TomanPriceField()
     total = TomanPriceField()
-    table_number = serializers.CharField(source="table.number")
+    table_number = serializers.CharField(source="table.number", read_only=True, allow_null=True, default=None)
 
     class Meta:
         model = Order
