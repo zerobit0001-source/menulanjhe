@@ -56,7 +56,7 @@ export default function ReportsPage() {
   return (
     <DashboardPageTransition>
       <DashboardContainer>
-        <div className="mx-auto w-full max-w-6xl space-y-6 pb-8">
+        <div className=" space-y-6 pb-8">
           <DashboardReportsHeader period={period} onPeriodChange={setPeriod} />
 
           {status === "loading" && <DashboardReportsLoading />}

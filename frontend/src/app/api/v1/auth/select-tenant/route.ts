@@ -94,6 +94,12 @@ export async function POST(req: NextRequest) {
       role: data.role,
     });
 
+    console.log("========== SELECT TENANT ==========");
+    console.log("NODE_ENV:", process.env.NODE_ENV);
+    console.log("ACCESS TOKEN FROM COOKIE:", Boolean(accessToken));
+    console.log("NEW ACCESS TOKEN:", Boolean(data.access));
+    console.log("NEW REFRESH TOKEN:", Boolean(data.refresh));
+
     nextResponse.cookies.set("access_token", data.access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -109,6 +115,8 @@ export async function POST(req: NextRequest) {
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
     });
+
+    console.log("SETTING COOKIES...");
 
     return nextResponse;
   } catch (error) {
