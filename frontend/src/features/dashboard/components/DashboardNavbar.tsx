@@ -3,6 +3,7 @@
 import { Avatar, Box, Button, IconButton, Typography } from "@mui/material";
 
 import { Bell, ChevronDown, Menu } from "lucide-react";
+import Link from "next/link";
 
 type DashboardNavbarProps = {
   onMenuClick: () => void;
@@ -191,6 +192,8 @@ export default function DashboardNavbar({ onMenuClick }: DashboardNavbarProps) {
 
           {/* Avatar */}
           <Avatar
+            component={Link}
+            href="/dashboard/settings/profile"
             sx={{
               width: {
                 xs: 36,
