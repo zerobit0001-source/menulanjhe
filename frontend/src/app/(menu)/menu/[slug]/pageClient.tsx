@@ -96,7 +96,7 @@ export default function PublicMenuPageClient() {
 
   return (
     <MenuRenderer
-      template="template008"
+      template="template006"
       menu={menu}
       qrToken={qrToken}
       tableName={table?.table_name}

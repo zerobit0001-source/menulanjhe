@@ -36,7 +36,7 @@ export default function MenuRenderer({
   qrToken,
   tableName,
 }: MenuRendererProps) {
-  const Template = menuTemplates[template] ?? menuTemplates.template007; // default to Template007 if not found
+  const Template = menuTemplates[template] ?? menuTemplates.template006; // default to Template006 if not found
 
   return <Template menu={menu} qrToken={qrToken} tableName={tableName} />;
 }
