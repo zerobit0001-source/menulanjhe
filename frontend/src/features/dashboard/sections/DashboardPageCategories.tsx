@@ -38,6 +38,8 @@ export const DashboardPageCategories = ({
         {/* Add Category */}
 
         <Button
+          component={Link}
+          href="/dashboard/categories/"
           variant="contained"
           className="flex h-30! items-center justify-center"
           sx={{
@@ -62,6 +64,8 @@ export const DashboardPageCategories = ({
         {categoryViewModels.map((category) => (
           <Card
             key={category.id}
+            component={Link}
+            href={`/dashboard/products?category=${category.id}`}
             elevation={3}
             className="flex h-30! items-center justify-between rounded-2xl! p-4"
             sx={{

@@ -7,7 +7,7 @@ import { SectionTitle } from "../components/SectionTitle";
 import DashboardMenuToolbar from "../components/DashboardMenuToolbar";
 import DashboardMenuProductCard from "../components/DashboardMenuProductCard";
 import { DashboardProduct } from "../types/dasboars.types";
-
+import Link from "next/link";
 
 type DashboardPageMenuProps = {
   products: DashboardProduct[];
@@ -29,6 +29,8 @@ export default function DashboardPageMenu({
         {/* Add Product */}
 
         <Button
+          component={Link}
+          href="/dashboard/products/create"
           variant="contained"
           className="
             min-h-[180px]!
