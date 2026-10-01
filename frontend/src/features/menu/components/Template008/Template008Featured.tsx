@@ -1,6 +1,6 @@
 "use client";
 import type { T7Product } from "./bindings";
-import { Template007ProductCard } from "./Template008ProductCard";
+import { Template008ProductCard } from "./Template008ProductCard";
 
 interface Props {
   products: T7Product[];
@@ -25,7 +25,7 @@ export function Template008Featured({
       </h2>
       <div className="mx-auto flex max-w-5xl snap-x gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {products.map((p) => (
-          <Template007ProductCard
+          <Template008ProductCard
             key={String(p.id)}
             variant="featured"
             product={p}

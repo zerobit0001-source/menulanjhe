@@ -27,7 +27,7 @@ export function Template008QtyControl({ quantity, onIncrement, onDecrement }: Pi
   );
 }
 
-export function Template007ProductCard({ product, quantity, onAdd, onIncrement, onDecrement, variant = "grid" }: Props) {
+export function Template008ProductCard({ product, quantity, onAdd, onIncrement, onDecrement, variant = "grid" }: Props) {
   const off = !product.available;
   const featured = variant === "featured";
   return (
@@ -51,7 +51,7 @@ export function Template007ProductCard({ product, quantity, onAdd, onIncrement, 
         <div className="mt-auto flex items-center justify-between gap-2 pt-3">
           <span className="text-[15px] font-bold text-[#171717]">{formatToman(product.price)}</span>
           {off ? null : quantity > 0 ? (
-            <Template007QtyControl quantity={quantity} onIncrement={onIncrement} onDecrement={onDecrement} />
+            <Template008QtyControl quantity={quantity} onIncrement={onIncrement} onDecrement={onDecrement} />
           ) : (
             <button
               onClick={onAdd}

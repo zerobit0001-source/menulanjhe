@@ -130,23 +130,25 @@ export function useT7Search(categories: T7Category[]) {
     results,
   };
 }
-export function useT7Order() {
-  const o = useMenuOrder() as any; // TODO: assumed { submit(input) => Promise<unknown>, isSubmitting, error }
+export function useT7Order(items: T7CartLine[], qrToken?: string | null) {
+  const o = useMenuOrder();
+
   return {
-    submitting: Boolean(o.isSubmitting),
-    error: (o.error ? String(o.error?.message ?? o.error) : null) as
-      | string
-      | null,
+    submitting: o.isLoading,
+    error: o.error || null,
+
     submit: async (input: {
       customerName?: string;
       notes?: string;
     }): Promise<boolean> => {
-      try {
-        await o.submit(input);
-        return true;
-      } catch {
-        return false;
-      }
+      const result = await o.submitOrder({
+        items: items as any,
+        qrToken,
+        name: input.customerName,
+        notes: input.notes,
+      });
+
+      return Boolean(result);
     },
   };
 }

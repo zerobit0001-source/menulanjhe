@@ -1,6 +1,6 @@
 "use client";
 import type { T7Category, T7Product } from "./bindings";
-import { Template007ProductCard } from "./Template008ProductCard";
+import { Template008ProductCard } from "./Template008ProductCard";
 
 interface Props {
   groups: { category?: T7Category; products: T7Product[] }[];
@@ -37,7 +37,7 @@ export function Template008ProductList({
             )}
             <div className="grid grid-cols-1 gap-3 min-[560px]:grid-cols-2 lg:grid-cols-3">
               {g.products.map((p) => (
-                <Template007ProductCard
+                <Template008ProductCard
                   key={String(p.id)}
                   product={p}
                   quantity={quantityOf(p.id)}

@@ -29,7 +29,7 @@ type MenuView = "menu" | "checkout" | "success";
 export default function Template008({ menu, tableName, qrToken }: Props) {
   const model = useMemo(() => toT7Model(menu), [menu]);
   const cart = useT7Cart(model.all);
-  const order = useT7Order();
+  const order = useT7Order(cart.lines, qrToken);
   const search = useT7Search(model.categories);
 
   const [activeCat, setActiveCat] = useState<string | number | null>(null);
