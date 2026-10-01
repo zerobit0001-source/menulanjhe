@@ -7,6 +7,7 @@ import Template004 from "./templates/Template004";
 import Template005 from "./templates/Template005";
 import Template006 from "./templates/Template006";
 import Template007 from "./templates/Template007";
+import Template008 from "./templates/Template008";
 
 const menuTemplates = {
   modern: ModernMenu,
@@ -17,6 +18,7 @@ const menuTemplates = {
   template005: Template005,
   template006: Template006,
   template007: Template007,
+  template008: Template008,
 };
 
 type MenuTemplate = keyof typeof menuTemplates;
@@ -34,7 +36,7 @@ export default function MenuRenderer({
   qrToken,
   tableName,
 }: MenuRendererProps) {
-  const Template = menuTemplates[template];
+  const Template = menuTemplates[template] ?? menuTemplates.template007; // default to Template007 if not found
 
   return <Template menu={menu} qrToken={qrToken} tableName={tableName} />;
 }

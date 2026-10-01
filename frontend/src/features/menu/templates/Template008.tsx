@@ -1,20 +1,33 @@
 "use client";
 import { useMemo, useState } from "react";
-import type { MenuData } from "../../types"; // TODO: adjust to the project's actual type path
-import { toT7Model, useT7Cart, useT7Order, useT7Search } from "./bindings";
-import { Template007Header } from "./Template007Header";
-import { Template007Hero } from "./Template007Hero";
-import { Template007Search } from "./Template007Search";
-import { Template007Featured } from "./Template007Featured";
-import { Template007CategoryNav } from "./Template007CategoryNav";
-import { Template007ProductList } from "./Template007ProductList";
-import { Template007CartButton } from "./Template007CartButton";
-import { Template007CartDrawer } from "./Template007CartDrawer";
-import { Template007Checkout } from "./Template007Checkout";
-import { Template007OrderSuccess } from "./Template007OrderSuccess";
+import { MenuData } from "../types/menu.types";
+import {
+  toT7Model,
+  useT7Cart,
+  useT7Order,
+  useT7Search,
+} from "../components/Template008/bindings";
+import { Template008Hero } from "../components/Template008/Template008Hero";
+import { Template008Featured } from "../components/Template008/Template008Featured";
+import { Template008Search } from "../components/Template008/Template008Search";
+import { Template008CartButton } from "../components/Template008/Template008CartButton";
+import { Template008CartDrawer } from "../components/Template008/Template008CartDrawer";
+import { Template008ProductList } from "../components/Template008/Template008ProductList";
+import { Template008Header } from "../components/Template008/Template008Header";
+import { Template008CategoryNav } from "../components/Template008/Template008CategoryNav";
+import { Template008Checkout } from "../components/Template008/Template008Checkout";
+import { Template008OrderSuccess } from "../components/Template008/Template008OrderSuccess";
 
-export default function Template008({ data }: { data: MenuData }) {
-  const model = useMemo(() => toT7Model(data), [data]);
+type Props = {
+  menu: MenuData;
+  tableName?: string | null;
+  qrToken?: string | null;
+};
+
+type MenuView = "menu" | "checkout" | "success";
+
+export default function Template008({ menu, tableName, qrToken }: Props) {
+  const model = useMemo(() => toT7Model(menu), [menu]);
   const cart = useT7Cart();
   const order = useT7Order();
   const search = useT7Search(model.all);
@@ -49,31 +62,31 @@ export default function Template008({ data }: { data: MenuData }) {
 
   return (
     <div dir="rtl" className="min-h-dvh bg-[#FAFAFA] text-[#171717]">
-      <Template007Header
+      <Template008Header
         shop={model.shop}
         count={cart.count}
         onCart={() => setCartOpen(true)}
       />
-      <Template007Hero shop={model.shop} />
-      <Template007Search value={search.query} onChange={search.setQuery} />
+      <Template008Hero shop={model.shop} />
+      <Template008Search value={search.query} onChange={search.setQuery} />
       {!searching && (
-        <Template007Featured products={model.featured} {...shared} />
+        <Template008Featured products={model.featured} {...shared} />
       )}
       {!searching && (
-        <Template007CategoryNav
+        <Template008CategoryNav
           categories={model.categories}
           active={activeCat}
           onSelect={setActiveCat}
         />
       )}
-      <Template007ProductList groups={groups} {...shared} />
+      <Template008ProductList groups={groups} {...shared} />
 
-      <Template007CartButton
+      <Template008CartButton
         count={cart.count}
         total={cart.total}
         onClick={() => setCartOpen(true)}
       />
-      <Template007CartDrawer
+      <Template008CartDrawer
         open={cartOpen}
         lines={cart.lines}
         total={cart.total}
@@ -83,7 +96,7 @@ export default function Template008({ data }: { data: MenuData }) {
         onDecrement={cart.decrement}
         onRemove={cart.remove}
       />
-      <Template007Checkout
+      <Template008Checkout
         open={checkoutOpen}
         total={cart.total}
         submitting={order.submitting}
@@ -91,7 +104,7 @@ export default function Template008({ data }: { data: MenuData }) {
         onClose={() => setCheckoutOpen(false)}
         onSubmit={handleSubmit}
       />
-      <Template007OrderSuccess
+      <Template008OrderSuccess
         open={success}
         onDone={() => setSuccess(false)}
       />
