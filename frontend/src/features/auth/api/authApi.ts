@@ -72,4 +72,5 @@ export const {
   useLazyMeQuery,
   useSelectTenantMutation,
   useLogoutMutation,
+  useChangePasswordMutation,
 } = authApi;
