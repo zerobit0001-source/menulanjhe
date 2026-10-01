@@ -46,10 +46,13 @@ export function toT7Model(data: MenuData): T7Model {
 
   // quickSections: assumed [{ key|type|slug, products? | productIds? }]
   const section = (d.quickSections ?? []).find((s: any) =>
-    /feature|popular/i.test(String(s.key ?? s.type ?? s.slug ?? s.title ?? ""))
+    /feature|popular/i.test(String(s.key ?? s.type ?? s.slug ?? s.title ?? "")),
   );
   const featured: T7Product[] = section
-    ? (section.products ?? (section.productIds ?? []).map((id: any) => byId.get(String(id)))).filter(Boolean)
+    ? (
+        section.products ??
+        (section.productIds ?? []).map((id: any) => byId.get(String(id)))
+      ).filter(Boolean)
     : [];
 
   return {
@@ -68,37 +71,76 @@ export interface T7CartLine {
   product: T7Product;
   quantity: number;
 }
-export function useT7Cart() {
-  const c = useMenuCart() as any; // TODO: assumed shape below
+export function useT7Cart(products: T7Product[]) {
+  const c = useMenuCart(products as any);
+
   return {
-    lines: (c.items ?? []) as T7CartLine[],
-    count: (c.totalCount ?? 0) as number,
-    total: (c.totalPrice ?? 0) as number,
-    quantityOf: (id: T7Product["id"]): number =>
-      (c.items ?? []).find((l: T7CartLine) => String(l.product.id) === String(id))?.quantity ?? 0,
-    add: (p: T7Product) => c.addItem(p) as void,
-    increment: (id: T7Product["id"]) => c.increment(id) as void,
-    decrement: (id: T7Product["id"]) => c.decrement(id) as void,
-    remove: (id: T7Product["id"]) => c.removeItem(id) as void,
-    clear: () => c.clear() as void,
+    lines: c.cartItems as T7CartLine[],
+    count: c.cartCount,
+    total: c.cartTotal,
+
+    quantityOf: (id: T7Product["id"]): number => c.quantities[String(id)] ?? 0,
+
+    add: (product: T7Product) => {
+      c.addProduct(product as any);
+    },
+
+    increment: (id: T7Product["id"]) => {
+      const product = products.find((item) => String(item.id) === String(id));
+
+      if (!product) return;
+
+      c.increaseProduct(product as any);
+    },
+
+    decrement: (id: T7Product["id"]) => {
+      const product = products.find((item) => String(item.id) === String(id));
+
+      if (!product) return;
+
+      c.decreaseProduct(product as any);
+    },
+
+    remove: (id: T7Product["id"]) => {
+      const product = products.find((item) => String(item.id) === String(id));
+
+      if (!product) return;
+
+      c.removeProduct(product as any);
+    },
+
+    clear: () => {
+      c.clearCart();
+    },
   };
 }
 
-export function useT7Search(products: T7Product[]) {
-  const s = useMenuSearch(products as any) as any; // TODO: assumed { query, setQuery, results }
+export function useT7Search(categories: T7Category[]) {
+  const s = useMenuSearch(categories as any) as any;
+
+  const results: T7Product[] = (s.filteredCategories ?? []).flatMap(
+    (category: T7Category) => category.products ?? [],
+  );
+
   return {
     query: (s.query ?? "") as string,
-    setQuery: s.setQuery as (v: string) => void,
-    results: (s.results ?? products) as T7Product[],
+
+    setQuery: s.setQuery as (value: string) => void,
+
+    results,
   };
 }
-
 export function useT7Order() {
   const o = useMenuOrder() as any; // TODO: assumed { submit(input) => Promise<unknown>, isSubmitting, error }
   return {
     submitting: Boolean(o.isSubmitting),
-    error: (o.error ? String(o.error?.message ?? o.error) : null) as string | null,
-    submit: async (input: { customerName?: string; notes?: string }): Promise<boolean> => {
+    error: (o.error ? String(o.error?.message ?? o.error) : null) as
+      | string
+      | null,
+    submit: async (input: {
+      customerName?: string;
+      notes?: string;
+    }): Promise<boolean> => {
       try {
         await o.submit(input);
         return true;

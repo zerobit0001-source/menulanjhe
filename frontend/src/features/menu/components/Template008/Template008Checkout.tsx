@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import { TextField } from "@mui/material";
-import { Template007Sheet } from "./Template008Sheet";
 import { formatToman } from "./utils";
+import { Template008Sheet } from "./Template008Sheet";
 
 interface Props {
   open: boolean;
@@ -36,7 +36,7 @@ export function Template008Checkout({
   const [name, setName] = useState("");
   const [notes, setNotes] = useState("");
   return (
-    <Template007Sheet open={open} title="ثبت سفارش" onClose={onClose}>
+    <Template008Sheet open={open} title="ثبت سفارش" onClose={onClose}>
       <div className="space-y-4 overflow-y-auto px-5 pb-4">
         <TextField
           label="نام (اختیاری)"
@@ -82,6 +82,6 @@ export function Template008Checkout({
           {submitting ? "در حال ثبت..." : "ثبت سفارش"}
         </button>
       </div>
-    </Template007Sheet>
+    </Template008Sheet>
   );
 }

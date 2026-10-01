@@ -3,12 +3,22 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
 import { faNum, formatToman } from "./utils";
 
-export function <Template008></Template008>CartButton({ count, total, onClick }: { count: number; total: number; onClick: () => void }) {
+export function Template008CartButton({
+  count,
+  total,
+  onClick,
+}: {
+  count: number;
+  total: number;
+  onClick: () => void;
+}) {
   return (
     <AnimatePresence>
       {count > 0 && (
         <motion.div
-          initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 80, opacity: 0 }}
+          initial={{ y: 80, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 80, opacity: 0 }}
           transition={{ duration: 0.25 }}
           className="fixed inset-x-0 bottom-0 z-30 px-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
         >

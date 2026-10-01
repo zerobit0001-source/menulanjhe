@@ -1,9 +1,9 @@
 "use client";
 import { Trash2 } from "lucide-react";
-import type { T7CartLine } from "./bindings";
-import { Template007Sheet } from "./Template008Sheet";
-import { Template007QtyControl } from "./Template008ProductCard";
 import { Template007Thumb, formatToman } from "./utils";
+import { T7CartLine } from "./bindings";
+import { Template008Sheet } from "./Template008Sheet";
+import { Template008QtyControl } from "./Template008ProductCard";
 
 interface Props {
   open: boolean;
@@ -27,7 +27,7 @@ export function Template008CartDrawer({
   onRemove,
 }: Props) {
   return (
-    <Template007Sheet open={open} title="سبد خرید" onClose={onClose}>
+    <Template008Sheet open={open} title="سبد خرید" onClose={onClose}>
       {lines.length === 0 ? (
         <p className="px-5 pb-12 pt-6 text-center text-sm text-[#737373]">
           سبد خرید شما خالی است.
@@ -60,7 +60,7 @@ export function Template008CartDrawer({
                     <span className="text-sm font-bold">
                       {formatToman(product.price * quantity)}
                     </span>
-                    <Template007QtyControl
+                    <Template008QtyControl
                       quantity={quantity}
                       onIncrement={() => onIncrement(product.id)}
                       onDecrement={() => onDecrement(product.id)}
@@ -86,6 +86,6 @@ export function Template008CartDrawer({
           </div>
         </>
       )}
-    </Template007Sheet>
+    </Template008Sheet>
   );
 }
