@@ -8,7 +8,9 @@ from apps.orders.serializers import OrderSerializer
 from apps.products.models import Product
 from apps.products.serializers import AdminProductSerializer
 from apps.tenants.permissions import HasTenantPermission
-from .serializers import DashboardCategorySerializer
+from .serializers import DashboardCategorySerializer, ReportQuerySerializer
+from apps.common.exceptions import ApplicationError
+from .services import InvalidReportPeriod, build_sales_report
 
 
 class DashboardView(APIView):
@@ -58,3 +60,26 @@ class DashboardView(APIView):
                 "recent_orders": OrderSerializer(recent_orders, many=True, context=context).data,
             }
         )
+
+
+class SalesReportView(APIView):
+    permission_classes = [HasTenantPermission]
+    required_permission = "reports.view"
+
+    def get(self, request):
+        query = ReportQuerySerializer(data=request.query_params)
+        query.is_valid(raise_exception=True)
+        data = query.validated_data
+
+        try:
+            report = build_sales_report(
+                tenant=request.tenant,
+                period=data["period"],
+                from_param=request.query_params.get("from"),
+                to_param=request.query_params.get("to"),
+                top_limit=data["limit"],
+            )
+        except InvalidReportPeriod as exc:
+            raise ApplicationError(str(exc), code="INVALID_REPORT_PERIOD", status_code=400)
+
+        return Response(report)
