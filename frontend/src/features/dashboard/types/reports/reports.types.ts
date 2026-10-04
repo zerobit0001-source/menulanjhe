@@ -1,13 +1,6 @@
-export type ReportPeriod = "today" | "last_7_days";
+export type ReportsPeriod = "today" | "week";
 
-export type OrdersByStatus = {
-  pending: number;
-  confirmed: number;
-  completed: number;
-  cancelled: number;
-};
-
-export type ReportSummary = {
+export type ReportsSummary = {
   orders_count: number;
   completed_orders_count: number;
   cancelled_orders_count: number;
@@ -17,6 +10,13 @@ export type ReportSummary = {
   discount_total: number;
   net_sales: number;
   average_order_value: number;
+};
+
+export type ReportStatusCounts = {
+  pending: number;
+  confirmed: number;
+  completed: number;
+  cancelled: number;
 };
 
 export type TopProduct = {
@@ -34,19 +34,19 @@ export type TopCategory = {
 };
 
 export type SalesByDay = {
-  date: string; // YYYY-MM-DD
+  date: string;
   orders_count: number;
   sales: number;
 };
 
-export type DashboardReport = {
+export type ReportsResponse = {
   ok: boolean;
-  period: ReportPeriod | string;
+  period: ReportsPeriod;
   from: string;
   to: string;
-  summary: ReportSummary;
-  orders_by_status: OrdersByStatus;
+  summary: ReportsSummary;
+  orders_by_status: ReportStatusCounts;
   top_products: TopProduct[];
   top_categories: TopCategory[];
-  sales_by_day?: SalesByDay[]; // weekly only
+  sales_by_day?: SalesByDay[];
 };
