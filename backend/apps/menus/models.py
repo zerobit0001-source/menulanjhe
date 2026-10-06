@@ -9,6 +9,7 @@ class Menu(UUIDTimeStampedModel):
     description = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
     is_published = models.BooleanField(default=False)
+    template_name = models.CharField(max_length=50, blank=True, default="classic")
 
     class Meta:
         constraints = [
