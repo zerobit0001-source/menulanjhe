@@ -78,7 +78,7 @@ class PublicMenuSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Menu
-        fields = ["id", "name", "slug", "description", "restaurant_name", "categories"]
+        fields = ["id", "name", "slug", "description", "template_name", "restaurant_name", "categories"]
         read_only_fields = fields
 
     def get_categories(self, menu):
