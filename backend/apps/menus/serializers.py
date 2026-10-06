@@ -10,7 +10,7 @@ class AdminMenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
         fields = ["id", "branch", "name", "slug", "description", "is_active", "is_published",
-                  "created_at", "updated_at"]
+                  "template_name", "created_at", "updated_at"]
         read_only_fields = ["id", "created_at", "updated_at"]
 
     def validate_branch(self, branch):
