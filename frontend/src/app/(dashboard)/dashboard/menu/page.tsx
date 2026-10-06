@@ -7,12 +7,17 @@ import MenuPageMenuQrCard from "@/features/dashboard/components/menu/MenuPageMen
 import MenuPageMenuTemplateGrid from "@/features/dashboard/components/menu/MenuPageMenuTemplateGrid";
 
 import { menuTemplates } from "@/features/dashboard/data/menu/demoMenu";
-import { demoMenu } from "@/features/menu/data/demoMenu";
 
-import { useGetMenusQuery } from "@/features/dashboard/api/menuApi";
+import {
+  useGetMenusQuery,
+  useUpdateMenuMutation,
+} from "@/features/dashboard/api/menuApi";
 
 export default function MenuPage() {
   const { data, isLoading, isError, refetch } = useGetMenusQuery();
+
+  const [updateMenu, { isLoading: isUpdatingTemplate }] =
+    useUpdateMenuMutation();
 
   if (isLoading) {
     return (
@@ -55,9 +60,28 @@ export default function MenuPage() {
       </DashboardContainer>
     );
   }
-  const menuUrl = `/menu/${menu.slug}`;
 
+  const menuUrl = `/menu/${menu.slug}`;
   const qrUrl = `${window.location.origin}${menuUrl}`;
+
+  const handleTemplateSelect = async (templateId: string) => {
+    if (templateId === menu.template_name) {
+      return;
+    }
+
+
+    console.log("Selected template:", templateId);
+    try {
+      await updateMenu({
+        id: menu.id,
+        body: {
+          template_name: templateId,
+        },
+      }).unwrap();
+    } catch (error) {
+      console.error("Failed to update menu template:", error);
+    }
+  };
 
   return (
     <DashboardContainer>
@@ -76,7 +100,12 @@ export default function MenuPage() {
         />
       </div>
 
-      <MenuPageMenuTemplateGrid templates={menuTemplates} />
+      <MenuPageMenuTemplateGrid
+        templates={menuTemplates}
+        selectedTemplate={menu.template_name}
+        onSelect={handleTemplateSelect}
+        isUpdating={isUpdatingTemplate}
+      />
     </DashboardContainer>
   );
 }

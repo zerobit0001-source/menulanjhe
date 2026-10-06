@@ -8,6 +8,7 @@ export type Menu = {
   is_published: boolean;
   created_at: string;
   updated_at: string;
+  template_name: string;
 };
 
 export type MenuListResponse = {
@@ -23,4 +24,5 @@ export type UpdateMenuRequest = {
   description?: string;
   is_active?: boolean;
   is_published?: boolean;
+  template?: string;
 };

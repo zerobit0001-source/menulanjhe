@@ -24,7 +24,7 @@ const menuTemplates = {
 type MenuTemplate = keyof typeof menuTemplates;
 
 type MenuRendererProps = {
-  template: MenuTemplate;
+  template: MenuTemplate ;
   menu: MenuData;
   qrToken?: string | null;
   tableName?: string | null;

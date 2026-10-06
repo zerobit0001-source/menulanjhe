@@ -7,8 +7,9 @@ import { MenuTemplate } from "../../types/menu/menu.type";
 type Props = {
   template: MenuTemplate;
   selected: boolean;
-  onSelect: (template: MenuTemplate) => void;
+  onSelect: (templateId: string) => void;
   onPreview: (template: MenuTemplate) => void;
+  disabled?: boolean;
 };
 
 export default function MenuPageMenuTemplateCard({
@@ -16,6 +17,7 @@ export default function MenuPageMenuTemplateCard({
   selected,
   onSelect,
   onPreview,
+  disabled = false,
 }: Props) {
   return (
     <Card
@@ -78,7 +80,7 @@ export default function MenuPageMenuTemplateCard({
         <Button
           fullWidth
           variant={selected ? "contained" : "outlined"}
-          onClick={() => onSelect(template)}
+          onClick={() => onSelect(template.id)}
           disabled={selected}
           className="mt-4 rounded-xl!"
         >
