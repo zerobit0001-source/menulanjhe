@@ -1,6 +1,6 @@
 import { baseApi } from "@/features/api/baseApi";
-import { PublicMenuResponse } from "../types/menu.types";
 import { CreateOrderRequest, CreateOrderResponse } from "../types/order.types";
+import { PublicMenuResponse } from "../types/public-menu.types";
 
 export const publicMenuApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

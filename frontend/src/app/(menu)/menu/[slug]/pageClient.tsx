@@ -21,6 +21,8 @@ export default function PublicMenuPageClient() {
     isError: isMenuError,
   } = useGetPublicMenuQuery(slug);
 
+  console.log("slug", slug, "qrToken", qrToken, "data", data);
+
   const {
     // sessionToken,
     table,
@@ -96,7 +98,7 @@ export default function PublicMenuPageClient() {
 
   return (
     <MenuRenderer
-      template="template006"
+      template={data.template_name}
       menu={menu}
       qrToken={qrToken}
       tableName={table?.table_name}
