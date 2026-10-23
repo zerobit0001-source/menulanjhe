@@ -33,9 +33,7 @@ export const categoryApi = baseApi.injectEndpoints({
         method: "GET",
       }),
 
-      providesTags: (_result, _error, id) => [
-        { type: "Category", id },
-      ],
+      providesTags: (_result, _error, id) => [{ type: "Category", id }],
     }),
 
     createCategory: builder.mutation<Category, CreateCategoryRequest>({
@@ -78,6 +76,23 @@ export const categoryApi = baseApi.injectEndpoints({
         { type: "Category", id },
       ],
     }),
+    reorderCategories: builder.mutation<
+      void,
+      {
+        items: {
+          id: string;
+          sort_order: number;
+        }[];
+      }
+    >({
+      query: (body) => ({
+        url: "admin/categories/reorder/",
+        method: "POST",
+        body,
+      }),
+
+      invalidatesTags: ["Category"],
+    }),
   }),
 });
 
@@ -87,4 +102,5 @@ export const {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useToggleCategoryActiveMutation,
+  useReorderCategoriesMutation,
 } = categoryApi;

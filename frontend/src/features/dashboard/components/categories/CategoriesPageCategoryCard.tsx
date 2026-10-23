@@ -33,12 +33,19 @@ import type { Category } from "../../types/categories/categories.type";
 import CategoriesPageCategoryModal from "./CategoriesPageCategoryModal";
 import { categoryIcons } from "../Icons";
 import Link from "next/link";
+import type { DraggableAttributes } from "@dnd-kit/core";
+import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 
+type DragHandleProps = DraggableAttributes &
+  SyntheticListenerMap & {
+    disabled?: boolean;
+  };
 type Props = {
   category: Category;
+  dragHandleProps?: DragHandleProps;
 };
 
-export default function CategoriesPageCategoryCard({ category }: Props) {
+export default function CategoriesPageCategoryCard({ category, dragHandleProps }: Props) {
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
   const [editOpen, setEditOpen] = useState(false);
@@ -126,7 +133,14 @@ export default function CategoriesPageCategoryCard({ category }: Props) {
     >
       <div className="flex items-center gap-3">
         {/* Drag Handle */}
-        <div className="hidden cursor-grab text-gray-300 sm:block">
+        <div
+          {...dragHandleProps}
+          className={`hidden sm:block ${
+            dragHandleProps?.disabled
+              ? "cursor-not-allowed opacity-40"
+              : "cursor-grab active:cursor-grabbing"
+          }`}
+        >
           <GripVertical size={19} />
         </div>
 

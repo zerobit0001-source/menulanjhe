@@ -63,7 +63,7 @@ export default function OrdersPageToolbar({
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
       <div className="flex items-center gap-2">
-        <Paper
+        {/* <Paper
           elevation={0}
           className="flex h-10 min-w-0 flex-1 items-center gap-2 border border-gray-200! px-3 sm:w-64 sm:flex-none"
         >
@@ -76,7 +76,7 @@ export default function OrdersPageToolbar({
             className="flex-1 text-sm!"
             fullWidth
           />
-        </Paper>
+        </Paper> */}
 
         <IconButton>
           <SlidersHorizontal size={20} />

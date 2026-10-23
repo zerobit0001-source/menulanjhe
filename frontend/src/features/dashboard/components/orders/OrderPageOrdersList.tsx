@@ -73,7 +73,7 @@ export default function OrderPageOrdersList({
   // Empty
   // ─────────────────────────────
 
-  if (!filteredOrders.length) {
+  if (!orders.length) {
     return (
       <div className="flex min-h-60 flex-col items-center justify-center gap-2">
         <Typography className="font-semibold! text-gray-700!">
@@ -102,7 +102,7 @@ export default function OrderPageOrdersList({
       )}
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-        {filteredOrders.map((order) => (
+        {orders.map((order) => (
           <OrderPageOrderCard key={order.id} order={order} />
         ))}
       </div>

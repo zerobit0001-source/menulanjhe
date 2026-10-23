@@ -1,5 +1,24 @@
 "use client";
 
+import {
+  DndContext,
+  PointerSensor,
+  KeyboardSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+
+import { useReorderCategoriesMutation } from "../../api/categoryApi";
+
 import { useMemo } from "react";
 
 import { useGetMenusQuery } from "../../api/menuApi";
@@ -8,6 +27,7 @@ import { useGetCategoriesQuery } from "../../api/categoryApi";
 import type { Category } from "../../types/categories/categories.type";
 
 import CategoriesPageCategoryCard from "./CategoriesPageCategoryCard";
+import SortableCategoryCard from "./SortableCategoryCard";
 
 type Props = {
   search: string;
@@ -42,6 +62,55 @@ export default function CategoriesPageCategoryList({ search, filter }: Props) {
   );
 
   console.log(data);
+
+  const [reorderCategories, { isLoading: isReordering }] =
+    useReorderCategoriesMutation();
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 6 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const canReorder = filter === "all" && !search.trim() && !isReordering;
+
+  async function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id || !canReorder) {
+      return;
+    }
+
+    const oldIndex = categories.findIndex(
+      (category) => category.id === active.id,
+    );
+
+    const newIndex = categories.findIndex(
+      (category) => category.id === over.id,
+    );
+
+    if (oldIndex < 0 || newIndex < 0) {
+      return;
+    }
+
+    const reordered = arrayMove(categories, oldIndex, newIndex);
+
+    try {
+      await reorderCategories({
+        items: reordered.map((category, index) => ({
+          id: category.id,
+          sort_order: index,
+        })),
+      }).unwrap();
+    } catch {
+      // RTK Query خطا را در mutation نگه می‌دارد.
+      // در این مرحله، refetch داده‌ها را با سرور هماهنگ می‌کند.
+      await refetch();
+    }
+  }
 
   if (isMenusLoading || isCategoriesLoading) {
     return (
@@ -117,9 +186,26 @@ export default function CategoriesPageCategoryList({ search, filter }: Props) {
 
   return (
     <div className="flex flex-col gap-2">
-      {categories.map((category) => (
-        <CategoriesPageCategoryCard key={category.id} category={category} />
-      ))}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={categories.map((category) => category.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="flex flex-col gap-2">
+            {categories.map((category) => (
+              <SortableCategoryCard
+                key={category.id}
+                category={category}
+                disabled={!canReorder}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
     </div>
   );
 }

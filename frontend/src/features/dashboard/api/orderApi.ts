@@ -10,6 +10,7 @@ type GetOrdersParams = {
   status?: OrderStatus;
   branch?: string;
   page?: number;
+  search?: string;
 };
 
 export const orderApi = baseApi.injectEndpoints({
@@ -27,6 +28,9 @@ export const orderApi = baseApi.injectEndpoints({
           }),
           ...(params?.page && {
             page: params.page,
+          }),
+          ...(params?.search && {
+            search: params.search,
           }),
         },
       }),

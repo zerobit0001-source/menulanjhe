@@ -32,6 +32,7 @@ export default function OrdersPageClient() {
   const { data, isLoading, isFetching, error } = useGetOrdersQuery({
     ...(status && { status }),
     page,
+    search,
   });
 
   const handleFilterChange = (newFilter: FilterValue) => {
@@ -42,6 +43,7 @@ export default function OrdersPageClient() {
     setSearch(value);
     setPage(1);
   };
+
 
   return (
     <>
