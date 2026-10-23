@@ -11,6 +11,7 @@ import { useGetOrdersQuery } from "@/features/dashboard/api/orderApi";
 
 import type { OrderStatus } from "@/features/dashboard/types/orders/orders.types";
 import { useOrdersRealtime } from "@/features/dashboard/realtime/useOrdersRealtime";
+import { Button } from "@mui/material";
 
 type FilterValue = "ALL" | OrderStatus;
 
@@ -68,27 +69,27 @@ export default function OrdersPageClient() {
 
         {data && data.total_pages > 1 && (
           <div className="flex items-center justify-center gap-2">
-            <button
-              type="button"
+            <Button
+              variant="contained"
               disabled={page === 1 || isFetching}
               onClick={() => setPage((prev) => prev - 1)}
               className="rounded-xl border border-gray-200 px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-40"
             >
               قبلی
-            </button>
+            </Button>
 
             <span className="text-sm text-gray-500">
               صفحه {data.current_page} از {data.total_pages}
             </span>
 
-            <button
-              type="button"
+            <Button
+              variant="contained"
               disabled={page === data.total_pages || isFetching}
               onClick={() => setPage((prev) => prev + 1)}
               className="rounded-xl border border-gray-200 px-4 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-40"
             >
               بعدی
-            </button>
+            </Button>
           </div>
         )}
       </div>
