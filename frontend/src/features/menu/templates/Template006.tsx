@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { useMenuCart } from "@/features/menu/hooks/useMenuCart";
 import { useMenuSearch } from "@/features/menu/hooks/useMenuSearch";
-import type { MenuData } from "@/features/menu/types/menu.types";
+import type { MenuData, TemplateProps } from "@/features/menu/types/menu.types";
 import Template006Checkout from "../components/Template006/Template006Checkout";
 import Template006OrderSuccess from "../components/Template006/Template006OrderSuccess";
 import Template006Header from "../components/Template006/Template006Header";
@@ -16,14 +16,9 @@ import Template006ProductList from "../components/Template006/Template006Product
 import Template006CartButton from "../components/Template006/Template006CartButton";
 import Template006CartDrawer from "../components/Template006/Template006CartDrawer";
 
-type Props = {
-  menu: MenuData;
-  qrToken?: string | null;
-};
-
 type MenuView = "menu" | "checkout" | "success";
 
-export default function Template006({ menu, qrToken }: Props) {
+export default function Template006({ menu, qrToken }: TemplateProps) {
   const [view, setView] = useState<MenuView>("menu");
   const [cartOpen, setCartOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(
@@ -115,7 +110,7 @@ export default function Template006({ menu, qrToken }: Props) {
   }
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#08090B] pb-28 text-white">
+    <main className="min-h-screen overflow-x-hidden bg-[#08090B] pb-28 text-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <Template006Header
         shop={menu.shop}
         cartCount={cartCount}

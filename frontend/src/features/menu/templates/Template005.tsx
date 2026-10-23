@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import type { MenuData } from "@/features/menu/types/menu.types";
+import type { MenuData, TemplateProps } from "@/features/menu/types/menu.types";
 import { useMenuCart } from "@/features/menu/hooks/useMenuCart";
 import { useMenuSearch } from "@/features/menu/hooks/useMenuSearch";
 import Template005Checkout from "../components/Template005/Template005Checkout";
@@ -16,14 +16,9 @@ import Template005ProductList from "../components/Template005/Template005Product
 import Template005CartButton from "../components/Template005/Template005CartButton";
 import Template005CartDrawer from "../components/Template005/Template005CartDrawer";
 
-type Props = {
-  menu: MenuData;
-  qrToken?: string | null;
-};
-
 type MenuView = "menu" | "checkout" | "success";
 
-export default function Template005({ menu, qrToken }: Props) {
+export default function Template005({ menu, qrToken }: TemplateProps) {
   const [view, setView] = useState<MenuView>("menu");
   const [cartOpen, setCartOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(
@@ -115,7 +110,7 @@ export default function Template005({ menu, qrToken }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-28">
+    <div className="min-h-screen bg-slate-50 pb-28 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <Template005Header
         shop={menu.shop}
         cartCount={cartCount}

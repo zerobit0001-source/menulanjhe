@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useMenuSearch } from "@/features/menu/hooks/useMenuSearch";
 import { useMenuCart } from "@/features/menu/hooks/useMenuCart";
-import type { MenuData } from "@/features/menu/types/menu.types";
+import type { MenuData, TemplateProps } from "@/features/menu/types/menu.types";
 import Template002Header from "../components/Template002/Template002Header";
 import Template002Search from "../components/Template002/Template002Search";
 import Template002CategoryTabs from "../components/Template002/Template002CategoryTabs";
@@ -14,15 +14,9 @@ import Template002CartDrawer from "../components/Template002/Template002CartDraw
 import Template002Checkout from "../components/Template002/Template002Checkout";
 import Template002OrderSuccess from "../components/Template002/Template002OrderSuccess";
 
-type Props = {
-  menu: MenuData;
-  tableName?: string | null;
-  qrToken?: string | null;
-};
-
 type MenuView = "menu" | "checkout" | "success";
 
-export default function Template002({ menu, qrToken }: Props) {
+export default function Template002({ menu, qrToken }: TemplateProps) {
   const [cartOpen, setCartOpen] = useState(false);
   const [view, setView] = useState<MenuView>("menu");
   const [createdOrder, setCreatedOrder] = useState<{

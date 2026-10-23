@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useMenuSearch } from "@/features/menu/hooks/useMenuSearch";
 import { useMenuCart } from "@/features/menu/hooks/useMenuCart";
-import type { MenuData } from "@/features/menu/types/menu.types";
+import type { MenuData, TemplateProps } from "@/features/menu/types/menu.types";
 import Template003Header from "../components/Template003/Template003Header";
 import Template003CategoryChips from "../components/Template003/Template003CategoryChips";
 import Template003DailyPicks from "../components/Template003/Template003DailyPicks";
@@ -13,15 +13,9 @@ import Template003CartDrawer from "../components/Template003/Template003CartDraw
 import Template003Checkout from "../components/Template003/Template003Checkout";
 import Template003OrderSuccess from "../components/Template003/Template003OrderSuccess";
 
-type Props = {
-  menu: MenuData;
-  tableName?: string | null;
-  qrToken?: string | null;
-};
-
 type MenuView = "menu" | "checkout" | "success";
 
-export default function Template003({ menu, qrToken }: Props) {
+export default function Template003({ menu, qrToken }: TemplateProps) {
   const [cartOpen, setCartOpen] = useState(false);
   const [view, setView] = useState<MenuView>("menu");
   const [createdOrder, setCreatedOrder] = useState<{

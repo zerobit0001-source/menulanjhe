@@ -10,6 +10,12 @@ export type MenuData = {
   categories: MenuCategory[];
 };
 
+export type TemplateProps = {
+  menu: MenuData;
+  tableName?: string | null;
+  qrToken?: string | null;
+  isPreview? : boolean;
+};
 
 export type MenuQuickSection = {
   id: string;
@@ -18,13 +24,11 @@ export type MenuQuickSection = {
   products: MenuProduct[];
 };
 
-
 export type MenuCategory = {
   id: string;
   name: string;
   products: MenuProduct[];
 };
-
 
 export type MenuProduct = {
   id: string;

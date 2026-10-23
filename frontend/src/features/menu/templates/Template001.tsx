@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { useMenuSearch } from "@/features/menu/hooks/useMenuSearch";
 import { useMenuCart } from "@/features/menu/hooks/useMenuCart";
-import type { MenuData, MenuProduct } from "@/features/menu/types/menu.types";
+import type {
+  MenuData,
+  MenuProduct,
+  TemplateProps,
+} from "@/features/menu/types/menu.types";
 import Template001Header from "../components/Template001/Template001Header";
 import Template001Search from "../components/Template001/Template001Search";
 import Template001QuickCategories from "../components/Template001/Template001QuickCategories";
@@ -15,15 +19,13 @@ import Template001CartDrawer from "../components/Template001/Template001CartDraw
 import Template001Checkout from "../components/Template001/Template001Checkout";
 import Template001OrderSuccess from "../components/Template001/Template001OrderSuccess";
 
-type Props = {
-  menu: MenuData;
-  // sessionToken?: string | null;
-  tableName?: string | null;
-  qrToken?: string | null;
-};
 type MenuView = "menu" | "checkout" | "success";
 
-export default function Template001({ menu, tableName, qrToken }: Props) {
+export default function Template001({
+  menu,
+  tableName,
+  qrToken,
+}: TemplateProps) {
   const [quickSection, setQuickSection] = useState("popular");
   const [cartOpen, setCartOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);

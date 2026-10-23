@@ -69,7 +69,6 @@ export default function MenuPage() {
       return;
     }
 
-
     console.log("Selected template:", templateId);
     try {
       await updateMenu({

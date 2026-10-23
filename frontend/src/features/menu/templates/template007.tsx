@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { useMenuSearch } from "@/features/menu/hooks/useMenuSearch";
 import { useMenuCart } from "@/features/menu/hooks/useMenuCart";
-import type { MenuData } from "@/features/menu/types/menu.types";
+import type { TemplateProps } from "@/features/menu/types/menu.types";
 import Template007Checkout from "../components/Template007/Template007Checkout";
 import Template007OrderSuccess from "../components/Template007/Template007OrderSuccess";
 import Template007Header from "../components/Template007/Template007Header";
@@ -18,15 +18,9 @@ import Template007ProductGrid from "../components/Template007/Template007Product
 import Template007CartButton from "../components/Template007/Template007CartButton";
 import Template007CartDrawer from "../components/Template007/Template007CartDrawer";
 
-type Props = {
-  menu: MenuData;
-  tableName?: string | null;
-  qrToken?: string | null;
-};
-
 type MenuView = "menu" | "checkout" | "success";
 
-export default function Template007({ menu, qrToken }: Props) {
+export default function Template007({ menu, qrToken }: TemplateProps) {
   const [cartOpen, setCartOpen] = useState(false);
   const [view, setView] = useState<MenuView>("menu");
   const [createdOrder, setCreatedOrder] = useState<{
@@ -110,7 +104,7 @@ export default function Template007({ menu, qrToken }: Props) {
   }
 
   return (
-    <div className="relative min-h-screen bg-[#120D09] text-[#F5EBDD]">
+    <div className="relative min-h-screen bg-[#120D09] text-[#F5EBDD] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <Template007Header
         shopName={menu.shop.name}
         cartCount={cartCount}

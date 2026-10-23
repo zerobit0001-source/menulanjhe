@@ -28,6 +28,7 @@ type MenuRendererProps = {
   menu: MenuData;
   qrToken?: string | null;
   tableName?: string | null;
+  isPreview?: boolean;
 };
 
 export default function MenuRenderer({
@@ -35,8 +36,9 @@ export default function MenuRenderer({
   menu,
   qrToken,
   tableName,
+  isPreview = false,
 }: MenuRendererProps) {
   const Template = menuTemplates[template] ?? menuTemplates.template006; // default to Template006 if not found
 
-  return <Template menu={menu} qrToken={qrToken} tableName={tableName} />;
+  return <Template menu={menu} qrToken={qrToken} tableName={tableName} isPreview={isPreview} />;
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useMenuSearch } from "@/features/menu/hooks/useMenuSearch";
 import { useMenuCart } from "@/features/menu/hooks/useMenuCart";
-import type { MenuData } from "@/features/menu/types/menu.types";
+import type { MenuData, TemplateProps } from "@/features/menu/types/menu.types";
 import Template004Header from "../components/Template004/Template004Header";
 import Template004Promo from "../components/Template004/Template004Promo";
 import Template004CategoryChips from "../components/Template004/Template004CategoryChips";
@@ -13,15 +13,13 @@ import Template004CartDrawer from "../components/Template004/Template004CartDraw
 import Template004Checkout from "../components/Template004/Template004Checkout";
 import Template004OrderSuccess from "../components/Template004/Template004OrderSuccess";
 
-type Props = {
-  menu: MenuData;
-  tableName?: string | null;
-  qrToken?: string | null;
-};
-
 type MenuView = "menu" | "checkout" | "success";
 
-export default function Template004({ menu, tableName, qrToken }: Props) {
+export default function Template004({
+  menu,
+  tableName,
+  qrToken,
+}: TemplateProps) {
   const [cartOpen, setCartOpen] = useState(false);
   const [view, setView] = useState<MenuView>("menu");
   const [createdOrder, setCreatedOrder] = useState<{
@@ -30,8 +28,9 @@ export default function Template004({ menu, tableName, qrToken }: Props) {
   } | null>(null);
   const [activeCategory, setActiveCategory] = useState("all");
 
-  const { search, setSearch, isSearching, filteredCategories } =
-    useMenuSearch(menu.categories);
+  const { search, setSearch, isSearching, filteredCategories } = useMenuSearch(
+    menu.categories,
+  );
 
   const allProducts = menu.categories.flatMap((category) => category.products);
 
@@ -48,8 +47,8 @@ export default function Template004({ menu, tableName, qrToken }: Props) {
   } = useMenuCart(allProducts);
 
   const popular =
-    menu.quickSections.find((section) => section.id === "popular")
-      ?.products ?? [];
+    menu.quickSections.find((section) => section.id === "popular")?.products ??
+    [];
 
   const visibleCategories =
     activeCategory === "all"
@@ -92,7 +91,7 @@ export default function Template004({ menu, tableName, qrToken }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-24">
+    <div className="min-h-screen bg-white pb-24 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <Template004Header
         shop={menu.shop}
         tableName={tableName}

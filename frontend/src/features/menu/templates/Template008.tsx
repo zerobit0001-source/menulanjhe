@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { MenuData } from "../types/menu.types";
+import { MenuData, TemplateProps } from "../types/menu.types";
 import {
   toT7Model,
   useT7Cart,
@@ -18,15 +18,13 @@ import { Template008CategoryNav } from "../components/Template008/Template008Cat
 import { Template008Checkout } from "../components/Template008/Template008Checkout";
 import { Template008OrderSuccess } from "../components/Template008/Template008OrderSuccess";
 
-type Props = {
-  menu: MenuData;
-  tableName?: string | null;
-  qrToken?: string | null;
-};
-
 type MenuView = "menu" | "checkout" | "success";
 
-export default function Template008({ menu, tableName, qrToken }: Props) {
+export default function Template008({
+  menu,
+  tableName,
+  qrToken,
+}: TemplateProps) {
   const model = useMemo(() => toT7Model(menu), [menu]);
   const cart = useT7Cart(model.all);
   const order = useT7Order(cart.lines, qrToken);
@@ -61,7 +59,10 @@ export default function Template008({ menu, tableName, qrToken }: Props) {
   };
 
   return (
-    <div dir="rtl" className="min-h-dvh bg-[#FAFAFA] text-[#171717]">
+    <div
+      dir="rtl"
+      className="min-h-dvh bg-[#FAFAFA] text-[#171717] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
       <Template008Header
         shop={model.shop}
         count={cart.count}

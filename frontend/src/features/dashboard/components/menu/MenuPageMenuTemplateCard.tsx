@@ -2,7 +2,11 @@
 
 import { Check, Eye } from "lucide-react";
 import { Button, Card, Typography } from "@mui/material";
-import { MenuTemplate } from "../../types/menu/menu.type";
+import MenuTemplatePreviewDialog from "./Menutemplatepreviewdialog";
+import MenuRenderer from "@/features/menu/MenuRenderer";
+import { demoMenu } from "@/features/menu/data/demoMenu";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Props = {
   template: MenuTemplate;
@@ -19,6 +23,9 @@ export default function MenuPageMenuTemplateCard({
   onPreview,
   disabled = false,
 }: Props) {
+  const [open, setOpen] = useState(false);
+
+  const router = useRouter();
   return (
     <Card
       elevation={0}
@@ -59,8 +66,11 @@ export default function MenuPageMenuTemplateCard({
         {/* Preview button */}
         <button
           type="button"
-          onClick={() => onPreview(template)}
-          className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-lg bg-white/95 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm backdrop-blur transition-colors hover:bg-white"
+          onClick={() => {
+            onPreview(template);
+            router.push(`/dashboard/menu/preview/${template.id}`);
+          }}
+          className="absolute underline bottom-3 left-3 flex items-center gap-1.5 rounded-lg bg-white/95 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm backdrop-blur transition-colors hover:bg-white"
         >
           <Eye size={14} />
           پیش‌نمایش
