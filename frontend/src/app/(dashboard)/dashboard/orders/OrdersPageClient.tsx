@@ -34,6 +34,9 @@ export default function OrdersPageClient({ search }: { search: string }) {
     search,
   });
 
+  console.log("================== this is orders ==================");
+  console.log(data);
+
   const handleFilterChange = (newFilter: FilterValue) => {
     setFilter(newFilter);
     setPage(1);
