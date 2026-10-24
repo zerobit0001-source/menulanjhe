@@ -1,7 +1,7 @@
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
+from django_filters.rest_framework import DjangoFilterBackend
 from apps.common.mixins import TenantScopedQuerySetMixin
 from apps.tenants.permissions import HasTenantPermission
 
@@ -21,7 +21,7 @@ class ProductViewSet(TenantScopedQuerySetMixin, viewsets.ModelViewSet):
     }
     required_permission = "product.view"
 
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter,]
     search_fields = ["id", "name", "description", "category__name"]
     filterset_fields = ["category", "is_available", "is_featured"]
 
