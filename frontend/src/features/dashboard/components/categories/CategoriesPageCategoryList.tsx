@@ -51,11 +51,7 @@ export default function CategoriesPageCategoryList({ search, filter }: Props) {
     isError: isCategoriesError,
     refetch,
   } = useGetCategoriesQuery(
-    activeMenu
-      ? {
-          menu: activeMenu.id,
-        }
-      : undefined,
+    { menu: activeMenu?.id ?? "" },
     {
       skip: !activeMenu,
     },

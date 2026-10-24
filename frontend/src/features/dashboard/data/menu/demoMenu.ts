@@ -1,4 +1,3 @@
-
 export const dashboardMenu: DashboardMenu = {
   id: "menu_001",
   shop_name: "کافه لانژه",
@@ -27,6 +26,34 @@ export const menuTemplates: MenuTemplate[] = [
     id: "template003",
     name: "مینیمال",
     description: "طراحی مینیمال و ساده",
+    preview: "",
+    available: true,
+  },
+  {
+    id: "template005",
+    name: "مرتب",
+    description: "ظراحی مرتب و تمیز مناسب رستوران",
+    preview: "",
+    available: true,
+  },
+  {
+    id: "template006",
+    name: "مشکی",
+    description: "طراحی دارک و مشکی مخصوص کافه ها با تم مشکی",
+    preview: "",
+    available: true,
+  },
+  {
+    id: "template007",
+    name: "قهوه ای",
+    description: "طراحی مدرن مخصوص کافه ها با تم قهوه ای",
+    preview: "",
+    available: true,
+  },
+  {
+    id: "template008",
+    name: "جذاب",
+    description: "طراحی مدرن مخصوص کافه ها با تم روشن و جذاب",
     preview: "",
     available: true,
   },
