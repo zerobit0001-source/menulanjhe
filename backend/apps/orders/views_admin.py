@@ -24,6 +24,7 @@ class OrderViewSet(TenantScopedQuerySetMixin, mixins.CreateModelMixin, viewsets.
         "cancel": "order.cancel",
     }
     filterset_fields = ["status", "branch", "order_type"]
+    search_fields = ["id"]
 
     def create(self, request, *args, **kwargs):
         serializer = CreateManualOrderSerializer(data=request.data)
