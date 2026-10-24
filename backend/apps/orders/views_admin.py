@@ -1,4 +1,4 @@
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from apps.branches.models import Branch
@@ -23,6 +23,11 @@ class OrderViewSet(TenantScopedQuerySetMixin, mixins.CreateModelMixin, viewsets.
         "complete": "order.complete",
         "cancel": "order.cancel",
     }
+
+    filter_backends = [
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
     filterset_fields = ["status", "branch", "order_type"]
     search_fields = ["id"]
 
