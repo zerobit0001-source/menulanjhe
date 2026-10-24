@@ -15,9 +15,8 @@ import { Button } from "@mui/material";
 
 type FilterValue = "ALL" | OrderStatus;
 
-export default function OrdersPageClient() {
+export default function OrdersPageClient({ search }: { search: string }) {
   const [filter, setFilter] = useState<FilterValue>("ALL");
-  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
   const { connectionState, isConnected } = useOrdersRealtime();
@@ -39,11 +38,6 @@ export default function OrdersPageClient() {
     setFilter(newFilter);
     setPage(1);
   };
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-    setPage(1);
-  };
-
 
   return (
     <>
@@ -58,7 +52,6 @@ export default function OrdersPageClient() {
           filter={filter}
           search={search}
           onFilterChange={handleFilterChange}
-          onSearchChange={handleSearchChange}
         />
 
         <OrderPageOrdersList

@@ -9,6 +9,8 @@ import {
 } from "@mui/material";
 import { Search, SlidersHorizontal } from "lucide-react";
 import type { OrderStatus } from "../../types/orders/orders.types";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type FilterValue = "ALL" | OrderStatus;
 
@@ -49,7 +51,6 @@ export default function OrdersPageToolbar({
   filter,
   search,
   onFilterChange,
-  onSearchChange,
 }: Props) {
   const handleFilter = (
     _event: React.MouseEvent<HTMLElement>,
@@ -59,24 +60,51 @@ export default function OrdersPageToolbar({
       onFilterChange(newFilter);
     }
   };
-  
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [searchValue, setSearchValue] = useState(search);
+
+  useEffect(() => {
+    setSearchValue(search);
+  }, [search]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      if (searchValue.trim()) {
+        params.set("search", searchValue.trim());
+      } else {
+        params.delete("search");
+      }
+
+      const queryString = params.toString();
+
+      router.push(queryString ? `${pathname}?${queryString}` : pathname);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [searchValue, pathname, router]);
+
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
       <div className="flex items-center gap-2">
-        {/* <Paper
+        <Paper
           elevation={0}
           className="flex h-10 min-w-0 flex-1 items-center gap-2 border border-gray-200! px-3 sm:w-64 sm:flex-none"
         >
           <Search size={19} className="shrink-0 text-gray-400" />
 
           <InputBase
-            value={search}
-            onChange={(event) => onSearchChange(event.target.value)}
+            value={searchValue}
+            onChange={(event) => setSearchValue(event.target.value)}
             placeholder="جستجوی سفارش..."
             className="flex-1 text-sm!"
             fullWidth
           />
-        </Paper> */}
+        </Paper>
 
         <IconButton>
           <SlidersHorizontal size={20} />

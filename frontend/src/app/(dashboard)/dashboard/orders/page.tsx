@@ -3,10 +3,22 @@ import OrdersPageClient from "./OrdersPageClient";
 import { SectionTitle } from "@/features/dashboard/components/SectionTitle";
 import { SquareText } from "lucide-react";
 
-export default function OrderPage() {
+interface OrdersPageProps {
+  searchParams: Promise<{
+    search?: string;
+    filter?: "all" | "DISABLED" | "VISIBLE";
+    page?: string;
+    category?: string;
+  }>;
+}
+
+export default async function OrderPage({ searchParams }: OrdersPageProps) {
+  const params = await searchParams;
+
+  const search = params.search ?? "";
   return (
     <DashboardContainer>
-      <OrdersPageClient />
+      <OrdersPageClient search={search} />
     </DashboardContainer>
   );
 }

@@ -17,7 +17,12 @@ type Props = {
   category: string;
 };
 
-export default function ProductsPageClient({ search, filter, page, category }: Props) {
+export default function ProductsPageClient({
+  search,
+  filter,
+  page,
+  category,
+}: Props) {
   return (
     <>
       <SectionTitle
@@ -32,7 +37,12 @@ export default function ProductsPageClient({ search, filter, page, category }: P
 
       <ProductsPageToolbar search={search} filter={filter} />
 
-      <ProductsPageProductsList search={search} filter={filter} page={page} category={category} />
+      <ProductsPageProductsList
+        search={search}
+        filter={filter}
+        page={page}
+        category={category}
+      />
     </>
   );
 }
