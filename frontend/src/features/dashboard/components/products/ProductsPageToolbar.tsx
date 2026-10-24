@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  CircularProgress,
   IconButton,
   InputBase,
   MenuItem,
@@ -11,67 +12,16 @@ import {
   Typography,
 } from "@mui/material";
 import { Search, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useGetCategoriesQuery } from "../../api/categoryApi";
+import { useGetMenusQuery } from "../../api/menuApi";
 
 const filters = [
   { value: "all", label: "همه" },
   { value: "DISABLED", label: "مخفی" },
   { value: "VISIBLE", label: "دیده" },
-];
-
-type Category = {
-  id: string;
-  menu: string;
-  name: string;
-  icon_name: string;
-  sort_order: number;
-  is_active: boolean;
-};
-
-// Fake data — بعداً با API جایگزین کن.
-const mockCategories: Category[] = [
-  {
-    id: "256686d5-9797-4c87-8819-190601cac5eb",
-    menu: "2a2c7d52-fd2f-4b7f-a2ef-8788954f88d2",
-    name: "قهوه",
-    icon_name: "coffee",
-    sort_order: 0,
-    is_active: true,
-  },
-  {
-    id: "a8b8c8d1-4e23-4a6b-9d71-123456789001",
-    menu: "2a2c7d52-fd2f-4b7f-a2ef-8788954f88d2",
-    name: "نوشیدنی سرد",
-    icon_name: "glass-water",
-    sort_order: 1,
-    is_active: true,
-  },
-  {
-    id: "a8b8c8d1-4e23-4a6b-9d71-123456789002",
-    menu: "2a2c7d52-fd2f-4b7f-a2ef-8788954f88d2",
-    name: "چای و دمنوش",
-    icon_name: "coffee",
-    sort_order: 2,
-    is_active: true,
-  },
-  {
-    id: "a8b8c8d1-4e23-4a6b-9d71-123456789003",
-    menu: "2a2c7d52-fd2f-4b7f-a2ef-8788954f88d2",
-    name: "کیک و دسر",
-    icon_name: "cake",
-    sort_order: 3,
-    is_active: true,
-  },
-  {
-    id: "a8b8c8d1-4e23-4a6b-9d71-123456789004",
-    menu: "2a2c7d52-fd2f-4b7f-a2ef-8788954f88d2",
-    name: "غیرفعال",
-    icon_name: "folder",
-    sort_order: 4,
-    is_active: false,
-  },
-];
+] as const;
 
 type Props = {
   search: string;
@@ -84,8 +34,40 @@ export default function ProductsPageToolbar({ search, filter }: Props) {
   const searchParams = useSearchParams();
 
   const selectedCategory = searchParams.get("category") ?? "all";
-
   const [searchValue, setSearchValue] = useState(search);
+
+  const {
+    data: menusData,
+    isLoading: isMenusLoading,
+    isError: isMenusError,
+  } = useGetMenusQuery();
+
+  const activeMenu = useMemo(
+    () => menusData?.results.find((menu) => menu.is_active),
+    [menusData],
+  );
+
+  const {
+    data: categoriesData,
+    isLoading: isCategoriesLoading,
+    isError: isCategoriesError,
+  } = useGetCategoriesQuery(
+    { menu: activeMenu?.id ?? "" },
+    { skip: !activeMenu },
+  );
+
+  const categories = useMemo(
+    () =>
+      [...(categoriesData?.results ?? [])]
+        .filter((category) => category.is_active)
+        .sort((a, b) => a.sort_order - b.sort_order),
+    [categoriesData],
+  );
+
+  const selectedCategoryName = useMemo(
+    () => categories.find((category) => category.id === selectedCategory)?.name,
+    [categories, selectedCategory],
+  );
 
   useEffect(() => {
     setSearchValue(search);
@@ -94,7 +76,6 @@ export default function ProductsPageToolbar({ search, filter }: Props) {
   useEffect(() => {
     const trimmedSearch = searchValue.trim();
 
-    // اگر مقدار جست‌وجو با URL یکی است، نیازی به navigation نیست.
     if (trimmedSearch === (searchParams.get("search") ?? "")) {
       return;
     }
@@ -197,21 +178,27 @@ export default function ProductsPageToolbar({ search, filter }: Props) {
                 );
               }
 
-              const category = mockCategories.find((item) => item.id === value);
-
-              return category?.name ?? "دسته‌بندی انتخاب‌شده";
+              return selectedCategoryName ?? "دسته‌بندی انتخاب‌شده";
             }}
           >
             <MenuItem value="all">همه دسته‌بندی‌ها</MenuItem>
 
-            {mockCategories
-              .filter((category) => category.is_active)
-              .sort((a, b) => a.sort_order - b.sort_order)
-              .map((category) => (
+            {isMenusLoading || isCategoriesLoading ? (
+              <MenuItem disabled>
+                <CircularProgress size={18} />
+                <span className="mr-2">در حال بارگذاری...</span>
+              </MenuItem>
+            ) : isMenusError || isCategoriesError ? (
+              <MenuItem disabled>خطا در دریافت دسته‌بندی‌ها</MenuItem>
+            ) : categories.length === 0 ? (
+              <MenuItem disabled>دسته‌بندی فعالی وجود ندارد</MenuItem>
+            ) : (
+              categories.map((category) => (
                 <MenuItem key={category.id} value={category.id}>
                   {category.name}
                 </MenuItem>
-              ))}
+              ))
+            )}
           </Select>
         </Paper>
       </div>
