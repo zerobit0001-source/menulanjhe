@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -20,6 +20,9 @@ class ProductViewSet(TenantScopedQuerySetMixin, viewsets.ModelViewSet):
         "toggle_active": "product.update",
     }
     required_permission = "product.view"
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["id", "name", "description", "category__name"]
     filterset_fields = ["category", "is_available", "is_featured"]
 
     @action(detail=True, methods=["post"], url_path="toggle_active")
