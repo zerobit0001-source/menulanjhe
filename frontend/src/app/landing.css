@@ -1,0 +1,41 @@
+/* Scoped to the landing page via the .ml-landing wrapper / ml-* classes. */
+
+.ml-section {
+    scroll-margin-top: 5rem;
+    /* offset for the sticky navbar */
+}
+
+@keyframes ml-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* All motion is opt-in: users with reduced motion get none of it. */
+@media (prefers-reduced-motion: no-preference) {
+    html:has(.ml-landing) {
+        scroll-behavior: smooth;
+    }
+
+    .ml-fade-up {
+        animation: ml-fade-up 0.6s ease-out both;
+    }
+
+    .ml-delay-1 {
+        animation-delay: 0.08s;
+    }
+
+    .ml-delay-2 {
+        animation-delay: 0.16s;
+    }
+
+    .ml-delay-3 {
+        animation-delay: 0.24s;
+    }
+}
