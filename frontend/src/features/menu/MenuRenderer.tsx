@@ -8,6 +8,7 @@ import Template005 from "./templates/Template005";
 import Template006 from "./templates/Template006";
 import Template007 from "./templates/Template007";
 import Template008 from "./templates/Template008";
+import Template009 from "./templates/Template009";
 
 const menuTemplates = {
   modern: ModernMenu,
@@ -19,12 +20,13 @@ const menuTemplates = {
   template006: Template006,
   template007: Template007,
   template008: Template008,
+  template009: Template009,
 };
 
 type MenuTemplate = keyof typeof menuTemplates;
 
 type MenuRendererProps = {
-  template: MenuTemplate ;
+  template: MenuTemplate;
   menu: MenuData;
   qrToken?: string | null;
   tableName?: string | null;
@@ -40,5 +42,12 @@ export default function MenuRenderer({
 }: MenuRendererProps) {
   const Template = menuTemplates[template] ?? menuTemplates.template006; // default to Template006 if not found
 
-  return <Template menu={menu} qrToken={qrToken} tableName={tableName} isPreview={isPreview} />;
+  return (
+    <Template
+      menu={menu}
+      qrToken={qrToken}
+      tableName={tableName}
+      isPreview={isPreview}
+    />
+  );
 }
