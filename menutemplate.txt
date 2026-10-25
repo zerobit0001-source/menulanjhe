@@ -1,0 +1,638 @@
+# Menu Lanjhe — Public Menu Template Integration Specification
+
+## 1. Purpose and Scope
+
+This document defines the mandatory architecture, data contracts, component responsibilities, and behavioral requirements for all public menu templates in the **Menu Lanjhe** project.
+
+Use this specification as the single source of truth whenever implementing a new public menu template or integrating an existing template into the project.
+
+Every template may have its own visual design, layout, animations, typography, colors, and user experience. However, all templates must follow the same data contracts and business logic.
+
+**The goal is to make templates visually independent but functionally consistent.**
+
+Do not create separate implementations of search, cart management, or order submission for individual templates when the existing shared hooks already provide these features.
+
+---
+
+## 2. Main Architecture and Responsibilities
+
+The public menu experience consists of three main views:
+
+- `menu`: Displays the restaurant menu and allows customers to select products.
+- `checkout`: Displays the checkout interface and allows customers to submit an order.
+- `success`: Displays the result of a successfully submitted order.
+
+The main template component is responsible for rendering the appropriate view and composing its visual sections.
+
+The existing shared hooks are responsible for the underlying behavior:
+
+- `useMenuSearch`: Search and filter menu products.
+- `useMenuCart`: Manage cart items, quantities, and totals.
+- `useMenuOrder`: Submit orders and expose loading and error states.
+
+Keep these responsibilities separate.
+
+### Architectural rules
+
+1. The template must not reimplement existing shared-hook functionality.
+2. The template must not introduce a new API integration when the existing project already provides the required service or hook.
+3. The template must receive its required data through props.
+4. View transitions must follow the defined state flow.
+5. Each template may implement its own visual components while respecting the shared contracts.
+6. Do not modify shared hooks, API services, global state, or unrelated project files unless explicitly required.
+7. Follow the existing project's TypeScript types, naming conventions, component organization, and import aliases.
+
+---
+
+## 3. Main Template Component Contract
+
+Every public menu template must expose the following props:
+
+```ts
+type MenuTemplateProps = {
+  menu: Menu;
+  qrToken: string;
+};
+```
+
+`Menu` represents the complete menu data model defined in this document.
+
+`qrToken` identifies the QR context associated with the public menu and must be passed to the checkout/order flow as required by the existing implementation.
+
+The main template component owns the view state and coordinates transitions between the three views.
+
+Conceptually:
+
+```tsx
+const [view, setView] = useState<
+  "menu" | "checkout" | "success"
+>("menu");
+```
+
+The component must also retain the successfully submitted order when transitioning to the success view.
+
+The exact component structure may differ according to the existing project architecture, but the public props and behavioral contracts must remain consistent.
+
+---
+
+## 4. Menu Data Model
+
+The template receives the following menu structure:
+
+```ts
+type Menu = {
+  shop: {
+    name: string;
+    description?: string;
+  };
+
+  quickSections: QuickSection[];
+
+  categories: MenuCategory[];
+};
+
+type QuickSection = {
+  id: string;
+  title: string;
+  type: "popular" | "discount";
+  products: MenuProduct[];
+};
+
+type MenuCategory = {
+  id: string;
+  name: string;
+  products: MenuProduct[];
+};
+
+type MenuProduct = {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  image?: string | null;
+  available: boolean;
+};
+```
+
+Use the actual shared types from the project if they already exist. Do not create conflicting duplicate definitions.
+
+### 4.1 Shop
+
+The `shop` object contains the restaurant's public identity:
+
+- `name`: Restaurant or café name.
+- `description`: Optional restaurant description.
+
+Display these values wherever appropriate in the template, such as the header or hero section.
+
+### 4.2 Quick Sections
+
+`quickSections` contains optional curated product groups, such as:
+
+- `popular`: Popular products.
+- `discount`: Discounted products.
+
+Each section has its own identifier, title, type, and product list.
+
+These sections are independent visual groups and may display products that also appear in regular categories.
+
+Do not assume that a product belongs to a quick section simply because its name, price, or position suggests it should.
+
+Only display quick sections supported by the provided data.
+
+### 4.3 Categories and Products
+
+`categories` contains the main menu structure.
+
+Each category contains its own products. Each product includes:
+
+- `id`: Stable product identifier.
+- `name`: Product name.
+- `description`: Optional product description.
+- `price`: Product price.
+- `image`: Optional product image.
+- `available`: Whether the product can currently be ordered.
+
+Unavailable products must remain visually identifiable as unavailable and must not be addable to the cart.
+
+Handle missing descriptions and images gracefully without breaking the layout.
+
+### 4.4 Static and API-Provided Data
+
+The supplied menu object may contain static values for development, previews, or demonstrations, while other values may be provided by the API.
+
+Follow the data source and conventions established by the existing project.
+
+The template must render the data it receives rather than independently deciding which values should be fetched.
+
+Important rules:
+
+- Do not replace real API data with hardcoded demonstration content.
+- Do not interpret an empty string or empty array as proof that data must be fetched.
+- Do not invent missing product information.
+- Do not hardcode prices, product availability, restaurant names, or order results into reusable template components.
+
+If a field required by the design is unavailable, render an appropriate fallback or omit the optional section.
+
+---
+
+## 5. Menu View Requirements
+
+When `view === "menu"`, render the customer-facing menu experience.
+
+The following sections are required architectural responsibilities. Their visual arrangement is determined by the individual template design.
+
+### 5.1 Header
+
+Display the restaurant identity and any appropriate navigation or utility actions.
+
+The header must fit the template's design and work correctly on mobile and desktop.
+
+### 5.2 Hero
+
+Display the restaurant name, optional description, and any relevant introductory content.
+
+Use the supplied data rather than hardcoded restaurant information.
+
+### 5.3 Search
+
+Integrate the existing hook:
+
+```ts
+import { useMenuSearch } from "@/features/menu/hooks/useMenuSearch";
+```
+
+The hook accepts:
+
+```ts
+useMenuSearch(categories: MenuCategory[])
+```
+
+It provides:
+
+- `search`
+- `setSearch`
+- `clearSearch`
+- `isSearching`
+- `filteredCategories`
+- `searchResultCount`
+
+Use these returned values to implement the search interface.
+
+Requirements:
+
+- Search product names and descriptions through the existing hook.
+- Display filtered categories and products.
+- Show the number of matching products when appropriate.
+- Provide a way to clear the search.
+- Display a suitable empty state when no products match.
+- Do not duplicate the filtering logic inside the template.
+- Do not modify the hook merely to accommodate a visual design.
+
+The current hook searches regular categories. Do not assume it also searches `quickSections`.
+
+### 5.4 Quick Sections
+
+Render supplied quick sections when appropriate for the design.
+
+Examples include popular products and discounts.
+
+Quick-section product cards must use the same product data and cart actions as regular product cards.
+
+Do not create a separate cart implementation for quick-section products.
+
+### 5.5 Categories
+
+Display the menu categories and their products.
+
+The design may use tabs, horizontal navigation, category chips, vertical sections, or another suitable navigation pattern.
+
+Regardless of the design:
+
+- Category navigation must work correctly.
+- Filtered search results must be respected.
+- Empty categories should be handled appropriately.
+- Product identifiers must remain consistent across the interface.
+
+### 5.6 Products
+
+Product cards must display available product information, including the name, price, optional description, and optional image.
+
+Each card must provide an appropriate way to add an available product to the cart.
+
+Unavailable products must not be addable.
+
+When a product is already in the cart, the interface may display its current quantity and provide increment/decrement controls.
+
+Product cards must work consistently whether the product appears in a regular category or a quick section.
+
+### 5.7 Cart Button
+
+Provide a visible cart entry point appropriate to the design.
+
+The button should communicate the current cart count and, where appropriate, the total price.
+
+Clicking it must open the cart interface.
+
+### 5.8 Cart
+
+Integrate the existing hook:
+
+```ts
+import { useMenuCart } from "@/features/menu/hooks/useMenuCart";
+```
+
+The hook accepts:
+
+```ts
+useMenuCart(products: MenuProduct[])
+```
+
+It provides:
+
+- `quantities`
+- `cartItems`
+- `cartCount`
+- `cartTotal`
+- `addProduct`
+- `increaseProduct`
+- `decreaseProduct`
+- `removeProduct`
+- `clearCart`
+
+Use these values and actions directly.
+
+Requirements:
+
+- Add available products.
+- Increase and decrease product quantities.
+- Remove products from the cart.
+- Display the current item quantities.
+- Display the cart count and calculated total.
+- Handle an empty cart.
+- Prevent unavailable products from being added.
+- Keep cart state consistent across all menu sections.
+
+Ensure that the `products` passed to `useMenuCart` contain every product that the cart is expected to resolve, including products displayed in quick sections.
+
+Do not create separate quantity state inside product cards or quick sections.
+
+### 5.9 Checkout Entry
+
+Provide a clear action to proceed to checkout.
+
+The action must be disabled or otherwise handled appropriately when the cart is empty.
+
+The action must transition the main template to the `checkout` view without unnecessarily resetting the cart.
+
+---
+
+## 6. Checkout View Requirements
+
+The checkout interface is responsible for collecting optional customer information and submitting the order.
+
+Its component contract is:
+
+```ts
+type CheckoutProps = {
+  items: CartItem[];
+  total: number;
+  qrToken: string;
+  onBack: () => void;
+  onSuccess: (order: MenuOrder) => void;
+};
+```
+
+Use the actual `CartItem` and `MenuOrder` types from the existing project. These names represent the shared cart-item and order-result contracts and must not conflict with existing definitions.
+
+### 6.1 Required State
+
+The checkout interface maintains:
+
+```tsx
+const [name, setName] = useState("");
+const [notes, setNotes] = useState("");
+```
+
+Both fields are optional.
+
+### 6.2 Order Submission
+
+Integrate the existing hook:
+
+```ts
+import { useMenuOrder } from "@/features/menu/hooks/useMenuOrder";
+```
+
+Use the existing hook's submission method and state:
+
+```tsx
+const {
+  submitOrder,
+  error,
+  isLoading,
+} = useMenuOrder();
+```
+
+The submission flow is:
+
+```tsx
+const handleSubmit = async () => {
+  const result = await submitOrder({
+    items,
+    qrToken,
+    name,
+    notes,
+  });
+
+  if (!result) return;
+
+  onSuccess(result);
+};
+```
+
+This illustrates the expected integration contract. Adapt the code to the actual return types and error-handling conventions of the existing hook without changing its business logic.
+
+### 6.3 Checkout Behavior
+
+The checkout interface must:
+
+- Display the selected products and quantities.
+- Display the total calculated by the shared cart hook.
+- Allow the customer to enter an optional name.
+- Allow the customer to enter optional order notes.
+- Provide a back action that calls `onBack`.
+- Display submission errors through the existing error state.
+- Display a loading state while the order is being submitted.
+- Prevent accidental repeated submissions while loading.
+- Call `onSuccess` only after a successful order submission.
+
+Do not clear the cart directly inside the checkout component.
+
+Do not independently navigate to the success page. The main template owns the view transition.
+
+### 6.4 Price and Order Integrity
+
+The displayed total comes from the shared cart state.
+
+Never treat a client-calculated total or client-supplied price as authoritative order data. The backend must validate the products, quantities, availability, and final prices.
+
+Follow the existing `useMenuOrder` API contract. Do not invent new request fields or change the order payload without verifying the backend integration.
+
+---
+
+## 7. Success View Requirements
+
+The success view is displayed only after a successful order submission.
+
+Its component contract is:
+
+```ts
+type SuccessProps = {
+  orderId: string;
+  total: number;
+  onBack: () => void;
+};
+```
+
+### Required behavior
+
+- Clearly communicate that the order was submitted successfully.
+- Display the order identifier.
+- Display the submitted order's total.
+- Provide a clear action to return to the menu.
+- Maintain the visual language of the selected template.
+
+The order identifier and total must come from the actual successful order response, not from hardcoded values.
+
+The success view must not submit the order again or independently manipulate the cart.
+
+The main template is responsible for storing the order result, clearing the cart, and changing the view.
+
+If the existing order response uses different field names, map them through the existing shared type or adapter instead of inventing response fields.
+
+---
+
+## 8. View State and Transition Rules
+
+The expected customer flow is:
+
+```text
+MENU
+  |
+  | Customer proceeds to checkout
+  v
+CHECKOUT
+  |
+  | Customer returns
+  v
+MENU
+
+CHECKOUT
+  |
+  | Order submission succeeds
+  v
+SUCCESS
+  |
+  | Customer returns to the menu
+  v
+MENU
+```
+
+### 8.1 Initial State
+
+The initial view must be `menu`.
+
+### 8.2 Returning from Checkout
+
+`onBack` returns the customer to the menu.
+
+The cart must remain intact when the customer returns from checkout.
+
+### 8.3 Successful Submission
+
+When checkout invokes `onSuccess(order)`:
+
+1. Store the returned order in the main template's state.
+2. Clear the shared cart using `clearCart()`.
+3. Change the active view to `success`.
+
+Only perform these actions after receiving a successful order result.
+
+### 8.4 Returning from Success
+
+When the customer chooses to return to the menu:
+
+1. Change the view to `menu`.
+2. Keep the cart empty.
+3. Do not resubmit the previous order.
+
+Use a predictable state transition rather than reloading the entire page.
+
+---
+
+## 9. Required Template Sections
+
+The main template must integrate the following responsibilities:
+
+1. Header
+2. Hero
+3. Search
+4. Quick Sections, when data is available
+5. Categories
+6. Products
+7. Cart Button
+8. Cart
+9. Checkout View
+10. Success View
+
+These responsibilities do not require separate files for every section. Organize the implementation according to the existing project structure and the complexity of the design.
+
+The template may include additional sections when they improve the experience, such as restaurant information, a floating cart summary, category navigation, or an empty-search state.
+
+Additional sections must not introduce duplicate business logic.
+
+The checkout and success interfaces may have their own layouts, but their behavior and props must follow this specification.
+
+---
+
+## 10. Design and Implementation Freedom
+
+The purpose of this specification is to standardize functionality, not visual design.
+
+Each template may independently define:
+
+- Colors and design tokens.
+- Typography and font sizes.
+- Spacing and layout.
+- Product card appearance.
+- Header and hero composition.
+- Category navigation style.
+- Cart drawer, modal, sheet, or dedicated cart layout.
+- Checkout layout.
+- Success-page composition.
+- Animations and transitions.
+- Responsive behavior.
+- Optional visual sections.
+
+Do not force every template to use the same layout.
+
+However, the design must remain usable on mobile devices and desktop screens, support the project's RTL requirements where applicable, and preserve accessible controls and readable content.
+
+Follow the existing project's UI library, icon library, styling conventions, and installed dependencies. Do not introduce new libraries without a clear need.
+
+---
+
+## 11. TypeScript, Integration, and Code Quality
+
+When implementing a template:
+
+- Use TypeScript and the existing shared domain types.
+- Avoid `any` and unnecessary type assertions.
+- Keep the main template's public props stable.
+- Reuse existing hooks and services.
+- Keep business logic out of purely visual components.
+- Do not duplicate state that already belongs to shared hooks.
+- Handle optional data safely.
+- Avoid unnecessary effects and derived state.
+- Ensure every interactive control performs its intended action.
+- Keep loading, error, empty, and success states consistent.
+- Do not modify unrelated components or files.
+- Do not change API contracts based on assumptions.
+
+Before implementation, inspect the relevant existing components, hooks, types, and API services. Resolve naming or contract differences using the actual project code rather than blindly copying illustrative snippets.
+
+After implementation, verify that:
+
+1. The template renders with the provided menu data.
+2. Search filters products correctly.
+3. Products can be added, incremented, decremented, and removed.
+4. Cart counts and totals update correctly.
+5. Unavailable products cannot be added.
+6. Checkout receives the correct props.
+7. Loading and error states are handled.
+8. A successful order transitions to the success view.
+9. The cart is cleared only after successful submission.
+10. Returning from checkout preserves the cart.
+11. Returning from success shows an empty cart.
+12. TypeScript and relevant project checks pass.
+
+---
+
+## 12. Instructions for AI-Assisted Template Implementation
+
+When asked to build or integrate a new public menu template:
+
+1. Inspect the existing project structure and identify the correct template location.
+2. Read the existing menu types and shared hook implementations.
+3. Review the provided design reference, screenshot, or visual requirements.
+4. Implement the requested visual design without changing the shared functional contracts.
+5. Connect every section to the existing menu data and shared hooks.
+6. Implement the three view states and their required transitions.
+7. Verify responsive behavior and the relevant user interactions.
+8. Report the files created or modified, any assumptions, and any integration issues that require attention.
+
+Do not redesign the entire project or refactor unrelated features.
+
+If a required API capability, type, or behavior is missing, identify the exact gap instead of silently inventing an implementation.
+
+**Priority order:**
+
+1. Existing project architecture and actual implementation.
+2. This specification's shared contracts and behavioral requirements.
+3. The requested template design and visual references.
+4. Additional implementation decisions that do not conflict with the above.
+
+---
+
+## Final Definition — What This Source Is For
+
+**This document is the reusable implementation specification for all Menu Lanjhe public menu templates.**
+
+Its purpose is to guide AI coding tools in creating new visual templates that integrate consistently with the existing menu data model, `useMenuSearch`, `useMenuCart`, `useMenuOrder`, checkout flow, and order-success flow.
+
+It standardizes how a template receives data, manages its three views, and interacts with shared functionality while leaving the visual design entirely flexible.
+
+Use this source together with the specific design prompt or reference for each new template.
+
+**This document defines how a template must work. The individual template prompt defines how that template must look.**
