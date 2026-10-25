@@ -9,6 +9,7 @@ from apps.tenants.permissions import HasTenantPermission
 from .models import Order
 from .serializers import CreateManualOrderSerializer, OrderSerializer
 from .services import cancel_order, complete_order, confirm_order, create_manual_order
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class OrderViewSet(TenantScopedQuerySetMixin, mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
@@ -25,6 +26,7 @@ class OrderViewSet(TenantScopedQuerySetMixin, mixins.CreateModelMixin, viewsets.
     }
 
     filter_backends = [
+        DjangoFilterBackend,
         filters.SearchFilter,
         filters.OrderingFilter,
     ]
