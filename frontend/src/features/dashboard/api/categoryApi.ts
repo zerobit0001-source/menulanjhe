@@ -76,22 +76,56 @@ export const categoryApi = baseApi.injectEndpoints({
         { type: "Category", id },
       ],
     }),
+
     reorderCategories: builder.mutation<
       void,
       {
+        menu: string;
         items: {
           id: string;
           sort_order: number;
         }[];
       }
     >({
-      query: (body) => ({
+      query: ({ menu: _menu, items }) => ({
         url: "admin/categories/reorder/",
         method: "POST",
-        body,
+        body: { items },
       }),
 
-      invalidatesTags: ["Category"],
+      async onQueryStarted({ menu, items }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          categoryApi.util.updateQueryData(
+            "getCategories",
+            { menu },
+            (draft) => {
+              const orderMap = new Map(
+                items.map((item) => [item.id, item.sort_order]),
+              );
+
+              draft.results.sort(
+                (a, b) =>
+                  (orderMap.get(a.id) ?? a.sort_order) -
+                  (orderMap.get(b.id) ?? b.sort_order),
+              );
+
+              draft.results.forEach((category) => {
+                const sortOrder = orderMap.get(category.id);
+
+                if (sortOrder !== undefined) {
+                  category.sort_order = sortOrder;
+                }
+              });
+            },
+          ),
+        );
+
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
     }),
   }),
 });

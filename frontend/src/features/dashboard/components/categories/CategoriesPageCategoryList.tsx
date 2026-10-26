@@ -26,7 +26,6 @@ import { useGetCategoriesQuery } from "../../api/categoryApi";
 
 import type { Category } from "../../types/categories/categories.type";
 
-import CategoriesPageCategoryCard from "./CategoriesPageCategoryCard";
 import SortableCategoryCard from "./SortableCategoryCard";
 
 type Props = {
@@ -96,6 +95,7 @@ export default function CategoriesPageCategoryList({ search, filter }: Props) {
 
     try {
       await reorderCategories({
+        menu: activeMenu.id,
         items: reordered.map((category, index) => ({
           id: category.id,
           sort_order: index,

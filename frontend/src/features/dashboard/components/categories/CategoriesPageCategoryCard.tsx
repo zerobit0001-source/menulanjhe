@@ -135,7 +135,7 @@ export default function CategoriesPageCategoryCard({ category, dragHandleProps }
         {/* Drag Handle */}
         <div
           {...dragHandleProps}
-          className={`hidden sm:block ${
+          className={`sm:block ${
             dragHandleProps?.disabled
               ? "cursor-not-allowed opacity-40"
               : "cursor-grab active:cursor-grabbing"

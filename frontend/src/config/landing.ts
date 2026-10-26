@@ -96,7 +96,7 @@ export const siteConfig = {
   demoUrl: null as string | null,
 
   /** TODO: Real dashboard login route (e.g. "/login"). While null, no login link is shown. */
-  loginUrl: null as string | null,
+  loginUrl: "/dashboard",
 
   /**
    * TODO: Real contact points. Leave empty until they are confirmed; the footer
