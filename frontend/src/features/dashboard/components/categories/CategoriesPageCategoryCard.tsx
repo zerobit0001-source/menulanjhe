@@ -8,11 +8,9 @@ import {
   GripVertical,
   MoreVertical,
   Pencil,
-  Utensils,
 } from "lucide-react";
 
 import {
-  Button,
   Card,
   IconButton,
   Menu,
@@ -48,7 +46,6 @@ type Props = {
 export default function CategoriesPageCategoryCard({ category, dragHandleProps }: Props) {
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
-  const [editOpen, setEditOpen] = useState(false);
 
   const [checked, setChecked] = useState(category.is_active);
 
@@ -75,31 +72,6 @@ export default function CategoriesPageCategoryCard({ category, dragHandleProps }
     setMenuAnchor(null);
   };
 
-  const handleEdit = () => {
-    handleMenuClose();
-    setEditOpen(true);
-  };
-
-  const handleUpdate = async (data: {
-    name: string;
-    description?: string;
-    icon_name?: string;
-  }) => {
-    try {
-      await updateCategory({
-        id: category.id,
-        body: {
-          name: data.name.trim(),
-          description: data.description?.trim() || "",
-          icon_name: data.icon_name?.trim() || "",
-        },
-      }).unwrap();
-
-      setEditOpen(false);
-    } catch (error) {
-      console.error("Update category failed:", error);
-    }
-  };
 
   const handleToggle = async () => {
     const previousValue = checked;
@@ -218,9 +190,11 @@ export default function CategoriesPageCategoryCard({ category, dragHandleProps }
           }}
         >
           {/* Edit */}
-          <MenuItem onClick={handleEdit} className="gap-2! text-sm!">
-            <Pencil size={16} />
-            ویرایش
+          <MenuItem className="gap-2! text-sm!">
+            <Link href={`/dashboard/categories/${category.id}/edit`} className="flex items-center gap-2">
+              <Pencil size={16} />
+              ویرایش
+            </Link>
           </MenuItem>
 
           {/* Toggle */}
@@ -253,15 +227,6 @@ export default function CategoriesPageCategoryCard({ category, dragHandleProps }
           </MenuItem>
         </Menu>
       </div>
-
-      {/* Edit Modal */}
-      <CategoriesPageCategoryModal
-        open={editOpen}
-        category={category}
-        onClose={() => setEditOpen(false)}
-        onSubmit={handleUpdate}
-        isSubmitting={isUpdating}
-      />
     </Card>
   );
 }
