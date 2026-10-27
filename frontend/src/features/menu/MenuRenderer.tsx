@@ -9,6 +9,7 @@ import Template006 from "./templates/Template006";
 import Template007 from "./templates/Template007";
 import Template008 from "./templates/Template008";
 import Template009 from "./templates/Template009";
+import { CoffeeHouseTemplate } from "./templates/coffeeHouse/coffee-house-template";
 
 const menuTemplates = {
   modern: ModernMenu,
@@ -21,6 +22,7 @@ const menuTemplates = {
   template007: Template007,
   template008: Template008,
   template009: Template009,
+  CoffeeHouseTemplate: CoffeeHouseTemplate,
 };
 
 type MenuTemplate = keyof typeof menuTemplates;
