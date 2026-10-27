@@ -35,10 +35,12 @@ const fade = {
 };
 
 export function CoffeeHouseTemplate({ menu, qrToken }: Props) {
-  const shop = useCoffeeShop(menu, qrToken);
+  const shop = useCoffeeShop(menu, ";akjf;aldf;alskdjf;lak");
   const [view, setView] = useState<View>("menu");
   const [cartOpen, setCartOpen] = useState(false);
   const [receipt, setReceipt] = useState<OrderReceiptData | null>(null);
+
+  console.log("shop", shop);
 
   const { search, cart, order } = shop;
   const { isSubmitting, submit } = order;

@@ -1,12 +1,10 @@
-// ASSUMPTION: all imports/paths/signatures below must be matched to the real project.
+"use client";
+
 import { useMemo } from "react";
+
 import { useMenuSearch } from "../../hooks/useMenuSearch";
 import { useMenuCart } from "../../hooks/useMenuCart";
 import { useMenuOrder } from "../../hooks/useMenuOrder";
-// import { useMenuSearch } from "@/features/menu/hooks/use-menu-search";
-// import { useMenuCart } from "@/features/menu/hooks/use-menu-cart";
-// import { useMenuOrder } from "@/features/menu/hooks/use-menu-order";
-// import type { PublicMenu, MenuCategory, MenuProduct, QuickSection } from "@/features/menu/types";
 
 export interface MenuProduct {
   id: string;
@@ -14,18 +12,21 @@ export interface MenuProduct {
   description?: string | null;
   price: number;
   imageUrl?: string | null;
-  isAvailable: boolean;
+  available: boolean;
 }
+
 export interface MenuCategory {
   id: string;
   name: string;
   products: MenuProduct[];
 }
+
 export interface QuickSectionData {
   id: string;
   title: string;
   products: MenuProduct[];
 }
+
 export interface PublicMenu {
   restaurantName: string;
   description?: string | null;
@@ -75,68 +76,99 @@ export interface CoffeeShop {
     clear: () => void;
   };
   order: {
-    /** Returns the backend receipt, or null on failure (error is then set). */
     submit: (input: CheckoutInput) => Promise<OrderReceiptData | null>;
     isSubmitting: boolean;
     error: string | null;
   };
 }
 
-// ASSUMPTION: replace with the project's price helper and currency label.
 const CURRENCY_LABEL = "تومان";
+
 export const formatPrice = (value: number) =>
   `${new Intl.NumberFormat("fa-IR").format(value)} ${CURRENCY_LABEL}`;
 
 export function useCoffeeShop(menu: PublicMenu, qrToken: string): CoffeeShop {
-  // Cart must know every product, including quick-section-only ones.
   const allProducts = useMemo(() => {
     const map = new Map<string, MenuProduct>();
-    menu.categories.forEach((c) => c.products.forEach((p) => map.set(p.id, p)));
-    menu.quickSections?.forEach((s) =>
-      s.products.forEach((p) => map.set(p.id, p)),
-    );
+
+    menu.categories.forEach((category) => {
+      category.products.forEach((product) => {
+        map.set(product.id, product);
+      });
+    });
+
+    menu.quickSections?.forEach((section) => {
+      section.products.forEach((product) => {
+        map.set(product.id, product);
+      });
+    });
+
     return [...map.values()];
   }, [menu]);
 
-  const searchHooke = useMenuSearch(menu.categories);
+  const searchHook = useMenuSearch(menu.categories);
   const cartHook = useMenuCart(allProducts);
   const orderHook = useMenuOrder();
 
-  // ---- ASSUMPTION: wire to the real hooks. Sketch: ----
-  // const searchHook = useMenuSearch(menu.categories);
-  // const cartHook = useMenuCart(allProducts);
-  // const orderHook = useMenuOrder();
-  //
-  // return {
-  //   search: {
-  //     query: searchHook.query,
-  //     setQuery: searchHook.setQuery,
-  //     categories: searchHook.filteredCategories,
-  //     resultCount: searchHook.filteredCategories.reduce((n, c) => n + c.products.length, 0),
-  //     isSearching: searchHook.query.trim().length > 0,
-  //   },
-  //   cart: {
-  //     lines: cartHook.items,                // map to { product, quantity }
-  //     count: cartHook.totalCount,
-  //     total: cartHook.totalPrice,           // display only; backend is authoritative
-  //     quantityOf: cartHook.getQuantity,
-  //     add: cartHook.addItem,                // check: id or product?
-  //     increase: cartHook.increment,
-  //     decrease: cartHook.decrement,
-  //     remove: cartHook.removeItem,
-  //     clear: cartHook.clear,
-  //   },
-  //   order: {
-  //     submit: async (input) => {
-  //       try {
-  //         const res = await orderHook.submit({ qrToken, items: cartHook.items, ...input });
-  //         return mapToReceipt(res);         // map the REAL response, don't invent fields
-  //       } catch { return null; }
-  //     },
-  //     isSubmitting: orderHook.isPending,
-  //     error: orderHook.error?.message ?? null,
-  //   },
-  // };
-  void qrToken;
-  void allProducts;
+  const quantityOf = (productId: string) => cartHook.quantities[productId] ?? 0;
+
+  return {
+    search: {
+      query: searchHook.search,
+      setQuery: searchHook.setSearch,
+      categories: searchHook.filteredCategories,
+      resultCount: searchHook.searchResultCount,
+      isSearching: searchHook.isSearching,
+    },
+
+    cart: {
+      lines: cartHook.cartItems,
+      count: cartHook.cartCount,
+      total: cartHook.cartTotal,
+      quantityOf,
+
+      add: (productId) => {
+        const product = allProducts.find((item) => item.id === productId);
+        if (product) cartHook.addProduct(product);
+      },
+
+      increase: (productId) => {
+        const product = allProducts.find((item) => item.id === productId);
+        if (product) cartHook.increaseProduct(product);
+      },
+
+      decrease: (productId) => {
+        const product = allProducts.find((item) => item.id === productId);
+        if (product) cartHook.decreaseProduct(product);
+      },
+
+      remove: (productId) => {
+        const product = allProducts.find((item) => item.id === productId);
+        if (product) cartHook.removeProduct(product);
+      },
+
+      clear: cartHook.clearCart,
+    },
+
+    order: {
+      submit: async (input) => {
+        const result = await orderHook.submitOrder({
+          items: cartHook.cartItems,
+          qrToken,
+          name: input.customerName,
+          notes: input.notes,
+        });
+
+        if (!result) return null;
+
+        return {
+          id: result.id,
+          total: result.total,
+        };
+      },
+
+      isSubmitting: orderHook.isLoading,
+      error: orderHook.error || null,
+    },
+  };
 }

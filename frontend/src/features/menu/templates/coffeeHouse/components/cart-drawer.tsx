@@ -60,9 +60,9 @@ export function CartDrawer({
             role="dialog"
             aria-modal="true"
             aria-label="سبد خرید"
-            initial={{ x: "-100%" }}
+            initial={{ x: "100%" }}
             animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
+            exit={{ x: "100%" }}
             transition={{ duration: 0.28, ease: "easeOut" }}
           >
             <div className="ch-drawer__head">
@@ -140,7 +140,7 @@ export function CartDrawer({
                   </div>
                   <button
                     type="button"
-                    className="ch-btn ch-btn--block"
+                    className="ch-btn ch-btn--block text-white!"
                     onClick={onCheckout}
                   >
                     ادامه و ثبت سفارش

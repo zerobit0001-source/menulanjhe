@@ -57,4 +57,11 @@ export const menuTemplates: MenuTemplate[] = [
     preview: "",
     available: true,
   },
+  {
+    id: "CoffeeHouseTemplate",
+    name: "قهوه خانه",
+    description: "طراحی مدرن مخصوص کافه ها با تم روشن و جذاب",
+    preview: "",
+    available: true,
+  },
 ];

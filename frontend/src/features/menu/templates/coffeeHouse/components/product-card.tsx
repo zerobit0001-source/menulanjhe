@@ -19,11 +19,11 @@ export function ProductCard({
   onIncrease,
   onDecrease,
 }: Props) {
-  const available = product.isAvailable;
+  const available = product.available;
 
   return (
     <motion.article
-      className={`ch-card${available ? "" : " ch-card--off"}`}
+      className={`ch-card${available ? "" : "ch-card--off"}`}
       initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -40px 0px" }}
@@ -44,7 +44,7 @@ export function ProductCard({
           ) : quantity === 0 ? (
             <motion.button
               type="button"
-              className="ch-btn ch-add"
+              className="ch-btn ch-add text-white!"
               whileTap={{ scale: 0.95 }}
               onClick={() => onAdd(product.id)}
               aria-label={`افزودن ${product.name} به سبد`}
@@ -86,4 +86,3 @@ export function ProductCard({
     </motion.article>
   );
 }
-

@@ -125,7 +125,7 @@ export function CheckoutView({
 
             <button
               type="submit"
-              className="ch-btn ch-btn--block"
+              className="ch-btn ch-btn--block text-white!"
               disabled={isSubmitting}
               aria-busy={isSubmitting}
             >

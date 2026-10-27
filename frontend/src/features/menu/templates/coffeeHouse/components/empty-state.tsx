@@ -19,7 +19,7 @@ export function EmptyState({
       <h3>{title}</h3>
       {description && <p>{description}</p>}
       {actionLabel && onAction && (
-        <button type="button" className="ch-btn" onClick={onAction}>
+        <button type="button" className="ch-btn text-white!" onClick={onAction}>
           {actionLabel}
         </button>
       )}
