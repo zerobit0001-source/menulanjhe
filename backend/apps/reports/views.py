@@ -42,7 +42,7 @@ class DashboardView(APIView):
         categories = (
             categories_qs.select_related("menu")
             .annotate(product_count=Count("products"))
-            .order_by("product_count", "-created_at")[:5]
+            .order_by("-product_count", "-created_at")[:5]
         )
         products = products_qs.select_related("category").order_by("-created_at")[:10]
         recent_orders = (
