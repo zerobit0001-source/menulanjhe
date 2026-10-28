@@ -1,7 +1,10 @@
 from django.conf import settings
 from rest_framework import serializers
 from .models import Table
-
+from datetime import timedelta
+from django.utils import timezone
+from apps.orders.models import Order
+from apps.orders.serializers import OrderSerializer
 
 class AdminTableSerializer(serializers.ModelSerializer):
     public_url = serializers.SerializerMethodField()
@@ -32,3 +35,21 @@ class AdminTableSerializer(serializers.ModelSerializer):
             return None
         base = settings.PUBLIC_TABLE_URL_BASE.rstrip("/")
         return f"{base}/{menu.slug}?qr={table.qr_token}"
+
+
+class AdminTableDetailSerializer(AdminTableSerializer):
+    orders = serializers.SerializerMethodField()
+
+    class Meta(AdminTableSerializer.Meta):
+        fields = AdminTableSerializer.Meta.fields + ["orders"]
+        read_only_fields = AdminTableSerializer.Meta.read_only_fields + ["orders"]
+
+    def get_orders(self, table):
+        since = timezone.now() - timedelta(hours=24)
+        orders = (
+            Order.objects.filter(table=table, created_at__gte=since)
+            .select_related("branch", "table", "customer")
+            .prefetch_related("items")
+            .order_by("-created_at")
+        )
+        return OrderSerializer(orders, many=True, context=self.context).data
