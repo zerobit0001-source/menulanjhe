@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from rest_framework.fields import empty
 
 class TomanPriceField(serializers.DecimalField):
     def __init__(self, **kwargs):
@@ -11,3 +11,7 @@ class TomanPriceField(serializers.DecimalField):
     def to_representation(self, value):
         value = super().to_representation(value)
         return int(value)
+
+
+class FormSafeBooleanField(serializers.BooleanField):
+    default_empty_html = empty
