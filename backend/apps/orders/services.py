@@ -249,7 +249,7 @@
 
 from django.db import transaction
 from apps.realtime.events import dispatch_order_event
-from .exceptions import InvalidStateTransition, InvalidTable, ProductNotAvailable
+from .exceptions import InvalidStateTransition, InvalidTable, ProductNotAvailable, PublicOrderingDisabled
 from .models import Order, OrderItem
 
 ALLOWED_TRANSITIONS = {
@@ -306,6 +306,11 @@ def _build_order_items(*, order: Order, branch, items: list[dict]) -> int:
 @transaction.atomic
 def create_dine_in_order(*, tenant, branch, table, items: list[dict],
                           idempotency_key: str, customer_data: dict | None = None, notes: str = ""):
+
+    profile = getattr(tenant, "restaurant", None)
+    if profile is not None and not profile.public_ordering_enabled:
+        raise PublicOrderingDisabled("ثبت سفارش از طریق منو در حال حاضر غیرفعال است. لطفاً به صندوق مراجعه کنید.")
+    
     existing = Order.objects.select_for_update().filter(
         tenant=tenant, idempotency_key=idempotency_key
     ).first()
