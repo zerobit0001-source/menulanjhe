@@ -13,6 +13,7 @@ class RestaurantProfile(UUIDTimeStampedModel):
     address = models.CharField(max_length=500, blank=True)
     website = models.URLField(blank=True)
     social_links = models.JSONField(default=dict, blank=True)
+    public_ordering_enabled = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
