@@ -1,11 +1,15 @@
 "use client";
 
+import {
+  useGetRestaurantProfileQuery,
+  useUpdatePublicOrderingMutation,
+} from "@/features/dashboard/api/dashboardApi";
 import Link from "next/link";
 import { ChevronLeft, LockKeyhole, Settings2, UserRound } from "lucide-react";
 
-import { Card, Typography } from "@mui/material";
+import { Alert, Card, FormControlLabel, Switch, Typography } from "@mui/material";
 import DashboardContainer from "@/features/dashboard/components/DashboardContainer";
-
+import { useState } from "react";
 
 const settingsItems = [
   {
@@ -23,6 +27,26 @@ const settingsItems = [
 ];
 
 export default function SettingsPageClient() {
+  const {
+    data: restaurantProfile,
+    isLoading: isProfileLoading,
+    isError: isProfileError,
+  } = useGetRestaurantProfileQuery();
+
+  const [updatePublicOrdering, { isLoading: isUpdating }] =
+    useUpdatePublicOrderingMutation();
+
+  const [updateError, setUpdateError] = useState(false);
+
+  const handlePublicOrderingChange = async (enabled: boolean) => {
+    setUpdateError(false);
+
+    try {
+      await updatePublicOrdering(enabled).unwrap();
+    } catch {
+      setUpdateError(true);
+    }
+  };
   return (
     <DashboardContainer>
       <div className="space-y-6">
@@ -98,32 +122,77 @@ export default function SettingsPageClient() {
 
         {/* Store */}
         <section>
-          <Typography
-            component="h2"
-            className="mb-3! text-sm! font-semibold! text-slate-700"
-          >
-            مجموعه
-          </Typography>
-
           <Card elevation={0} className="rounded-2xl! border border-slate-200!">
             <div className="p-5">
               <Typography
                 component="h3"
                 className="text-sm! font-semibold! text-slate-900"
               >
-                تنظیمات مجموعه
+                تنظیمات سفارش‌گیری
               </Typography>
 
               <Typography
                 component="p"
                 className="mt-1! text-xs! leading-6! text-slate-500"
               >
-                تنظیمات مربوط به مجموعه، اطلاعات کسب‌وکار و سایر گزینه‌های
-                مدیریتی در این بخش قرار خواهند گرفت.
+                مشخص کنید مشتریان بتوانند از منوی عمومی مجموعه سفارش ثبت کنند یا
+                خیر.
               </Typography>
 
-              <div className="mt-4 inline-flex rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-400">
-                به‌زودی
+              {isProfileError && (
+                <Alert severity="error" className="mt-4">
+                  دریافت تنظیمات مجموعه ناموفق بود.
+                </Alert>
+              )}
+
+              {updateError && (
+                <Alert severity="error" className="mt-4">
+                  تغییر وضعیت سفارش‌گیری انجام نشد. دوباره تلاش کنید.
+                </Alert>
+              )}
+
+              <div className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-4">
+                <div className="min-w-0">
+                  <Typography
+                    component="p"
+                    className="text-sm! font-medium! text-slate-800"
+                  >
+                    فعال‌سازی سفارش‌گیری از منوی عمومی
+                  </Typography>
+
+                  <Typography
+                    component="p"
+                    className="mt-1! text-xs! leading-5! text-slate-500"
+                  >
+                    {isProfileLoading
+                      ? "در حال دریافت وضعیت..."
+                      : restaurantProfile?.public_ordering_enabled
+                        ? "سفارش‌گیری فعال است."
+                        : "سفارش‌گیری غیرفعال است."}
+                  </Typography>
+                </div>
+
+                <FormControlLabel
+                  className="m-0!"
+                  label=""
+                  control={
+                    <Switch
+                      checked={
+                        restaurantProfile?.public_ordering_enabled ?? false
+                      }
+                      disabled={
+                        isProfileLoading ||
+                        isProfileError ||
+                        isUpdating ||
+                        restaurantProfile?.public_ordering_enabled === undefined
+                      }
+                      onChange={(_, checked) => {
+                        void handlePublicOrderingChange(checked);
+                      }}
+                      color="primary"
+                    />
+                  }
+                />
               </div>
             </div>
           </Card>
