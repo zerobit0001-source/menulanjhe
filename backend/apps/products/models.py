@@ -9,6 +9,7 @@ class Product(UUIDTimeStampedModel):
     slug = models.SlugField()
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to="products/", null=True, blank=True)
+    optimized_image = models.ImageField(upload_to="products/optimized/", null=True, blank=True, editable=False)
     price = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
     is_available = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
