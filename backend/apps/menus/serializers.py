@@ -69,18 +69,23 @@ class PublicCategorySerializer(serializers.ModelSerializer):
 
     def get_products(self, category):
         products = category.products.filter(is_available=True).order_by("sort_order", "name")
-        return PublicProductSerializer(products, many=True).data
+        return PublicProductSerializer(products, many=True, context=self.context).data
 
 
 class PublicMenuSerializer(serializers.ModelSerializer):
     categories = serializers.SerializerMethodField()
     restaurant_name = serializers.CharField(source="branch.tenant.restaurant.name", read_only=True)
+    ordering_enabled = serializers.SerializerMethodField()
 
     class Meta:
         model = Menu
-        fields = ["id", "name", "slug", "description", "template_name", "restaurant_name", "categories"]
+        fields = ["id", "name", "slug", "description", "template_name", "restaurant_name", "ordering_enabled", "categories"]
         read_only_fields = fields
+
+    def get_ordering_enabled(self, menu):
+        profile = getattr(menu.branch.tenant, "restaurant", None)
+        return True if profile is None else profile.public_ordering_enabled
 
     def get_categories(self, menu):
         categories = menu.categories.filter(is_active=True).order_by("sort_order", "name")
-        return PublicCategorySerializer(categories, many=True).data
+        return PublicCategorySerializer(categories, many=True, context=self.context).data
