@@ -10,7 +10,7 @@ class ResolveTableView(APIView):
 
     def get(self, request, qr_token):
         table = get_object_or_404(
-            Table.objects.select_related("branch__tenant"),
+            Table.objects.select_related("branch__tenant__restaurant"),
             qr_token=qr_token,
             is_active=True,
             branch__is_active=True,
@@ -18,6 +18,7 @@ class ResolveTableView(APIView):
         )
         
         menu = table.branch.menus.filter(is_active=True, is_published=True).first()
+        profile = getattr(table.branch.tenant, "restaurant", None)
 
         return Response(
             {
@@ -26,5 +27,6 @@ class ResolveTableView(APIView):
                 "tenant_slug": table.branch.tenant.slug,
                 "branch_id": str(table.branch_id),
                 "menu_slug": menu.slug if menu else None,
+                "ordering_enabled": True if profile is None else profile.public_ordering_enabled,
             }
         )
