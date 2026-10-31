@@ -64,4 +64,12 @@ export const menuTemplates: MenuTemplate[] = [
     preview: "",
     available: true,
   },
+  {
+    id: "Template011",
+    name: "هایپر",
+    description:
+      "طراحی که به صورت هایپر مدرن و جذاب است و مناسب رستوران ها و کافه ها می باشد",
+    preview: "",
+    available: true,
+  },
 ];
