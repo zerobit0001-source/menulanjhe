@@ -43,7 +43,7 @@ export default function ProductPageProductCard({
   return (
     <Card elevation={1}>
       {/* Image */}
-      <div className="relative flex h-50 w-full items-center justify-center bg-gray-200 p-2 text-gray-400">
+      <div className="relative flex h-50 w-full items-center justify-center bg-gray-200 text-gray-400">
         <span className="absolute right-2 top-2 z-10 rounded-full bg-white px-4 py-1">
           <Typography variant="body2" className="text-xs!">
             {product.category_name ?? "دسته‌بندی نامشخص"}
@@ -54,7 +54,7 @@ export default function ProductPageProductCard({
           <img
             src={product.image}
             alt={product.name}
-            className="h-full w-full rounded-xl object-cover"
+            className="h-full w-full object-cover"
           />
         ) : (
           <Package size={20} />
