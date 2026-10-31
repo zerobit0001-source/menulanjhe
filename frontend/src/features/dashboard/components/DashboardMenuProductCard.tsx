@@ -266,26 +266,6 @@ export default function DashboardMenuProductCard({
               </Box>
             </Box>
           </Box>
-
-          {/* Visibility */}
-          <Box className="flex items-center justify-between gap-4">
-            <Box className="min-w-0">
-              <Typography variant="body1" className="font-bold!">
-                نمایش محصول
-              </Typography>
-
-              <Typography variant="caption" className="text-gray-500!">
-                دیده شدن محصول در منو
-              </Typography>
-            </Box>
-
-            <Switch
-              checked={product.is_available}
-              onClick={(event) => {
-                event.stopPropagation();
-              }}
-            />
-          </Box>
         </Box>
       </Modal>
     </>
