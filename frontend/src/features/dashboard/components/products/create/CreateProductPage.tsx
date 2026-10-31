@@ -4,10 +4,11 @@ import { useGetCategoriesQuery } from "@/features/dashboard/api/categoryApi";
 import { useGetMenusQuery } from "@/features/dashboard/api/menuApi";
 import { useCreateProductMutation } from "@/features/dashboard/api/productApi";
 import {
+  Alert,
   Button,
   CircularProgress,
   FormControl,
-  FormControlLabel,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
@@ -16,7 +17,61 @@ import {
 } from "@mui/material";
 import { ArrowRight, PackagePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+
+import ProductImageField from "../ProductImageField";
+
+type FieldErrors = {
+  name?: string;
+  category?: string;
+  price?: string;
+};
+
+const DEFAULT_API_ERROR = "ثبت محصول انجام نشد. لطفاً دوباره تلاش کنید.";
+
+/** Extracts the backend `message` from an RTK Query error, if present. */
+function getApiErrorMessage(error: unknown): string {
+  if (typeof error === "object" && error !== null && "data" in error) {
+    const data = (error as { data?: unknown }).data;
+
+    if (typeof data === "object" && data !== null && "message" in data) {
+      const message = (data as { message?: unknown }).message;
+
+      if (typeof message === "string" && message.trim()) {
+        return message;
+      }
+    }
+  }
+
+  return DEFAULT_API_ERROR;
+}
+
+function FormSection({
+  title,
+  description,
+  className = "",
+  children,
+}: {
+  title: string;
+  description?: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <section
+      className={`rounded-2xl border border-gray-200 bg-white p-5 shadow-sm ${className}`}
+    >
+      <div className="mb-5">
+        <h2 className="text-base font-bold text-gray-900">{title}</h2>
+        {description && (
+          <p className="mt-1 text-xs text-gray-500">{description}</p>
+        )}
+      </div>
+
+      {children}
+    </section>
+  );
+}
 
 export default function CreateProductPage() {
   const router = useRouter();
@@ -26,6 +81,10 @@ export default function CreateProductPage() {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [apiError, setApiError] = useState("");
 
   const {
     data: menusData,
@@ -58,10 +117,36 @@ export default function CreateProductPage() {
 
   const isLoading = isMenusLoading || isCategoriesLoading;
 
+  const validate = (): boolean => {
+    const errors: FieldErrors = {};
+
+    if (!name.trim()) {
+      errors.name = "نام محصول را وارد کنید.";
+    }
+
+    if (!category) {
+      errors.category = "دسته‌بندی محصول را انتخاب کنید.";
+    }
+
+    if (!price.trim()) {
+      errors.price = "قیمت محصول را وارد کنید.";
+    }
+
+    setFieldErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!category || !name.trim() || !price.trim()) {
+    if (isCreating) {
+      return;
+    }
+
+    setApiError("");
+
+    if (!validate()) {
       return;
     }
 
@@ -72,11 +157,14 @@ export default function CreateProductPage() {
         description: description.trim(),
         price: price.trim(),
         is_featured: isFeatured,
+        image: imageFile,
       }).unwrap();
 
       router.push("/dashboard/products");
     } catch (error) {
       console.error("Create product failed:", error);
+
+      setApiError(getApiErrorMessage(error));
     }
   };
 
@@ -121,13 +209,15 @@ export default function CreateProductPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="mx-auto w-full max-w-5xl">
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
         <Button
           type="button"
           variant="text"
           onClick={() => router.back()}
+          disabled={isCreating}
+          aria-label="بازگشت"
           className="min-w-0! rounded-xl! text-gray-500!"
         >
           <ArrowRight size={20} />
@@ -146,118 +236,165 @@ export default function CreateProductPage() {
         </div>
       </div>
 
-      {/* Form */}
-      <form
-        onSubmit={handleSubmit}
-        className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
-      >
-        <div className="flex flex-col gap-5">
-          {/* Name */}
-          <TextField
-            label="نام محصول"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="مثلاً اسپرسو"
-            fullWidth
-            required
-          />
+      <form onSubmit={handleSubmit} noValidate>
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+          {/* Basic info */}
+          <FormSection
+            title="اطلاعات اصلی"
+            description="نام، دسته‌بندی و قیمت محصول"
+            className="lg:col-span-2"
+          >
+            <div className="flex flex-col gap-5">
+              <TextField
+                label="نام محصول"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder="مثلاً اسپرسو"
+                fullWidth
+                required
+                disabled={isCreating}
+                error={Boolean(fieldErrors.name)}
+                helperText={fieldErrors.name}
+              />
 
-          {/* Category */}
-          <FormControl fullWidth required>
-            <InputLabel>دسته‌بندی</InputLabel>
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <FormControl
+                  fullWidth
+                  required
+                  disabled={isCreating}
+                  error={Boolean(fieldErrors.category)}
+                >
+                  <InputLabel>دسته‌بندی</InputLabel>
 
-            <Select
-              value={category}
-              label="دسته‌بندی"
-              onChange={(event) => setCategory(event.target.value)}
-            >
-              {categories.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+                  <Select
+                    value={category}
+                    label="دسته‌بندی"
+                    onChange={(event) => setCategory(event.target.value)}
+                  >
+                    {categories.map((item) => (
+                      <MenuItem key={item.id} value={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
 
-          {/* Price */}
-          <TextField
-            label="قیمت"
-            value={price}
-            onChange={(event) => {
-              const value = event.target.value.replace(/\D/g, "");
-              setPrice(value);
-            }}
-            placeholder="مثلاً 45000"
-            fullWidth
-            required
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <span className="ml-2 text-sm text-gray-400">تومان</span>
-                ),
-              },
-            }}
-          />
+                  {fieldErrors.category && (
+                    <FormHelperText>{fieldErrors.category}</FormHelperText>
+                  )}
+                </FormControl>
+
+                <TextField
+                  label="قیمت"
+                  value={price}
+                  onChange={(event) => {
+                    const value = event.target.value.replace(/\D/g, "");
+                    setPrice(value);
+                  }}
+                  placeholder="مثلاً 45000"
+                  fullWidth
+                  required
+                  disabled={isCreating}
+                  error={Boolean(fieldErrors.price)}
+                  helperText={fieldErrors.price}
+                  slotProps={{
+                    htmlInput: { inputMode: "numeric" },
+                    input: {
+                      endAdornment: (
+                        <span className="ml-2 text-sm text-gray-400">
+                          تومان
+                        </span>
+                      ),
+                    },
+                  }}
+                />
+              </div>
+            </div>
+          </FormSection>
+
+          {/* Image */}
+          <FormSection
+            title="تصویر محصول"
+            description="اختیاری"
+            className="lg:col-span-1 lg:row-span-2"
+          >
+            <ProductImageField
+              value={imageFile}
+              onChange={setImageFile}
+              disabled={isCreating}
+            />
+          </FormSection>
 
           {/* Description */}
-          <TextField
-            label="توضیحات"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            placeholder="توضیح کوتاهی درباره محصول..."
-            multiline
-            minRows={4}
-            fullWidth
-          />
-
-          {/* Featured */}
-          <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
-            <div>
-              <p className="text-sm font-semibold text-gray-800">محصول ویژه</p>
-
-              <p className="mt-1 text-xs text-gray-500">
-                این محصول به عنوان محصول ویژه نمایش داده شود.
-              </p>
-            </div>
-
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={isFeatured}
-                  onChange={(event) => setIsFeatured(event.target.checked)}
-                />
-              }
-              label=""
-            />
-          </div>
-
-          {/* Actions */}
-          <div className="mt-2 flex items-center justify-end gap-3 border-t border-gray-100 pt-5">
-            <Button
-              type="button"
-              variant="outlined"
-              onClick={() => router.back()}
+          <FormSection
+            title="توضیحات"
+            description="توضیح کوتاهی درباره محصول"
+            className="lg:col-span-2"
+          >
+            <TextField
+              label="توضیحات"
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              placeholder="توضیح کوتاهی درباره محصول..."
+              multiline
+              minRows={4}
+              fullWidth
               disabled={isCreating}
-              className="rounded-xl! border-gray-200! text-gray-600!"
-            >
-              انصراف
-            </Button>
+            />
+          </FormSection>
 
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={
-                isCreating || !name.trim() || !price.trim() || !category
-              }
-              className="rounded-xl! px-6! shadow-none!"
-            >
-              {isCreating ? (
-                <CircularProgress size={20} color="inherit" />
-              ) : (
-                "افزودن محصول"
-              )}
-            </Button>
-          </div>
+          {/* Settings */}
+          <FormSection title="تنظیمات محصول" className="lg:col-span-3">
+            <div className="flex items-center justify-between gap-4 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+              <div>
+                <p className="text-sm font-semibold text-gray-800">
+                  محصول ویژه
+                </p>
+
+                <p className="mt-1 text-xs text-gray-500">
+                  این محصول به عنوان محصول ویژه نمایش داده شود.
+                </p>
+              </div>
+
+              <Switch
+                checked={isFeatured}
+                onChange={(event) => setIsFeatured(event.target.checked)}
+                disabled={isCreating}
+                slotProps={{ input: { "aria-label": "محصول ویژه" } }}
+              />
+            </div>
+          </FormSection>
+        </div>
+
+        {apiError && (
+          <Alert severity="error" className="mt-5" role="alert">
+            {apiError}
+          </Alert>
+        )}
+
+        {/* Actions */}
+        <div className="mt-5 flex items-center justify-end gap-3">
+          <Button
+            type="button"
+            variant="outlined"
+            onClick={() => router.back()}
+            disabled={isCreating}
+            className="rounded-xl! border-gray-200! text-gray-600!"
+          >
+            انصراف
+          </Button>
+
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={isCreating}
+            className="min-w-36 rounded-xl! px-6! shadow-none!"
+          >
+            {isCreating ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              "افزودن محصول"
+            )}
+          </Button>
         </div>
       </form>
     </div>

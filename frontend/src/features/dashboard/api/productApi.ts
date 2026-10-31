@@ -7,6 +7,22 @@ import type {
   UpdateProductRequest,
 } from "../types/products/products.type";
 
+function buildCreateProductFormData(input: CreateProductRequest): FormData {
+  const formData = new FormData();
+
+  formData.append("category", input.category);
+  formData.append("name", input.name);
+  formData.append("description", input.description ?? "");
+  formData.append("price", input.price);
+  formData.append("is_featured", String(input.is_featured ?? false));
+
+  if (input.image) {
+    formData.append("image", input.image);
+  }
+
+  return formData;
+}
+
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query<
@@ -53,10 +69,10 @@ export const productApi = baseApi.injectEndpoints({
     }),
 
     createProduct: builder.mutation<Product, CreateProductRequest>({
-      query: (body) => ({
+      query: (input) => ({
         url: "admin/products/",
         method: "POST",
-        body,
+        body: buildCreateProductFormData(input),
       }),
 
       invalidatesTags: ["Product"],
