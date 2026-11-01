@@ -100,7 +100,7 @@ export default function Template002({ menu, qrToken }: TemplateProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#1C1815] pb-28 text-[#F2EDE4]">
+    <div className="min-h-screen w-full bg-[#1C1815] pb-28 text-[#F2EDE4]">
       <Template002Header
         shop={menu.shop}
         cartCount={cartCount}

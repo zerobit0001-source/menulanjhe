@@ -1,91 +1,78 @@
-export const dashboardMenu: DashboardMenu = {
-  id: "menu_001",
-  shop_name: "کافه لانژه",
-  slug: "cafe-lanjhe",
-  active_template: "template001",
-  is_published: true,
-  updated_at: "2026-09-11T18:30:00",
-};
+interface MenuTemplate {
+  id: string;
+  name: string;
+  description: string;
+  available: boolean;
+}
 
 export const menuTemplates: MenuTemplate[] = [
   {
     id: "template001",
     name: "مدرن",
     description: "طراحی مدرن و مناسب کافه و رستوران",
-    preview: "",
     available: true,
   },
   {
     id: "template002",
     name: "کلاسیک",
     description: "طراحی ساده و کلاسیک",
-    preview: "",
     available: true,
   },
   {
     id: "template003",
     name: "مینیمال",
     description: "طراحی مینیمال و ساده",
-    preview: "",
     available: true,
   },
   {
     id: "template005",
     name: "مرتب",
     description: "ظراحی مرتب و تمیز مناسب رستوران",
-    preview: "",
     available: true,
   },
   {
     id: "template006",
     name: "مشکی",
     description: "طراحی دارک و مشکی مخصوص کافه ها با تم مشکی",
-    preview: "",
     available: true,
   },
   {
     id: "template007",
     name: "قهوه ای",
     description: "طراحی مدرن مخصوص کافه ها با تم قهوه ای",
-    preview: "",
     available: true,
   },
   {
     id: "template008",
     name: "جذاب",
     description: "طراحی مدرن مخصوص کافه ها با تم روشن و جذاب",
-    preview: "",
     available: true,
   },
   {
     id: "CoffeeHouseTemplate",
     name: "قهوه خانه",
     description: "طراحی مدرن مخصوص کافه ها با تم روشن و جذاب",
-    preview: "",
     available: true,
   },
   {
-    id: "Template011",
-    name: "هایپر",
+    id: "template011",
+    name: "تمام‌صفحه",
     description:
-      "طراحی که به صورت هایپر مدرن و جذاب است و مناسب رستوران ها و کافه ها می باشد",
-    preview: "",
+      "نمایش هر محصول به‌صورت تمام‌صفحه با اسلاید بین محصولات هر دسته؛ مناسب کافه‌ها و رستوران‌هایی که عکس غذا را در اولویت می‌دانند",
     available: true,
   },
   {
-    id: "Template012",
-    name: "هایپر",
+    id: "template012",
+    name: "گرید",
     description:
-      "طراحی که به صورت هایپر مدرن و جذاب است و مناسب رستوران ها و کافه ها می باشد",
-    preview: "",
+      "نمایش محصولات در شبکه‌ای از کارت‌های تصویری با دکمه افزودن سریع و دسته‌بندی کشویی؛ مناسب منوهای پرمحصول",
     available: true,
   },
   {
-    id: "Template013",
-    name: "هایپر",
+    id: "template013",
+    name: "مات پریمیوم",
     description:
-      "طراحی که به صورت هایپر مدرن و جذاب است و مناسب رستوران ها و کافه ها می باشد",
-    preview: "",
+      "طراحی تیره و مات با رنگ طلایی ملایم و فهرست تحریری؛ مناسب رستوران‌ها و کافه‌های لوکس",
     available: true,
   },
 ];

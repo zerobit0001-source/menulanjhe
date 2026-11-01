@@ -61,7 +61,7 @@ export default function Template008({
   return (
     <div
       dir="rtl"
-      className="min-h-dvh bg-[#FAFAFA] text-[#171717] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="min-h-dvh w-full bg-[#FAFAFA] text-[#171717] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       <Template008Header
         shop={model.shop}

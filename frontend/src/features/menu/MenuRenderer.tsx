@@ -25,9 +25,9 @@ const menuTemplates = {
   template007: Template007,
   template008: Template008,
   template009: Template009,
-  Template011: Template011,
-  Template012: Template012,
-  Template013: Template013,
+  template011: Template011,
+  template012: Template012,
+  template013: Template013,
   CoffeeHouseTemplate: CoffeeHouseTemplate,
 };
 

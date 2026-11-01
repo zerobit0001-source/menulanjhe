@@ -68,7 +68,7 @@ export default function MenuPageMenuTemplateCard({
           type="button"
           onClick={() => {
             onPreview(template);
-            router.push(`/dashboard/menu/preview/${template.id}`);
+            router.push(`/preview/${template.id}`);
           }}
           className="absolute underline bottom-3 left-3 flex items-center gap-1.5 rounded-lg bg-white/95 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm backdrop-blur transition-colors hover:bg-white"
         >
@@ -78,12 +78,12 @@ export default function MenuPageMenuTemplateCard({
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-4 flex flex-col gap-4">
         <Typography className="font-bold! text-gray-900!">
           {template.name}
         </Typography>
 
-        <Typography className="mt-1! line-clamp-2 text-xs! text-gray-400!">
+        <Typography className="line-clamp-2 text-xs! text-gray-400!">
           {template.description}
         </Typography>
 
@@ -92,7 +92,7 @@ export default function MenuPageMenuTemplateCard({
           variant={selected ? "contained" : "outlined"}
           onClick={() => onSelect(template.id)}
           disabled={selected}
-          className="mt-4 rounded-xl!"
+          className=" rounded-xl!"
         >
           {selected ? "قالب فعال" : "انتخاب قالب"}
         </Button>
