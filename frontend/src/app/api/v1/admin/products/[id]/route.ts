@@ -17,31 +17,27 @@ export async function PATCH(
 
     if (!accessToken) {
       return NextResponse.json(
-        {
-          code: "UNAUTHORIZED",
-          message: "احراز هویت انجام نشده است.",
-        },
+        { code: "UNAUTHORIZED", message: "احراز هویت انجام نشده است." },
         { status: 401 },
       );
     }
 
     const { id } = await params;
-    const body = await req.json();
+
+    const formData = await req.formData();
 
     const response = await fetch(`${BACKEND_API_URL}/admin/products/${id}/`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: formData,
+      cache: "no-store",
     });
 
     const data = await response.json();
 
-    return NextResponse.json(data, {
-      status: response.status,
-    });
+    return NextResponse.json(data, { status: response.status });
   } catch {
     return NextResponse.json(
       {

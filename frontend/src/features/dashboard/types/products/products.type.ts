@@ -26,7 +26,8 @@ export type CreateProductRequest = {
   category: string;
   name: string;
   description?: string;
-  image?: string | null;
+  /** Real file, uploaded as multipart/form-data. Omit when no image is selected. */
+  image?: File | null;
   price: string;
   is_featured?: boolean;
 };

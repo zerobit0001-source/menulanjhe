@@ -79,15 +79,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const body = await req.json();
+    // multipart/form-data: forward as-is. Do NOT set Content-Type manually;
+    // fetch generates it together with the multipart boundary.
+    const formData = await req.formData();
 
     const response = await fetch(`${BACKEND_API_URL}/admin/products/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: formData,
+      cache: "no-store",
     });
 
     const data = await response.json();

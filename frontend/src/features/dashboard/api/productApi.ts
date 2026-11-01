@@ -7,6 +7,40 @@ import type {
   UpdateProductRequest,
 } from "../types/products/products.type";
 
+
+function buildCreateProductFormData(input: CreateProductRequest): FormData {
+  const formData = new FormData();
+
+  formData.append("category", input.category);
+  formData.append("name", input.name);
+  formData.append("description", input.description ?? "");
+  formData.append("price", input.price);
+  formData.append("is_featured", String(input.is_featured ?? false));
+
+  if (input.image) {
+    formData.append("image", input.image);
+  }
+
+  return formData;
+}
+
+function buildUpdateProductFormData(body: UpdateProductRequest): FormData {
+  const formData = new FormData();
+
+  if (body.category !== undefined) formData.append("category", body.category);
+  if (body.name !== undefined) formData.append("name", body.name);
+  if (body.description !== undefined) {
+    formData.append("description", body.description);
+  }
+  if (body.price !== undefined) formData.append("price", body.price);
+  if (body.is_featured !== undefined) {
+    formData.append("is_featured", String(body.is_featured));
+  }
+  if (body.image) formData.append("image", body.image);
+
+  return formData;
+}
+
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query<
@@ -53,10 +87,10 @@ export const productApi = baseApi.injectEndpoints({
     }),
 
     createProduct: builder.mutation<Product, CreateProductRequest>({
-      query: (body) => ({
+      query: (input) => ({
         url: "admin/products/",
         method: "POST",
-        body,
+        body: buildCreateProductFormData(input),
       }),
 
       invalidatesTags: ["Product"],
@@ -72,7 +106,7 @@ export const productApi = baseApi.injectEndpoints({
       query: ({ id, body }) => ({
         url: `admin/products/${id}/`,
         method: "PATCH",
-        body,
+        body: buildUpdateProductFormData(body),
       }),
 
       invalidatesTags: (_result, _error, { id }) => [
