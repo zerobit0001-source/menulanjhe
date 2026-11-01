@@ -110,7 +110,7 @@ export default function Template005({ menu, qrToken }: TemplateProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-28 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="min-h-screen w-full bg-slate-50 pb-28 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <Template005Header
         shop={menu.shop}
         cartCount={cartCount}

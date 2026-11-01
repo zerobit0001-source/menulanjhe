@@ -28,7 +28,7 @@ const menuTemplates = {
   template011: Template011,
   template012: Template012,
   template013: Template013,
-  CoffeeHouseTemplate: CoffeeHouseTemplate,
+  // CoffeeHouseTemplate: CoffeeHouseTemplate,
 };
 
 type MenuTemplate = keyof typeof menuTemplates;

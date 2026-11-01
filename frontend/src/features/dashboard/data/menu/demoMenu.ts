@@ -48,12 +48,12 @@ export const menuTemplates: MenuTemplate[] = [
     description: "طراحی مدرن مخصوص کافه ها با تم روشن و جذاب",
     available: true,
   },
-  {
-    id: "CoffeeHouseTemplate",
-    name: "قهوه خانه",
-    description: "طراحی مدرن مخصوص کافه ها با تم روشن و جذاب",
-    available: true,
-  },
+  // {
+  //   id: "CoffeeHouseTemplate",
+  //   name: "قهوه خانه",
+  //   description: "طراحی مدرن مخصوص کافه ها با تم روشن و جذاب",
+  //   available: true,
+  // },
   {
     id: "template011",
     name: "تمام‌صفحه",

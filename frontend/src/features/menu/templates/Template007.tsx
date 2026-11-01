@@ -104,7 +104,7 @@ export default function Template007({ menu, qrToken }: TemplateProps) {
   }
 
   return (
-    <div className="relative min-h-screen bg-[#120D09] text-[#F5EBDD] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="relative w-full min-h-screen bg-[#120D09] text-[#F5EBDD] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <Template007Header
         shopName={menu.shop.name}
         cartCount={cartCount}

@@ -696,7 +696,7 @@ export default function Template009({ menu, qrToken }: MenuTemplateProps) {
   }
 
   return (
-    <Box sx={{ ...rootSx, pb: cart.cartCount > 0 ? 12 : 4 }}>
+    <Box className="w-full!" sx={{ ...rootSx, pb: cart.cartCount > 0 ? 12 : 4 }}>
       {/* Hero */}
       <Box
         component="header"

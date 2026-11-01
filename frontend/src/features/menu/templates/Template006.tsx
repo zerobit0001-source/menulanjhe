@@ -110,7 +110,7 @@ export default function Template006({ menu, qrToken }: TemplateProps) {
   }
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#08090B] pb-28 text-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <main className="min-h-screen w-full overflow-x-hidden bg-[#08090B] pb-28 text-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <Template006Header
         shop={menu.shop}
         cartCount={cartCount}

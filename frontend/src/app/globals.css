@@ -22,3 +22,8 @@
 body {
   font-family: "Vazirmatn", sans-serif;
 }
+
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}

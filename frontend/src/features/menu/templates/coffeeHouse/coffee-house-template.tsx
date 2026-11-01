@@ -84,7 +84,7 @@ export function CoffeeHouseTemplate({ menu, qrToken }: Props) {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="ch-root" dir="rtl">
+      <div className="ch-root w-full" dir="rtl">
         <CoffeeHeader
           name={menu.restaurantName}
           cartCount={cart.count}
