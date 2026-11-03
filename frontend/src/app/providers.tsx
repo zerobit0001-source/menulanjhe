@@ -9,7 +9,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <Provider store={store}>
       {children}
       <ToastContainer
-        position="bottom-center"
+        position="top-right"
         autoClose={4000}
         rtl
         newestOnTop

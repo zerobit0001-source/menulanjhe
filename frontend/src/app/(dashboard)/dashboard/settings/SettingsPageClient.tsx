@@ -7,9 +7,15 @@ import {
 import Link from "next/link";
 import { ChevronLeft, LockKeyhole, Settings2, UserRound } from "lucide-react";
 
-import { Alert, Card, FormControlLabel, Switch, Typography } from "@mui/material";
+import {
+  Alert,
+  Card,
+  FormControlLabel,
+  Switch,
+  Typography,
+} from "@mui/material";
 import DashboardContainer from "@/features/dashboard/components/DashboardContainer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const settingsItems = [
   {
@@ -36,17 +42,39 @@ export default function SettingsPageClient() {
   const [updatePublicOrdering, { isLoading: isUpdating }] =
     useUpdatePublicOrderingMutation();
 
+  const [publicOrderingEnabled, setPublicOrderingEnabled] = useState<
+    boolean | null
+  >(null);
+
   const [updateError, setUpdateError] = useState(false);
 
+  // Sync local state with the API response.
+  useEffect(() => {
+    if (restaurantProfile?.public_ordering_enabled !== undefined) {
+      setPublicOrderingEnabled(restaurantProfile.public_ordering_enabled);
+    }
+  }, [restaurantProfile?.public_ordering_enabled]);
+
   const handlePublicOrderingChange = async (enabled: boolean) => {
+    if (publicOrderingEnabled === null || isUpdating) return;
+
+    const previousValue = publicOrderingEnabled;
+
+    // Optimistic UI update.
+    setPublicOrderingEnabled(enabled);
     setUpdateError(false);
 
     try {
       await updatePublicOrdering(enabled).unwrap();
-    } catch {
+    } catch (error) {
+      // Roll back if the request fails.
+      setPublicOrderingEnabled(previousValue);
       setUpdateError(true);
+
+      console.error("Failed to update public ordering:", error);
     }
   };
+
   return (
     <DashboardContainer>
       <div className="space-y-6">
@@ -164,9 +192,9 @@ export default function SettingsPageClient() {
                     component="p"
                     className="mt-1! text-xs! leading-5! text-slate-500"
                   >
-                    {isProfileLoading
+                    {isProfileLoading || publicOrderingEnabled === null
                       ? "در حال دریافت وضعیت..."
-                      : restaurantProfile?.public_ordering_enabled
+                      : publicOrderingEnabled
                         ? "سفارش‌گیری فعال است."
                         : "سفارش‌گیری غیرفعال است."}
                   </Typography>
@@ -177,14 +205,12 @@ export default function SettingsPageClient() {
                   label=""
                   control={
                     <Switch
-                      checked={
-                        restaurantProfile?.public_ordering_enabled ?? false
-                      }
+                      checked={publicOrderingEnabled ?? false}
                       disabled={
                         isProfileLoading ||
                         isProfileError ||
                         isUpdating ||
-                        restaurantProfile?.public_ordering_enabled === undefined
+                        publicOrderingEnabled === null
                       }
                       onChange={(_, checked) => {
                         void handlePublicOrderingChange(checked);
