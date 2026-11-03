@@ -27,5 +27,5 @@ export type PublicMenuResponse = {
   description: string;
   restaurant_name: string;
   categories: PublicMenuCategory[];
-  template_name: string;
+  template_name: string | any;
 };
