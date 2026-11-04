@@ -38,6 +38,7 @@ class SelectTenantView(APIView):
 
 class ChangePasswordView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    throttle_scope = "auth_change_password"
 
     def post(self, request):
         serializer = ChangePasswordSerializer(data=request.data, context={"request": request})
