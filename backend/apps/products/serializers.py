@@ -7,6 +7,7 @@ from django.core.files.storage import default_storage
 
 
 
+
 class AdminProductSerializer(serializers.ModelSerializer):
     slug = serializers.SlugField(required=False, allow_blank=True)
     category_name = serializers.CharField(source="category.name", read_only=True)
@@ -52,7 +53,6 @@ class AdminProductSerializer(serializers.ModelSerializer):
         if "image" in validated_data:
             image = validated_data["image"]
             old_files = [f.name for f in (instance.image, instance.optimized_image) if f]
-            # عکس جدید → نسخه‌ی بهینه‌ی جدید | عکس پاک شد (null) → نسخه‌ی بهینه هم پاک می‌شه
             validated_data["optimized_image"] = optimize_image(image) if image else None
 
         instance = super().update(instance, validated_data)
