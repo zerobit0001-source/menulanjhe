@@ -1,5 +1,6 @@
 import io
 import os
+
 import pytest
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -57,7 +58,7 @@ def test_small_image_is_not_upscaled(owner_a, catalog_a):
 
 
 def test_transparency_is_preserved(owner_a, catalog_a):
-    img = Image.new("RGBA", (500, 500), (0, 0, 0, 0))
+    img = Image.new("RGBA", (500, 500), (0, 0, 0, 0))  # کاملاً شفاف
     img.paste((200, 80, 40, 255), (100, 100, 400, 400))
     buf = io.BytesIO()
     img.save(buf, format="PNG")
