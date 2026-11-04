@@ -167,6 +167,19 @@ REST_FRAMEWORK = {
         "apps.common.renderers.EnvelopeJSONRenderer",
     ),
     "PAGE_SIZE": 20,
+
+    "DEFAULT_THROTTLE_CLASSES": ("rest_framework.throttling.ScopedRateThrottle",),
+    "DEFAULT_THROTTLE_RATES": {
+        "auth_login": "20/min",
+        "auth_login_phone": "10/min",
+        "auth_refresh": "60/min",
+        "auth_change_password": "5/min",
+        "public_menu": "120/min",
+        "public_resolve": "120/min",
+        "public_order": "60/min",
+        "public_order_table": "10/min",
+    },
+    "NUM_PROXIES": int(os.getenv("NUM_PROXIES", "0")),
 }
 
 
