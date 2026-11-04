@@ -1,3 +1,95 @@
+# from rest_framework import serializers
+# from django.utils.text import slugify
+# from apps.products.serializers import PublicProductSerializer
+# from .models import Category, Menu
+# 
+# 
+# class AdminMenuSerializer(serializers.ModelSerializer):
+#     slug = serializers.SlugField(required=False, allow_blank=True)
+# 
+#     class Meta:
+#         model = Menu
+#         fields = ["id", "branch", "name", "slug", "description", "is_active", "is_published",
+#                   "template_name", "created_at", "updated_at"]
+#         read_only_fields = ["id", "created_at", "updated_at"]
+# 
+#     def validate_branch(self, branch):
+#         tenant = self.context["request"].tenant
+#         if branch.tenant_id != tenant.id:
+#             raise serializers.ValidationError("این شعبه متعلق به رستوران شما نیست.")
+#         return branch
+# 
+#     def create(self, validated_data):
+#         if not validated_data.get("slug"):
+#             validated_data["slug"] = self._generate_unique_slug(
+#                 name=validated_data["name"], branch=validated_data["branch"]
+#             )
+#         return super().create(validated_data)
+# 
+#     def _generate_unique_slug(self, name, branch):
+#         base_slug = slugify(name, allow_unicode=True) or "menu"
+#         slug = base_slug
+#         counter = 2
+#         while Menu.objects.filter(branch=branch, slug=slug).exists():
+#             slug = f"{base_slug}-{counter}"
+#             counter += 1
+#         return slug
+# 
+# 
+# class AdminCategorySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Category
+#         fields = ["id", "menu", "name", "description", "icon_name", "image", "sort_order", "is_active",
+#                   "created_at", "updated_at"]
+#         read_only_fields = ["id", "created_at", "updated_at"]
+# 
+#     def validate_menu(self, menu):
+#         tenant = self.context["request"].tenant
+#         if menu.branch.tenant_id != tenant.id:
+#             raise serializers.ValidationError("این منو متعلق به رستوران شما نیست.")
+#         return menu
+# 
+# 
+# class CategoryReorderItemSerializer(serializers.Serializer):
+#     id = serializers.UUIDField()
+#     sort_order = serializers.IntegerField(min_value=0)
+# 
+# 
+# class CategoryReorderSerializer(serializers.Serializer):
+#     items = CategoryReorderItemSerializer(many=True)
+# 
+# 
+# class PublicCategorySerializer(serializers.ModelSerializer):
+#     products = serializers.SerializerMethodField()
+# 
+#     class Meta:
+#         model = Category
+#         fields = ["id", "name", "description", "icon_name", "image", "sort_order", "products"]
+#         read_only_fields = fields
+# 
+#     def get_products(self, category):
+#         products = category.products.filter(is_available=True).order_by("sort_order", "name")
+#         return PublicProductSerializer(products, many=True, context=self.context).data
+# 
+# 
+# class PublicMenuSerializer(serializers.ModelSerializer):
+#     categories = serializers.SerializerMethodField()
+#     restaurant_name = serializers.CharField(source="branch.tenant.restaurant.name", read_only=True)
+#     ordering_enabled = serializers.SerializerMethodField()
+# 
+#     class Meta:
+#         model = Menu
+#         fields = ["id", "name", "slug", "description", "template_name", "restaurant_name", "ordering_enabled", "categories"]
+#         read_only_fields = fields
+# 
+#     def get_ordering_enabled(self, menu):
+#         profile = getattr(menu.branch.tenant, "restaurant", None)
+#         return True if profile is None else profile.public_ordering_enabled
+# 
+#     def get_categories(self, menu):
+#         categories = menu.categories.filter(is_active=True).order_by("sort_order", "name")
+#         return PublicCategorySerializer(categories, many=True, context=self.context).data
+
 from rest_framework import serializers
 from django.utils.text import slugify
 from apps.products.serializers import PublicProductSerializer
@@ -12,12 +104,24 @@ class AdminMenuSerializer(serializers.ModelSerializer):
         fields = ["id", "branch", "name", "slug", "description", "is_active", "is_published",
                   "template_name", "created_at", "updated_at"]
         read_only_fields = ["id", "created_at", "updated_at"]
+        validators = []
 
     def validate_branch(self, branch):
         tenant = self.context["request"].tenant
         if branch.tenant_id != tenant.id:
             raise serializers.ValidationError("این شعبه متعلق به رستوران شما نیست.")
         return branch
+
+    def validate(self, attrs):
+        slug = attrs.get("slug")
+        branch = attrs.get("branch") or (self.instance.branch if self.instance else None)
+        if slug and branch:
+            qs = Menu.objects.filter(branch=branch, slug=slug)
+            if self.instance:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise serializers.ValidationError({"slug": "این اسلاگ قبلاً برای این شعبه استفاده شده است."})
+        return attrs
 
     def create(self, validated_data):
         if not validated_data.get("slug"):
@@ -79,7 +183,8 @@ class PublicMenuSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Menu
-        fields = ["id", "name", "slug", "description", "template_name", "restaurant_name", "ordering_enabled", "categories"]
+        fields = ["id", "name", "slug", "description", "template_name", "restaurant_name",
+                  "ordering_enabled", "categories"]
         read_only_fields = fields
 
     def get_ordering_enabled(self, menu):
