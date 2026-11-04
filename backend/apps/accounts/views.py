@@ -1,6 +1,9 @@
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.throttling import ScopedRateThrottle
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from apps.common.throttles import LoginPhoneThrottle
 from apps.tenants.models import Membership
 from .serializers import (
     ChangePasswordSerializer,
@@ -41,3 +44,13 @@ class ChangePasswordView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"detail": "Password changed successfully."}, status=status.HTTP_200_OK)
+
+
+class LoginView(TokenObtainPairView):
+    throttle_classes = [ScopedRateThrottle, LoginPhoneThrottle]
+    throttle_scope = "auth_login"
+
+
+class RefreshView(TokenRefreshView):
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "auth_refresh"
