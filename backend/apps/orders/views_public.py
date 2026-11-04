@@ -1,3 +1,4 @@
+# # ## ## # Version 1.0.0
 # from rest_framework import permissions, status
 # from rest_framework.response import Response
 # from rest_framework.views import APIView
@@ -33,10 +34,52 @@
 #         return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
 
 
+
+# # ## ## # Version 2.0.0
+# from django.shortcuts import get_object_or_404
+# from rest_framework import permissions, status
+# from rest_framework.response import Response
+# from rest_framework.views import APIView
+# from apps.tables.models import Table
+# from .serializers import CreateDineInOrderSerializer, OrderSerializer
+# from .services import create_dine_in_order
+# 
+# 
+# class CreateGuestOrderView(APIView):
+#     permission_classes = [permissions.AllowAny]
+# 
+#     def post(self, request):
+#         serializer = CreateDineInOrderSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         data = serializer.validated_data
+# 
+#         table = get_object_or_404(
+#             Table.objects.select_related("branch__tenant"),
+#             qr_token=data["qr_token"],
+#             is_active=True,
+#             branch__is_active=True,
+#             branch__tenant__is_active=True,
+#         )
+# 
+#         order = create_dine_in_order(
+#             tenant=table.branch.tenant,
+#             branch=table.branch,
+#             table=table,
+#             items=[{"product_id": str(i["product_id"]), "quantity": i["quantity"]} for i in data["items"]],
+#             idempotency_key=data["idempotency_key"],
+#             customer_data=data.get("customer"),
+#             notes=data.get("notes", ""),
+#         )
+#         return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+
+
+# ## ## ## # Version 3.0.0
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.throttling import ScopedRateThrottle
+from apps.common.throttles import TableQrThrottle
 from apps.tables.models import Table
 from .serializers import CreateDineInOrderSerializer, OrderSerializer
 from .services import create_dine_in_order
@@ -44,6 +87,8 @@ from .services import create_dine_in_order
 
 class CreateGuestOrderView(APIView):
     permission_classes = [permissions.AllowAny]
+    throttle_classes = [ScopedRateThrottle, TableQrThrottle]
+    throttle_scope = "public_order"
 
     def post(self, request):
         serializer = CreateDineInOrderSerializer(data=request.data)
