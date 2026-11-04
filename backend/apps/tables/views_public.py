@@ -7,6 +7,7 @@ from .models import Table
 
 class ResolveTableView(APIView):
     permission_classes = [permissions.AllowAny]
+    throttle_scope = "public_resolve"
 
     def get(self, request, qr_token):
         table = get_object_or_404(
