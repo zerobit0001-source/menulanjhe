@@ -2,6 +2,7 @@ import { Smartphone } from "lucide-react";
 import { demoHref, requestHref } from "@/config/landing";
 import { ImagePlaceholder } from "./image-placeholder";
 import { Container, LinkButton } from "./ui";
+import Image from "next/image";
 
 export function Hero() {
   return (
@@ -45,14 +46,22 @@ export function Hero() {
             </p>
           </div>
 
-          <div className="ml-fade-up ml-delay-2">
-            <ImagePlaceholder
+          <div className="ml-fade-up ml-delay-2 flex items-center justify-end">
+            {/* <ImagePlaceholder
               label="جایگاه تصویر اصلی محصول"
               description="اسکرین‌شات منوی مشتری روی موبایل در این بخش قرار می‌گیره."
               icon={Smartphone}
               aspect="4 / 5"
               className="mx-auto max-w-md lg:max-w-none"
-            />
+            /> */}
+            <div className="w-[320px] h-[661px] ">
+              <Image
+                src={"/images/mainpage/hero1.png"}
+                alt="عکس منو برای صفحه اصلی"
+                width={320}
+                height={661}
+              />
+            </div>
           </div>
         </div>
       </Container>
