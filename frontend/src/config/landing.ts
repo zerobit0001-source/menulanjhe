@@ -107,7 +107,22 @@ export const siteConfig = {
    * Example:
    * { id: "phone", label: "تلفن", value: "۰۲۱-...", href: "tel:+98...", kind: "phone" }
    */
-  contacts: [] as ContactPoint[],
+  contacts: [
+    {
+      id: "phone",
+      label: "تلفن",
+      value: "+989225621256",
+      href: "tel:+989225621256",
+      kind: "phone",
+    },
+    {
+      id: "phone",
+      label: "تلفن",
+      value: "+989149623780",
+      href: "tel:+989149623780",
+      kind: "phone",
+    },
+  ] as ContactPoint[],
 };
 
 export const requestHref: string = siteConfig.requestUrl ?? "#contact-info";
