@@ -1,6 +1,7 @@
 import { Link2, Mail, Phone, UtensilsCrossed } from "lucide-react";
 import { navLinks, siteConfig, type ContactPoint } from "@/config/landing";
 import { Container, focusRing } from "./ui";
+import Link from "next/link";
 
 const contactIcons: Record<ContactPoint["kind"], typeof Phone> = {
   phone: Phone,
@@ -94,10 +95,10 @@ export function Footer() {
         </div>
 
         <div className="border-t border-stone-200 py-6 text-center text-xs text-stone-500">
-          © {year} {siteConfig.name}. تمامی حقوق محفوظ است.
+          <Link target="_blank" href={"https://amirrezaabdollahi.vercel.app/?source=menulanghue"}>©</Link> {year}{" "}
+          {siteConfig.name}. تمامی حقوق محفوظ است.
         </div>
       </Container>
     </footer>
   );
 }
-

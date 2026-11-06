@@ -12,8 +12,7 @@ import {
 import { Avatar, Card, Chip, Divider, Typography } from "@mui/material";
 import Link from "next/link";
 import DashboardContainer from "@/features/dashboard/components/DashboardContainer";
-
-
+import LogoutButton from "@/features/auth/components/LogoutButton";
 
 type ProfilePageClientProps = {
   user: CurrentUserResponse;
@@ -74,14 +73,14 @@ export default function ProfilePageClient({ user }: ProfilePageClientProps) {
               اطلاعات حساب کاربری و مجموعه‌های شما
             </Typography>
           </div>
-
-          <Link
+          {/* <Link
             href="/dashboard/settings/profile/edit"
             className="inline-flex w-fit items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800"
           >
             ویرایش پروفایل
             <ChevronLeft size={17} />
-          </Link>
+          </Link> */}
+          <LogoutButton className={"inline-flex w-fit"} />
         </div>
 
         {/* Profile overview */}
