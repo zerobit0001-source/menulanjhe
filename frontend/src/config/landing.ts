@@ -56,6 +56,7 @@ export type DashboardShot = {
   description: string;
   icon: LucideIcon;
   enabled: boolean;
+  src: string;
 };
 
 export type Business = {
@@ -316,6 +317,7 @@ export const dashboardShots: DashboardShot[] = [
     label: "جایگاه اسکرین‌شات پنل مدیریت",
     description: "نمای کلی داشبورد",
     icon: LayoutDashboard,
+    src: "/images/mainpage/dashboard_screenshot.png",
     enabled: true,
   },
   {
@@ -323,6 +325,7 @@ export const dashboardShots: DashboardShot[] = [
     label: "جایگاه اسکرین‌شات مدیریت محصولات",
     description: "لیست و ویرایش محصولات",
     icon: Package,
+    src: "/images/mainpage/products_screenshot.png",
     enabled: true,
   },
   {
@@ -330,6 +333,7 @@ export const dashboardShots: DashboardShot[] = [
     label: "جایگاه اسکرین‌شات مدیریت دسته‌بندی‌ها",
     description: "ساخت و مرتب‌سازی دسته‌بندی‌ها",
     icon: FolderTree,
+    src: "/images/mainpage/categories_screenshot.png",
     enabled: true,
   },
   {
@@ -337,14 +341,15 @@ export const dashboardShots: DashboardShot[] = [
     label: "جایگاه اسکرین‌شات سفارش‌ها",
     description: "مشاهده و پیگیری سفارش‌ها",
     icon: ClipboardList,
+    src: "/images/mainpage/orders_screenshot.png",
     enabled: true,
   },
   {
-    // TODO: set to false if reports are not available yet.
     id: "reports",
     label: "جایگاه اسکرین‌شات گزارش‌ها",
     description: "گزارش‌های پایه",
     icon: BarChart3,
+    src: "/images/mainpage/reports_screenshot.png",
     enabled: true,
   },
 ];
