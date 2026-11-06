@@ -58,12 +58,12 @@ export function ProductDemo() {
             aspect="16 / 10"
           /> */}
 
-          <div className="w-[230px] h-[617px] ">
+          <div className="w-full md:w-[500px] h-[774px] ">
             <Image
-              src={"/images/mainpage/image.png"}
+              src={"/images/mainpage/showcase_2.png"}
               alt="عکس منو برای صفحه اصلی"
-              width={230}
-              height={617}
+              width={500}
+              height={774}
             />
           </div>
         </div>

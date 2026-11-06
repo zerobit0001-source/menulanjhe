@@ -2,6 +2,7 @@ import { LayoutTemplate } from "lucide-react";
 import { menuTemplates } from "@/config/landing";
 import { ImagePlaceholder } from "./image-placeholder";
 import { Section, SectionHeading } from "./ui";
+import Image from "next/image";
 
 export function TemplatesGallery() {
   return (
@@ -19,12 +20,26 @@ export function TemplatesGallery() {
             key={template.id}
             className="rounded-2xl border border-stone-200 bg-white p-4"
           >
-            <ImagePlaceholder
+            {/* <ImagePlaceholder
               label="جایگاه پیش‌نمایش قالب منو"
               description={template.name}
               icon={LayoutTemplate}
               aspect="3 / 4"
-            />
+            /> */}
+
+            <div
+              style={{ aspectRatio: "2 / 4" }}
+              className={`flex min-h-36 w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl bg-stone-100 text-center`}
+            >
+              <Image
+                src={template.src}
+                alt={template.name}
+                width={300}
+                height={300}
+                className="w-full h-full"
+              />
+            </div>
+
             <div className="px-2 pb-2 pt-5">
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-base font-bold text-stone-900">

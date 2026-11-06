@@ -42,6 +42,7 @@ export type Feature = {
 };
 
 export type MenuTemplate = {
+  src: string;
   id: string;
   name: string;
   description: string;
@@ -253,14 +254,25 @@ export const features: Feature[] = [
  */
 export const menuTemplates: MenuTemplate[] = [
   {
-    id: "Template001",
-    name: "قالب ۰۰۱",
-    description: "TODO: توضیح کوتاه ظاهر و کاربرد این قالب را اینجا وارد کن.",
+    src: "/images/mainpage/image.png",
+    id: "fullscreen",
+    name: "قالب تمام صفحه",
+    description:
+      "نمایش هر محصول به‌صورت تمام‌صفحه با اسلاید بین محصولات هر دسته؛ مناسب کافه‌ها و رستوران‌هایی که عکس غذا را در اولویت می‌دانند",
   },
   {
-    id: "Template002",
-    name: "قالب ۰۰۲",
-    description: "TODO: توضیح کوتاه ظاهر و کاربرد این قالب را اینجا وارد کن.",
+    src: "/images/mainpage/image (3).png",
+    id: "categoryflow",
+    name: "قالب جریان دسته‌ها",
+    description:
+      "طراحی تیره با تم قهوه‌ای و نارنجی؛ مرور منو دسته‌به‌دسته با ناوبری قبلی و بعدی ، مناسب رستوران‌ها و کافه‌های شب‌محور",
+  },
+  {
+    src: "/images/mainpage/image (2).png",
+    id: "accordion",
+    name: "قالب گشوده",
+    description:
+      "طراحی روشن و گرم با دسته‌بندی‌های بازشونده؛ با یک لمس هر دسته باز می‌شود و محصولات متنی آن با انیمیشن نرم نمایش داده میشن .",
   },
 ];
 
