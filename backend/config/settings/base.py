@@ -6,7 +6,17 @@ from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-load_dotenv(BASE_DIR / ".env")
+_dotenv_local = BASE_DIR / ".env.local"
+# load_dotenv(BASE_DIR / ".env")
+load_dotenv(_dotenv_local if _dotenv_local.exists() else BASE_DIR / ".env")
+
+
+def _env_list(name, default=""):
+    return [item.strip() for item in os.getenv(name, default).split(",") if item.strip()]
+
+def _env_bool(name, default=False):
+    value = os.getenv(name)
+    return default if value is None else value.strip().lower() in ("1", "true", "yes", "on")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -14,7 +24,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = _env_list("ALLOWED_HOSTS")
 
 
 # Application definition
