@@ -11,3 +11,9 @@ REST_FRAMEWORK = {
 }
 
 PUBLIC_TABLE_URL_BASE = globals().get("PUBLIC_TABLE_URL_BASE") or "https://example.com/menu"
+
+
+DATABASES["default"]["CONN_MAX_AGE"] = 0
+
+CORS_ALLOWED_ORIGINS = ["https://app.example.com"]
+CORS_ALLOWED_ORIGIN_REGEXES = []

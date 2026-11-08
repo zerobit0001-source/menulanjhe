@@ -71,6 +71,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -111,6 +112,18 @@ DATABASES = {
 }
 
 
+
+if os.getenv("DATABASE_URL"):
+    import environ
+
+    DATABASES = {"default": environ.Env.db_url_config(os.environ["DATABASE_URL"])}
+    DATABASES["default"]["CONN_MAX_AGE"] = int(os.getenv("DB_CONN_MAX_AGE", "60"))
+    DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
+
+
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
@@ -135,7 +148,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -178,6 +191,7 @@ REST_FRAMEWORK = {
     ),
     "PAGE_SIZE": 20,
 
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_THROTTLE_CLASSES": ("rest_framework.throttling.ScopedRateThrottle",),
     "DEFAULT_THROTTLE_RATES": {
         "auth_login": "20/min",
@@ -223,6 +237,27 @@ CHANNEL_LAYERS = {
 }
 
 
+
+
+if os.getenv("REDIS_URL"):
+    from urllib.parse import urlparse
+
+    _redis = urlparse(os.environ["REDIS_URL"])
+    _redis_base = f"{_redis.scheme}://{_redis.netloc}"
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {"hosts": [f"{_redis_base}/0"]},
+        }
+    }
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": f"{_redis_base}/1",
+        }
+    }
+
+
 # Uploaded media files
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -230,3 +265,38 @@ MEDIA_ROOT = BASE_DIR / "media"
 MAX_UPLOAD_SIZE_MB = 5
 IMAGE_MAX_DIMENSION = 1280
 IMAGE_WEBP_QUALITY = 82
+
+
+
+# Static files
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+
+# Cors - csrf
+CORS_ALLOWED_ORIGINS = _env_list("CORS_ALLOWED_ORIGINS")
+CORS_EXPOSE_HEADERS = ["Retry-After"]
+CSRF_TRUSTED_ORIGINS = _env_list("CSRF_TRUSTED_ORIGINS")
+
+
+# Loging
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {"standard": {"format": "%(asctime)s %(levelname)s %(name)s: %(message)s"}},
+    "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "standard"}},
+    "root": {"handlers": ["console"], "level": os.getenv("LOG_LEVEL", "INFO")},
+    "loggers": {"django.request": {"handlers": ["console"], "level": "WARNING", "propagate": False}},
+}
+
+
+
+# Swager documentation
+ENABLE_API_DOCS = _env_bool("ENABLE_API_DOCS", default=DEBUG)
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Restaurant / Cafe SaaS API",
+    "DESCRIPTION": "API documentation for the Restaurant / Cafe SaaS project. This documentation provides details about the available endpoints, request/response formats, and authentication methods.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "COMPONENT_SPLIT_REQUEST": True,
+}
