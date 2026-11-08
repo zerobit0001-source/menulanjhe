@@ -7,7 +7,7 @@ export function TargetBusinesses() {
       <SectionHeading
         id="businesses-title"
         eyebrow="مناسب برای"
-        title="منو لاژو برای چه کسب‌وکارهایی ساخته شده؟"
+        title="منو لانژ برای چه کسب‌وکارهایی ساخته شده؟"
       />
 
       <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

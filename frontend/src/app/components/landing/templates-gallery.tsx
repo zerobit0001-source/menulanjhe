@@ -35,6 +35,7 @@ export function TemplatesGallery() {
               <div className="flex min-w-0 items-center justify-between gap-2">
                 <h3 className="min-w-0 truncate text-sm font-bold text-stone-900 sm:text-base">
                   {template.name}
+                  menulounge
                 </h3>
 
                 <span

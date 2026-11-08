@@ -9,7 +9,7 @@ import Providers from "./providers";
 import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
-  title: "Menu Lanjhe",
+  title: "Menu Lounge",
   description: "Digital Menu & Ordering Platform",
 };
 

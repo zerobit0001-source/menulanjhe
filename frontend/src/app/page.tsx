@@ -14,9 +14,9 @@ import { Faq } from "./components/landing/faq";
 import { FinalCta } from "./components/landing/final-cta";
 import { Footer } from "./components/landing/footer";
 
-const title = "منو لاژو | منوی دیجیتال و QR Code برای کافه و رستوران";
+const title = "منو لانژ | منوی دیجیتال و QR Code برای کافه و رستوران";
 const description =
-  "با منو لاژو منوی دیجیتال کسب‌وکارت رو مدیریت کن، محصولات و قیمت‌ها رو به‌روزرسانی کن و با لینک یا QR Code در اختیار مشتری‌هات قرار بده.";
+  "با منو لانژ منوی دیجیتال کسب‌وکارت رو مدیریت کن، محصولات و قیمت‌ها رو به‌روزرسانی کن و با لینک یا QR Code در اختیار مشتری‌هات قرار بده.";
 
 export const metadata: Metadata = {
   title,
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     description,
     type: "website",
     locale: "fa_IR",
-    siteName: "منو لاژو",
+    siteName: "منو لانژ",
   },
 };
 

@@ -93,7 +93,7 @@ export default function AuthPage() {
             <UtensilsCrossed size={27} />
           </div>
 
-          <h1 className="text-2xl font-bold text-slate-900">Menu Lanjhe</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Menu Lounge</h1>
 
           <p className="mt-2 text-sm text-slate-500">
             وارد پنل مدیریت مجموعه خود شوید
@@ -189,7 +189,7 @@ export default function AuthPage() {
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-400">
-          Menu Lanjhe · مدیریت ساده و هوشمند منو
+          Menu Lounge · مدیریت ساده و هوشمند منو
         </p>
       </div>
     </main>

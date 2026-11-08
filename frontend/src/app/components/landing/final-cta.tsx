@@ -12,7 +12,7 @@ export function FinalCta() {
           id="final-cta-title"
           className="mx-auto max-w-2xl text-2xl font-bold leading-[1.7] text-white sm:text-3xl"
         >
-          منوی دیجیتال کسب‌وکارت رو با منو لاژو شروع کن
+          منوی دیجیتال کسب‌وکارت رو با منو لانژ شروع کن
         </h2>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <LinkButton href={requestHref} withArrow>
@@ -21,7 +21,7 @@ export function FinalCta() {
           <LinkButton
             href="#features"
             variant="secondary"
-            className="border-stone-600 bg-transparent text-white hover:bg-stone-800"
+            className="border-stone-600 bg-transparent text-stone-300 hover:text-white hover:bg-stone-800"
           >
             مشاهده امکانات
           </LinkButton>
