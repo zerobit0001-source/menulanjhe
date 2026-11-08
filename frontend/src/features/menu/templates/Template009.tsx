@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Menu Lanjhe — Public Menu Template009 ("Sage & Paper")
+ * Menu Lounge — Public Menu Template009 ("Sage & Paper")
  *
  * Visual direction: warm paper background, deep olive primary, terracotta accent,
  * large rounded food photography, editorial section headings. Persian RTL, Vazirmatn.
@@ -696,7 +696,10 @@ export default function Template009({ menu, qrToken }: MenuTemplateProps) {
   }
 
   return (
-    <Box className="w-full!" sx={{ ...rootSx, pb: cart.cartCount > 0 ? 12 : 4 }}>
+    <Box
+      className="w-full!"
+      sx={{ ...rootSx, pb: cart.cartCount > 0 ? 12 : 4 }}
+    >
       {/* Hero */}
       <Box
         component="header"

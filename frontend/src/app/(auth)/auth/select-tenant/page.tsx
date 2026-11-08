@@ -150,7 +150,7 @@ export default function SelectTenantPage() {
           )}
         </div>
 
-        <p className="mt-6 text-center text-xs text-slate-400">Menu Lanjhe</p>
+        <p className="mt-6 text-center text-xs text-slate-400">Menu Lounge</p>
       </div>
     </main>
   );

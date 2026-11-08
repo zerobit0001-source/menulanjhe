@@ -286,7 +286,7 @@ function SidebarContent({
             whiteSpace: "nowrap",
           }}
         >
-          Menu Lanjhe
+          Menu Lounge
         </Typography>
 
         {/* Close button */}

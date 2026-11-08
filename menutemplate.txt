@@ -1,8 +1,8 @@
-# Menu Lanjhe — Public Menu Template Integration Specification
+# Menu Lounge — Public Menu Template Integration Specification
 
 ## 1. Purpose and Scope
 
-This document defines the mandatory architecture, data contracts, component responsibilities, and behavioral requirements for all public menu templates in the **Menu Lanjhe** project.
+This document defines the mandatory architecture, data contracts, component responsibilities, and behavioral requirements for all public menu templates in the **Menu Lounge** project.
 
 Use this specification as the single source of truth whenever implementing a new public menu template or integrating an existing template into the project.
 
@@ -627,7 +627,7 @@ If a required API capability, type, or behavior is missing, identify the exact g
 
 ## Final Definition — What This Source Is For
 
-**This document is the reusable implementation specification for all Menu Lanjhe public menu templates.**
+**This document is the reusable implementation specification for all Menu Lounge public menu templates.**
 
 Its purpose is to guide AI coding tools in creating new visual templates that integrate consistently with the existing menu data model, `useMenuSearch`, `useMenuCart`, `useMenuOrder`, checkout flow, and order-success flow.
 

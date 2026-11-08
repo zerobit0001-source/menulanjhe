@@ -13,7 +13,7 @@ export function GettingStarted() {
         </h2>
         <p className="mt-4 text-base leading-9 text-stone-600">
           برای آشنایی با شرایط راه‌اندازی منوی دیجیتال و امکانات مناسب
-          کسب‌وکارت، با تیم منو لاژو در ارتباط باش.
+          کسب‌وکارت، با تیم منو لانژ در ارتباط باش.
         </p>
         <div className="mt-8 flex justify-center">
           <LinkButton href={requestHref} withArrow>

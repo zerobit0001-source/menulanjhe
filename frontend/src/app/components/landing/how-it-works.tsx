@@ -39,7 +39,7 @@ export function HowItWorks() {
           className="mt-1 h-5 w-5 shrink-0 text-teal-700"
         />
         <p className="text-sm leading-8 text-stone-700">
-          در حال حاضر راه‌اندازی حساب کسب‌وکار با همکاری تیم منو لاژو انجام
+          در حال حاضر راه‌اندازی حساب کسب‌وکار با همکاری تیم منو لانژ انجام
           می‌شه و ثبت‌نام عمومی وجود نداره.
         </p>
       </div>
