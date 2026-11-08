@@ -21,7 +21,7 @@ export function FinalCta() {
           <LinkButton
             href="#features"
             variant="secondary"
-            className="border-stone-600 bg-transparent text-white hover:bg-stone-800"
+            className="border-stone-600 bg-transparent text-stone-300 hover:text-white hover:bg-stone-800"
           >
             مشاهده امکانات
           </LinkButton>

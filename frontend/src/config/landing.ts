@@ -92,7 +92,7 @@ export const siteConfig = {
    * While null, every «درخواست راه‌اندازی» button scrolls to the contact
    * section in the footer.
    */
-  requestUrl: null as string | null,
+  requestUrl: "https://wa.me/989029820513",
 
   /** TODO: Real public demo menu URL. While null, demo buttons scroll to #demo. */
   demoUrl: null as string | null,
