@@ -122,6 +122,13 @@ export const siteConfig = {
       href: "tel:+989149623780",
       kind: "phone",
     },
+    {
+      id: "whatsapp",
+      label: "واتساپ",
+      value: "+989029820513",
+      href: "https://wa.me/989029820513",
+      kind: "link",
+    },
   ] as ContactPoint[],
 };
 
