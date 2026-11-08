@@ -18,13 +18,12 @@ export function DashboardPreview() {
         {shots.map((shot, index) => (
           <li
             key={shot.id}
-            className={index === 0 ? "md:col-span-2" : undefined}
+            className={`${index === 0 ? "md:col-span-2" : undefined} rounded-xl overflow-hidden p-2 bg-stone-100 `}
           >
-            <ImagePlaceholder
-              label={shot.label}
-              description={shot.description}
-              icon={shot.icon}
-              aspect={index === 0 ? "21 / 9" : "16 / 10"}
+            <img
+              src={shot.src}
+              alt={shot.description}
+              className="w-full h-full rounded-xl "
             />
           </li>
         ))}

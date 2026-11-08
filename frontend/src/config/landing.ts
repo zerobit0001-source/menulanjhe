@@ -42,6 +42,7 @@ export type Feature = {
 };
 
 export type MenuTemplate = {
+  src: string;
   id: string;
   name: string;
   description: string;
@@ -55,6 +56,7 @@ export type DashboardShot = {
   description: string;
   icon: LucideIcon;
   enabled: boolean;
+  src: string;
 };
 
 export type Business = {
@@ -105,7 +107,22 @@ export const siteConfig = {
    * Example:
    * { id: "phone", label: "تلفن", value: "۰۲۱-...", href: "tel:+98...", kind: "phone" }
    */
-  contacts: [] as ContactPoint[],
+  contacts: [
+    {
+      id: "phone",
+      label: "تلفن",
+      value: "+989225621256",
+      href: "tel:+989225621256",
+      kind: "phone",
+    },
+    {
+      id: "phone",
+      label: "تلفن",
+      value: "+989149623780",
+      href: "tel:+989149623780",
+      kind: "phone",
+    },
+  ] as ContactPoint[],
 };
 
 export const requestHref: string = siteConfig.requestUrl ?? "#contact-info";
@@ -253,14 +270,25 @@ export const features: Feature[] = [
  */
 export const menuTemplates: MenuTemplate[] = [
   {
-    id: "Template001",
-    name: "قالب ۰۰۱",
-    description: "TODO: توضیح کوتاه ظاهر و کاربرد این قالب را اینجا وارد کن.",
+    src: "/images/mainpage/image.png",
+    id: "fullscreen",
+    name: "قالب تمام صفحه",
+    description:
+      "نمایش هر محصول به‌صورت تمام‌صفحه با اسلاید بین محصولات هر دسته؛ مناسب کافه‌ها و رستوران‌هایی که عکس غذا را در اولویت می‌دانند",
   },
   {
-    id: "Template002",
-    name: "قالب ۰۰۲",
-    description: "TODO: توضیح کوتاه ظاهر و کاربرد این قالب را اینجا وارد کن.",
+    src: "/images/mainpage/image (3).png",
+    id: "categoryflow",
+    name: "قالب جریان دسته‌ها",
+    description:
+      "طراحی تیره با تم قهوه‌ای و نارنجی؛ مرور منو دسته‌به‌دسته با ناوبری قبلی و بعدی ، مناسب رستوران‌ها و کافه‌های شب‌محور",
+  },
+  {
+    src: "/images/mainpage/image (2).png",
+    id: "accordion",
+    name: "قالب گشوده",
+    description:
+      "طراحی روشن و گرم با دسته‌بندی‌های بازشونده؛ با یک لمس هر دسته باز می‌شود و محصولات متنی آن با انیمیشن نرم نمایش داده میشن .",
   },
 ];
 
@@ -304,6 +332,7 @@ export const dashboardShots: DashboardShot[] = [
     label: "جایگاه اسکرین‌شات پنل مدیریت",
     description: "نمای کلی داشبورد",
     icon: LayoutDashboard,
+    src: "/images/mainpage/dashboard_screenshot.png",
     enabled: true,
   },
   {
@@ -311,6 +340,7 @@ export const dashboardShots: DashboardShot[] = [
     label: "جایگاه اسکرین‌شات مدیریت محصولات",
     description: "لیست و ویرایش محصولات",
     icon: Package,
+    src: "/images/mainpage/products_screenshot.png",
     enabled: true,
   },
   {
@@ -318,6 +348,7 @@ export const dashboardShots: DashboardShot[] = [
     label: "جایگاه اسکرین‌شات مدیریت دسته‌بندی‌ها",
     description: "ساخت و مرتب‌سازی دسته‌بندی‌ها",
     icon: FolderTree,
+    src: "/images/mainpage/categories_screenshot.png",
     enabled: true,
   },
   {
@@ -325,14 +356,15 @@ export const dashboardShots: DashboardShot[] = [
     label: "جایگاه اسکرین‌شات سفارش‌ها",
     description: "مشاهده و پیگیری سفارش‌ها",
     icon: ClipboardList,
+    src: "/images/mainpage/orders_screenshot.png",
     enabled: true,
   },
   {
-    // TODO: set to false if reports are not available yet.
     id: "reports",
     label: "جایگاه اسکرین‌شات گزارش‌ها",
     description: "گزارش‌های پایه",
     icon: BarChart3,
+    src: "/images/mainpage/reports_screenshot.png",
     enabled: true,
   },
 ];

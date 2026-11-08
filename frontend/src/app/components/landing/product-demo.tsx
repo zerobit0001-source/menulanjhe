@@ -2,6 +2,7 @@ import { ArrowLeft, Check, Smartphone } from "lucide-react";
 import { siteConfig } from "@/config/landing";
 import { ImagePlaceholder } from "./image-placeholder";
 import { Section, SectionHeading, focusRing } from "./ui";
+import Image from "next/image";
 
 const points = [
   "منو در مرورگر موبایل مشتری باز می‌شه و نیازی به نصب اپلیکیشن نیست.",
@@ -49,13 +50,22 @@ export function ProductDemo() {
           ) : null}
         </div>
 
-        <div className="lg:col-span-3">
-          <ImagePlaceholder
+        <div className="lg:col-span-3 flex items-center justify-end">
+          {/* <ImagePlaceholder
             label="جایگاه اسکرین‌شات منوی مشتری"
             description="تصویر واقعی منوی دیجیتال از دید مشتری در این بخش قرار می‌گیره."
             icon={Smartphone}
             aspect="16 / 10"
-          />
+          /> */}
+
+          <div className="w-full md:w-[500px] h-[774px] ">
+            <Image
+              src={"/images/mainpage/showcase_2.png"}
+              alt="عکس منو برای صفحه اصلی"
+              width={500}
+              height={774}
+            />
+          </div>
         </div>
       </div>
     </Section>

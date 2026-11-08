@@ -13,6 +13,8 @@ import { CoffeeHouseTemplate } from "./templates/coffeeHouse/coffee-house-templa
 import Template011 from "./templates/Template011";
 import Template012 from "./templates/Template012";
 import Template013 from "./templates/Template013";
+import Template014 from "./templates/Template014";
+import Template015 from "./templates/Template015";
 
 const menuTemplates = {
   modern: ModernMenu,
@@ -28,6 +30,8 @@ const menuTemplates = {
   template011: Template011,
   template012: Template012,
   template013: Template013,
+  template014: Template014,
+  template015: Template015,
   // CoffeeHouseTemplate: CoffeeHouseTemplate,
 };
 

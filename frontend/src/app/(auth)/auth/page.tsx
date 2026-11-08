@@ -72,8 +72,14 @@ export default function AuthPage() {
       // 4. Go to dashboard
       router.push("/dashboard");
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Login error:", error.data);
 
+      if (error.data.code == "RATE_LIMITED") {
+        setErrorMessage(
+          "تعداد درخواست‌ها بیش از حد مجاز است. لطفاً کمی بعد دوباره تلاش کنید .",
+        );
+        return;
+      }
       setErrorMessage("شماره موبایل یا رمز عبور اشتباه است.");
     }
   };
