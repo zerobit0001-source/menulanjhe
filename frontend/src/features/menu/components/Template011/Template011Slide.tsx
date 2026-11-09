@@ -15,7 +15,7 @@ export default function Template011Slide({ product }: Props) {
   const hasImage = Boolean(product.image) && !failed;
 
   return (
-    <div className="absolute inset-0 overflow-hidden bg-neutral-900">
+    <div className="absolute inset-0 overflow-hidden bg-neutral-900 flex items-center justify-center">
       {hasImage ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
