@@ -5,6 +5,7 @@ import { Menu, UtensilsCrossed, X } from "lucide-react";
 import Link from "next/link";
 import { navLinks, requestHref, siteConfig } from "@/config/landing";
 import { Container, LinkButton, focusRing } from "./ui";
+import Image from "next/image";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -59,9 +60,14 @@ export function Navbar() {
         >
           <span
             aria-hidden="true"
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-white"
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-700"
           >
-            <UtensilsCrossed className="h-5 w-5" />
+            <Image
+              src={"/logos/png/white/ml-white-32.png"}
+              alt="منو لانژ"
+              width={32}
+              height={32}
+            />
           </span>
           <span className="text-lg font-bold text-stone-900">
             {siteConfig.name}

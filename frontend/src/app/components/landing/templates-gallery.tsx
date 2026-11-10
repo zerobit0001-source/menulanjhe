@@ -14,14 +14,14 @@ export function TemplatesGallery() {
         description="هر قالب، محصولات رو به شکل متفاوتی به مشتری نشون می‌ده."
       />
 
-      <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {menuTemplates.map((template) => (
           <li
             key={template.id}
             className="min-w-0 overflow-hidden rounded-2xl border border-stone-200 bg-white p-3 sm:p-4"
           >
             {/* Preview */}
-            <div className="relative aspect-[3/5] w-full overflow-hidden rounded-xl bg-stone-100">
+            <div className="relative aspect-[2/4] w-full overflow-hidden rounded-xl bg-stone-100">
               <Image
                 src={template.src}
                 alt={template.name}

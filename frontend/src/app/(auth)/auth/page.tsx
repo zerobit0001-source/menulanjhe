@@ -9,6 +9,7 @@ import {
   useLoginMutation,
   useSelectTenantMutation,
 } from "@/features/auth/api/authApi";
+import Image from "next/image";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -89,8 +90,13 @@ export default function AuthPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#2B5288] text-white shadow-sm">
-            <UtensilsCrossed size={27} />
+          <div className="flex items-center justify-center">
+            <Image
+              src={"/logos/png/black/ml-black-48.png"}
+              alt="منو لانژ"
+              width={48}
+              height={48}
+            />
           </div>
 
           <h1 className="text-2xl font-bold text-slate-900">Menu Lounge</h1>
@@ -137,7 +143,7 @@ export default function AuthPage() {
                   onChange={(event) => setPhoneNumber(event.target.value)}
                   placeholder="09123456789"
                   disabled={isLoading}
-                  className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 pr-10 pl-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#2B5288] focus:bg-white focus:ring-2 focus:ring-[#2B5288]/10 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 pr-10 pl-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-700bg-teal-700 focus:bg-white focus:ring-2 focus:ring-teal-700bg-teal-700/10 disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </div>
             </div>
@@ -165,7 +171,7 @@ export default function AuthPage() {
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="رمز عبور"
                   disabled={isLoading}
-                  className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 pr-10 pl-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#2B5288] focus:bg-white focus:ring-2 focus:ring-[#2B5288]/10 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 pr-10 pl-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-700bg-teal-700 focus:bg-white focus:ring-2 focus:ring-teal-700bg-teal-700/10 disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </div>
             </div>
@@ -181,7 +187,7 @@ export default function AuthPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="h-12 w-full rounded-xl bg-[#2B5288] text-sm font-semibold text-white transition hover:bg-[#234572] disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-12 w-full rounded-xl bg-teal-700 text-sm font-semibold text-white transition hover:bg-teal-500 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isLoading ? "در حال ورود..." : "ورود"}
             </button>

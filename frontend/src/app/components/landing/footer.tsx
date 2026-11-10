@@ -2,6 +2,7 @@ import { Link2, Mail, Phone, UtensilsCrossed } from "lucide-react";
 import { navLinks, siteConfig, type ContactPoint } from "@/config/landing";
 import { Container, focusRing } from "./ui";
 import Link from "next/link";
+import Image from "next/image";
 
 const contactIcons: Record<ContactPoint["kind"], typeof Phone> = {
   phone: Phone,
@@ -21,9 +22,14 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <span
                 aria-hidden="true"
-                className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-white"
+                className="flex h-14 w-14 items-center justify-center rounded-xl"
               >
-                <UtensilsCrossed className="h-5 w-5" />
+                <Image
+                  src={"/logos/png/black/ml-black-48.png"}
+                  alt="منو لانژ"
+                  width={48}
+                  height={48}
+                />
               </span>
               <span className="text-lg font-bold text-stone-900">
                 {siteConfig.name}
@@ -95,8 +101,13 @@ export function Footer() {
         </div>
 
         <div className="border-t border-stone-200 py-6 text-center text-xs text-stone-500">
-          <Link target="_blank" href={"https://amirrezaabdollahi.vercel.app/?source=menulanghue"}>©</Link> {year}{" "}
-          {siteConfig.name}. تمامی حقوق محفوظ است.
+          <Link
+            target="_blank"
+            href={"https://amirrezaabdollahi.vercel.app/?source=menulanghue"}
+          >
+            ©
+          </Link>{" "}
+          {year} {siteConfig.name}. تمامی حقوق محفوظ است.
         </div>
       </Container>
     </footer>

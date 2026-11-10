@@ -46,7 +46,7 @@ export function Hero() {
             </p>
           </div>
 
-          <div className="ml-fade-up ml-delay-2 flex items-center justify-end">
+          <div className="ml-fade-up ml-delay-2 flex items-center justify-center lg:justify-end">
             {/* <ImagePlaceholder
               label="جایگاه تصویر اصلی محصول"
               description="اسکرین‌شات منوی مشتری روی موبایل در این بخش قرار می‌گیره."

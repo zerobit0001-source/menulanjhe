@@ -50,7 +50,7 @@ export function ProductDemo() {
           ) : null}
         </div>
 
-        <div className="lg:col-span-3 flex items-center justify-end">
+        <div className="lg:col-span-3 flex items-center justify-center lg:justify-end">
           {/* <ImagePlaceholder
             label="جایگاه اسکرین‌شات منوی مشتری"
             description="تصویر واقعی منوی دیجیتال از دید مشتری در این بخش قرار می‌گیره."
@@ -58,7 +58,7 @@ export function ProductDemo() {
             aspect="16 / 10"
           /> */}
 
-          <div className="w-full md:w-[500px] h-[774px] ">
+          <div className="w-full md:w-[500px] h-[754px] ">
             <Image
               src={"/images/mainpage/showcase_2.png"}
               alt="عکس منو برای صفحه اصلی"

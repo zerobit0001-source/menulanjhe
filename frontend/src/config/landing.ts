@@ -116,7 +116,7 @@ export const siteConfig = {
       kind: "phone",
     },
     {
-      id: "phone",
+      id: "phone2",
       label: "تلفن",
       value: "+989149623780",
       href: "tel:+989149623780",
