@@ -1,6 +1,7 @@
 import { baseApi } from "@/features/api/baseApi";
 
 import type {
+  AdminCreateOrderRequest,
   Order,
   OrderListResponse,
   OrderStatus,
@@ -37,6 +38,15 @@ export const orderApi = baseApi.injectEndpoints({
       providesTags: ["Order"],
     }),
 
+    createAdminOrder: builder.mutation<Order, AdminCreateOrderRequest>({
+      query: (body) => ({
+        url: "admin/orders/",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Order"],
+    }),
+
     confirmOrder: builder.mutation<Order, string>({
       query: (id) => ({
         url: `admin/orders/${id}/confirm/`,
@@ -65,6 +75,7 @@ export const orderApi = baseApi.injectEndpoints({
 
 export const {
   useGetOrdersQuery,
+  useCreateAdminOrderMutation,
   useConfirmOrderMutation,
   useCompleteOrderMutation,
   useCancelOrderMutation,

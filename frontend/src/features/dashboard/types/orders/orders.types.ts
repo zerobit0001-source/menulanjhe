@@ -20,8 +20,8 @@ export type Order = {
   id: string;
   branch: string;
   table: string;
-  table_number: number;
-  table_session: string;
+  table_number: string;
+  table_session: string | null;
   customer: OrderCustomer;
   order_type: OrderType;
   status: OrderStatus;
@@ -40,4 +40,20 @@ export type OrderListResponse = {
   total_pages: number;
   current_page: number;
   results: Order[];
+};
+
+export type AdminCreateOrderRequest = {
+  order_type: "DINE_IN";
+  table_id: string;
+  items: {
+    product_id: string;
+    quantity: number;
+  }[];
+  customer?: {
+    name?: string;
+    phone?: string;
+  };
+  notes?: string;
+  branch?: string;
+  idempotency_key?: string;
 };
