@@ -1,18 +1,24 @@
 import DashboardThemeProvider from "@/features/dashboard/DashboardThemeProvider";
 import DashboardPageTransition from "@/features/dashboard/components/DashboardPageTransition";
-import DashboardLayoutClient from "@/features/dashboard/components/DashboardLayoutClient";
-import { getCurrentUser } from "@/lib/auth/getCurrentUser";
-import { redirect } from "next/navigation";
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "پیش‌نمایش قالب",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <DashboardThemeProvider>
-        <DashboardPageTransition>{children}</DashboardPageTransition>
+      <DashboardPageTransition>{children}</DashboardPageTransition>
     </DashboardThemeProvider>
   );
 }

@@ -14,19 +14,48 @@ import { Faq } from "./components/landing/faq";
 import { FinalCta } from "./components/landing/final-cta";
 import { Footer } from "./components/landing/footer";
 
-const title = "منو لانژ | منوی دیجیتال و QR Code برای کافه و رستوران";
+const title = "منوی دیجیتال و QR Code برای کافه و رستوران";
+
 const description =
-  "با منو لانژ منوی دیجیتال کسب‌وکارت رو مدیریت کن، محصولات و قیمت‌ها رو به‌روزرسانی کن و با لینک یا QR Code در اختیار مشتری‌هات قرار بده.";
+  "با منو لانژ منوی دیجیتال کافه یا رستورانت رو بساز و مدیریت کن. محصولات و قیمت‌ها رو به‌روزرسانی کن و منوی خودت رو با لینک اختصاصی یا QR Code در اختیار مشتری‌ها قرار بده.";
 
 export const metadata: Metadata = {
   title,
+
   description,
+
+  alternates: {
+    canonical: "/",
+  },
+  keywords: [
+    "منوی دیجیتال",
+    "منوی آنلاین رستوران",
+    "منوی QR Code",
+    "طراحی منوی کافه",
+  ],
+
   openGraph: {
-    title,
+    title: "منو لانژ | منوی دیجیتال کافه و رستوران",
     description,
     type: "website",
     locale: "fa_IR",
+    url: "/",
     siteName: "منو لانژ",
+    images: [
+      {
+        url: "/images/banner.jpg",
+        width: 1200,
+        height: 630,
+        alt: "منو لانژ، سامانه منوی دیجیتال و مدیریت سفارش رستوران",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "منو لانژ | منوی دیجیتال کافه و رستوران",
+    description,
+    images: ["/images/banner.jpg"],
   },
 };
 
