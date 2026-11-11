@@ -9,13 +9,13 @@ import Template006 from "./templates/Template006";
 import Template007 from "./templates/Template007";
 import Template008 from "./templates/Template008";
 import Template009 from "./templates/Template009";
-import { CoffeeHouseTemplate } from "./templates/coffeeHouse/coffee-house-template";
 import Template011 from "./templates/Template011";
 import Template012 from "./templates/Template012";
 import Template013 from "./templates/Template013";
 import Template014 from "./templates/Template014";
 import Template015 from "./templates/Template015";
 import Template016 from "./templates/Template016";
+import Template017 from "./templates/Template017";
 
 const menuTemplates = {
   modern: ModernMenu,
@@ -34,7 +34,7 @@ const menuTemplates = {
   template014: Template014,
   template015: Template015,
   template016: Template016,
-  // CoffeeHouseTemplate: CoffeeHouseTemplate,
+  template017: Template017,
 };
 
 type MenuTemplate = keyof typeof menuTemplates;
