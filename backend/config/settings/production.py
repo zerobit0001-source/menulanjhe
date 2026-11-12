@@ -59,7 +59,7 @@
 # 
 
 
-# After ready to production 
+# After ready to production  
 import os
 from django.core.exceptions import ImproperlyConfigured
 from .base import *
