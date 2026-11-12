@@ -1,0 +1,15 @@
+# HTTP-only mode (NGINX_MODE=http).
+# Use it for the first start and while issuing the SSL certificate.
+include /etc/nginx/snippets/upstreams.conf;
+
+server {
+    listen 80 default_server;
+    server_name _;
+
+    # Let's Encrypt HTTP-01 challenge
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    include /etc/nginx/snippets/app-locations.conf;
+}

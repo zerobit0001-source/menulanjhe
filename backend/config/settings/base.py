@@ -239,6 +239,24 @@ CHANNEL_LAYERS = {
 
 
 
+# if os.getenv("REDIS_URL"):
+#     from urllib.parse import urlparse
+# 
+#     _redis = urlparse(os.environ["REDIS_URL"])
+#     _redis_base = f"{_redis.scheme}://{_redis.netloc}"
+#     CHANNEL_LAYERS = {
+#         "default": {
+#             "BACKEND": "channels_redis.core.RedisChannelLayer",
+#             "CONFIG": {"hosts": [f"{_redis_base}/0"]},
+#         }
+#     }
+#     CACHES = {
+#         "default": {
+#             "BACKEND": "django.core.cache.backends.redis.RedisCache",
+#             "LOCATION": f"{_redis_base}/1",
+#         }
+#     }
+
 if os.getenv("REDIS_URL"):
     from urllib.parse import urlparse
 
@@ -247,7 +265,21 @@ if os.getenv("REDIS_URL"):
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {"hosts": [f"{_redis_base}/0"]},
+            # redis-py 8 defaults socket_timeout to 5s, the same as the 5s
+            # BZPOPMIN that channels_redis blocks on while waiting for
+            # messages. Every idle WebSocket then crashed with
+            # "Timeout reading from redis" (close code 1011) after ~5s.
+            # A larger read timeout restores the normal behaviour.
+            "CONFIG": {
+                "hosts": [
+                    {
+                        "address": f"{_redis_base}/0",
+                        "socket_timeout": float(os.getenv("REDIS_SOCKET_TIMEOUT", "30")),
+                        "socket_connect_timeout": 5,
+                        "health_check_interval": 30,
+                    }
+                ]
+            },
         }
     }
     CACHES = {
@@ -257,9 +289,23 @@ if os.getenv("REDIS_URL"):
         }
     }
 
-
 # Uploaded media files
-MEDIA_URL = "/media/"
+# In production the frontend (Next.js) calls Django over the internal Docker
+# network (http://web:8000), so DRF would build image URLs like
+# http://web:8000/media/... that browsers can't reach. Setting MEDIA_URL to the
+# full public URL (e.g. https://menu.example.com/media/) fixes that, because
+# build_absolute_uri() leaves already-absolute URLs untouched.
+# Uploaded media files
+# MEDIA_URL = "/media/"
+# MEDIA_ROOT = BASE_DIR / "media"
+# 
+# MAX_UPLOAD_SIZE_MB = 5
+# IMAGE_MAX_DIMENSION = 1280
+# IMAGE_WEBP_QUALITY = 82
+
+MEDIA_URL = os.getenv("MEDIA_URL", "/media/")
+if not MEDIA_URL.endswith("/"):
+    MEDIA_URL += "/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 MAX_UPLOAD_SIZE_MB = 5

@@ -161,3 +161,11 @@ redis-data/
 
 # Docker Desktop
 .dockerignore.local
+
+# =========================
+# Deploy (server-only data)
+# =========================
+data/certbot/conf/*
+data/certbot/www/*
+!data/certbot/**/.gitkeep
+backups/
