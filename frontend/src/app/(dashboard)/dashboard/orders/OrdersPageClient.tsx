@@ -12,6 +12,7 @@ import { useGetOrdersQuery } from "@/features/dashboard/api/orderApi";
 import type { OrderStatus } from "@/features/dashboard/types/orders/orders.types";
 import { useOrdersRealtime } from "@/features/dashboard/realtime/useOrdersRealtime";
 import { Button } from "@mui/material";
+import Link from "next/link";
 
 type FilterValue = "ALL" | OrderStatus;
 
@@ -48,7 +49,11 @@ export default function OrdersPageClient({ search }: { search: string }) {
         title="سفارش ها"
         icon={<SquareText size={20} className="text-gray-500" />}
         count={data?.count ?? 0}
-      />
+      >
+        <Link href="/dashboard/orders/create">
+          <Button variant="contained">ثبت سفارش جدید</Button>
+        </Link>
+      </SectionTitle>
 
       <div className="mt-6 flex flex-col gap-4">
         <OrdersPageToolbar
