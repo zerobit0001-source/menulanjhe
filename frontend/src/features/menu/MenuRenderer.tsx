@@ -2,12 +2,10 @@ import type { MenuData } from "./types/menu.types";
 import ModernMenu from "./templates/ModernMenu";
 import Template001 from "./templates/Template001";
 import Template002 from "./templates/Template002";
-import Template003 from "./templates/Template003";
 import Template004 from "./templates/Template004";
 import Template005 from "./templates/Template005";
 import Template006 from "./templates/Template006";
 import Template007 from "./templates/Template007";
-import Template008 from "./templates/Template008";
 import Template009 from "./templates/Template009";
 import Template011 from "./templates/Template011";
 import Template012 from "./templates/Template012";
@@ -22,12 +20,12 @@ const menuTemplates = {
   modern: ModernMenu,
   template001: Template001,
   template002: Template002,
-  template003: Template003,
+  // template003: Template003,
   template004: Template004,
   template005: Template005,
   template006: Template006,
   template007: Template007,
-  template008: Template008,
+  // template008: Template008,
   template009: Template009,
   template011: Template011,
   template012: Template012,

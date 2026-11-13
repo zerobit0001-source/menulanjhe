@@ -18,12 +18,12 @@ export const menuTemplates: MenuTemplate[] = [
     description: "طراحی ساده و کلاسیک",
     available: true,
   },
-  {
-    id: "template003",
-    name: "مینیمال",
-    description: "طراحی مینیمال و ساده",
-    available: true,
-  },
+  // {
+  //   id: "template003",
+  //   name: "مینیمال",
+  //   description: "طراحی مینیمال و ساده",
+  //   available: true,
+  // },
   {
     id: "template005",
     name: "مرتب",
@@ -42,12 +42,12 @@ export const menuTemplates: MenuTemplate[] = [
     description: "طراحی مدرن مخصوص کافه ها با تم قهوه ای",
     available: true,
   },
-  {
-    id: "template008",
-    name: "جذاب",
-    description: "طراحی مدرن مخصوص کافه ها با تم روشن و جذاب",
-    available: true,
-  },
+  // {
+  //   id: "template008",
+  //   name: "جذاب",
+  //   description: "طراحی مدرن مخصوص کافه ها با تم روشن و جذاب",
+  //   available: true,
+  // },
   // {
   //   id: "CoffeeHouseTemplate",
   //   name: "قهوه خانه",
