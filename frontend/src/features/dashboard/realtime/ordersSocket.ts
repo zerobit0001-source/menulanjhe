@@ -1,7 +1,5 @@
 export type OrderRealtimeEvent =
-  | "ORDER_CREATED"
-  | "ORDER_UPDATED"
-  | "ORDER_CANCELLED";
+  "ORDER_CREATED" | "ORDER_UPDATED" | "ORDER_CANCELLED";
 
 export type OrderRealtimeMessage = {
   event: OrderRealtimeEvent;
@@ -23,8 +21,15 @@ type OrdersSocketOptions = {
   onError?: (event: Event) => void;
 };
 
-const WS_BASE_URL =
-  process.env.NEXT_PUBLIC_WS_URL ?? "ws://127.0.0.1:8080";
+function getWebSocketBaseUrl() {
+  if (process.env.NEXT_PUBLIC_WS_URL) {
+    return process.env.NEXT_PUBLIC_WS_URL;
+  }
+
+  const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+
+  return `${protocol}//${window.location.host}`;
+}
 
 export function createOrdersSocket({
   token,
@@ -34,7 +39,7 @@ export function createOrdersSocket({
   onError,
 }: OrdersSocketOptions) {
   const socket = new WebSocket(
-    `${WS_BASE_URL}/ws/v1/orders/?token=${encodeURIComponent(token)}`,
+    `${getWebSocketBaseUrl()}/ws/v1/orders/?token=${encodeURIComponent(token)}`,
   );
 
   socket.onopen = () => {
@@ -43,16 +48,11 @@ export function createOrdersSocket({
 
   socket.onmessage = (event) => {
     try {
-      const message = JSON.parse(
-        event.data,
-      ) as OrderRealtimeMessage;
+      const message = JSON.parse(event.data) as OrderRealtimeMessage;
 
       onMessage?.(message);
     } catch (error) {
-      console.error(
-        "Failed to parse orders WebSocket message:",
-        error,
-      );
+      console.error("Failed to parse orders WebSocket message:", error);
     }
   };
 

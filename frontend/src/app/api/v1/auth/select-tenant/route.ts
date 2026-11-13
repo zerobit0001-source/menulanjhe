@@ -1,3 +1,4 @@
+import { isSecureCookie } from "@/lib/server/cookies";
 import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_API_URL = process.env.BACKEND_API_URL;
@@ -102,7 +103,7 @@ export async function POST(req: NextRequest) {
 
     nextResponse.cookies.set("access_token", data.access, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isSecureCookie(),
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 15,
@@ -110,7 +111,7 @@ export async function POST(req: NextRequest) {
 
     nextResponse.cookies.set("refresh_token", data.refresh, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isSecureCookie(),
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 7,

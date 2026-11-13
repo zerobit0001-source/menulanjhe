@@ -25,6 +25,8 @@ ENV NEXT_TELEMETRY_DISABLED=1 \
 # `next build` collects page data. The real value comes from docker-compose at
 # runtime; this one is only a placeholder for the build.
 ENV BACKEND_API_URL=http://web:8000/api/v1
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 
 # Optional: inlined into the browser bundle at build time. Leave empty to let
 # the dashboard derive ws(s)://<current host> automatically.

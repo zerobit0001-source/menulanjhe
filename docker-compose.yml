@@ -91,6 +91,7 @@ services:
       args:
         NPM_REGISTRY: ${NPM_REGISTRY:-https://registry.npmjs.org/}
         NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL:-}
+        NEXT_PUBLIC_SITE_URL: ${PUBLIC_URL}
     image: menulanjhe-frontend
     restart: unless-stopped
     environment:
