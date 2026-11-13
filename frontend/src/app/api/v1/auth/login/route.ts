@@ -1,5 +1,5 @@
-import { forwardedHeaders } from "@/lib/server/forwardedHeaders";
 import { isSecureCookie } from "@/lib/server/cookies";
+import { forwardedHeaders } from "@/lib/server/frowardedHeaders";
 import { NextResponse } from "next/server";
 
 const BACKEND_API_URL = process.env.BACKEND_API_URL;
