@@ -6,7 +6,7 @@ export function publicMenuToMenuData(menu: PublicMenuResponse): MenuData {
 
   return {
     shop: {
-      name: menu.restaurant_name,
+      name: menu.restaurant_name?.trim() || menu.name || "",
       description: menu.description,
     },
 

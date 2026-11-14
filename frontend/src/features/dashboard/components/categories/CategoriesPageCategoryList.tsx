@@ -56,7 +56,6 @@ export default function CategoriesPageCategoryList({ search, filter }: Props) {
     },
   );
 
-  console.log(data);
 
   const [reorderCategories, { isLoading: isReordering }] =
     useReorderCategoriesMutation();

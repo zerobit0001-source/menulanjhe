@@ -40,8 +40,6 @@ export function CoffeeHouseTemplate({ menu, qrToken }: Props) {
   const [cartOpen, setCartOpen] = useState(false);
   const [receipt, setReceipt] = useState<OrderReceiptData | null>(null);
 
-  console.log("shop", shop);
-
   const { search, cart, order } = shop;
   const { isSubmitting, submit } = order;
   const clearCart = cart.clear;

@@ -8,8 +8,6 @@ import DashboardPageMenu from "@/features/dashboard/sections/DashboardPageMenu";
 export default function DashboardPageClient() {
   const { data, isLoading, isError, refetch } = useGetDashboardQuery();
 
-  console.log(data);
-
   if (isLoading) {
     return (
       <DashboardContainer>

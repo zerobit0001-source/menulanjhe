@@ -34,8 +34,6 @@ export default function ReportsPage() {
     refetch,
   } = useGetReportsQuery(period);
 
-  console.log("ReportsPage report:", report);
-
   const fade = (delay: number) => ({
     initial: reduce ? false : ({ opacity: 0, y: 8 } as const),
 

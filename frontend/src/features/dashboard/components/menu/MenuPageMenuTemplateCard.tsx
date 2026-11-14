@@ -12,7 +12,6 @@ type Props = {
   template: MenuTemplate;
   selected: boolean;
   onSelect: (templateId: string) => void;
-  onPreview: (template: MenuTemplate) => void;
   disabled?: boolean;
 };
 
@@ -20,7 +19,6 @@ export default function MenuPageMenuTemplateCard({
   template,
   selected,
   onSelect,
-  onPreview,
   disabled = false,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -67,7 +65,6 @@ export default function MenuPageMenuTemplateCard({
         <button
           type="button"
           onClick={() => {
-            onPreview(template);
             router.push(`/preview/${template.id}`);
           }}
           className="absolute underline bottom-3 left-3 flex items-center gap-1.5 rounded-lg bg-white/95 px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm backdrop-blur transition-colors hover:bg-white"

@@ -32,8 +32,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log("========== REFRESH ==========");
-    console.log("refresh token exists:", Boolean(refreshToken));
 
     const response = await fetch(`${BACKEND_API_URL}/auth/refresh/`, {
       method: "POST",

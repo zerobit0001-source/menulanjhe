@@ -20,9 +20,6 @@ const baseQueryWithReauth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   await mutex.waitForUnlock();
 
-  console.log("========== API REQUEST ==========");
-  console.log("REQUEST:", args);
-
   let result = await rawBaseQuery(args, api, extraOptions);
 
   console.log("REQUEST STATUS:", result.error?.status ?? "SUCCESS");

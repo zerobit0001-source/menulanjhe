@@ -14,7 +14,6 @@ type Props = {
 export default async function PreviewMenuPage({ params }: Props) {
   const { slug } = await params;
 
-  console.log(slug);
 
   if (!menuTemplates.some((template) => template.id === slug)) {
     return (

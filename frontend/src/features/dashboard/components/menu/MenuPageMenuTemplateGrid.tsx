@@ -16,9 +16,7 @@ export default function MenuPageMenuTemplateGrid({
   onSelect,
   isUpdating = false,
 }: Props) {
-  const handleTemplatePreview = (template: Menu) => {
-    console.log("Preview template:", template.id);
-  };
+
 
   return (
     <div className="mt-6">
@@ -37,7 +35,6 @@ export default function MenuPageMenuTemplateGrid({
             template={template}
             selected={template.id === selectedTemplate}
             onSelect={onSelect}
-            onPreview={handleTemplatePreview}
             disabled={isUpdating}
           />
         ))}

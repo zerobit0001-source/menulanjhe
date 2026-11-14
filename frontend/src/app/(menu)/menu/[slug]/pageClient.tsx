@@ -21,8 +21,6 @@ export default function PublicMenuPageClient() {
     isError: isMenuError,
   } = useGetPublicMenuQuery(slug);
 
-  console.log("slug", slug, "qrToken", qrToken, "data", data);
-
   const {
     // sessionToken,
     table,

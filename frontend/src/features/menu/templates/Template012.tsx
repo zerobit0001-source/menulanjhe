@@ -93,7 +93,13 @@ export default function Template012({
     }
 
     return allProducts;
-  }, [activeCategory, allProducts, filteredCategories, isSearching, menu.categories]);
+  }, [
+    activeCategory,
+    allProducts,
+    filteredCategories,
+    isSearching,
+    menu.categories,
+  ]);
 
   const closeCategories = useCallback(() => setCategoryOpen(false), []);
   const closeCart = useCallback(() => setCartOpen(false), []);

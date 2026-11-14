@@ -27,7 +27,6 @@ export default function TableDetailsPage({ tableId }: Props) {
 
   const { data: table, isLoading, isError } = useGetTableQuery(tableId);
 
-  console.log(table);
 
   const [regenerateTableToken, { isLoading: isRegenerating }] =
     useRegenerateTableTokenMutation();

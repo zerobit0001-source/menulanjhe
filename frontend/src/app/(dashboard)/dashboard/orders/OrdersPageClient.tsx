@@ -22,10 +22,6 @@ export default function OrdersPageClient({ search }: { search: string }) {
 
   const { connectionState, isConnected } = useOrdersRealtime();
 
-  console.log("Orders realtime:", {
-    connectionState,
-    isConnected,
-  });
 
   const status = filter === "ALL" ? undefined : filter;
 
@@ -35,8 +31,6 @@ export default function OrdersPageClient({ search }: { search: string }) {
     search,
   });
 
-  console.log("================== this is orders ==================");
-  console.log(data);
 
   const handleFilterChange = (newFilter: FilterValue) => {
     setFilter(newFilter);

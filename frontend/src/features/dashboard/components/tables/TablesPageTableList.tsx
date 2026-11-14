@@ -6,7 +6,6 @@ import TablesPageTableCard from "./TablesPageTableCard";
 export default function TablesPageTableList() {
   const { data, isLoading, isError } = useGetTablesQuery();
 
-  console.log(data);
 
   if (isLoading) {
     return (
