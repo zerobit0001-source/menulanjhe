@@ -11,6 +11,7 @@ import {
 } from "@/features/dashboard/api/categoryApi";
 
 import { categoryIcons } from "../../Icons";
+import { sileo } from "sileo";
 
 export default function EditCategoryPage({ id }: { id: string }) {
   const router = useRouter();
@@ -36,12 +37,12 @@ export default function EditCategoryPage({ id }: { id: string }) {
     e.preventDefault();
 
     if (!name.trim()) {
-      toast.error("نام دسته‌بندی الزامی است.");
+      sileo.error({title : "نام دسته‌بندی الزامی است."});
       return;
     }
 
     if (!iconName) {
-      toast.error("لطفاً یک آیکن انتخاب کنید.");
+      sileo.error({title : "لطفاً یک آیکن انتخاب کنید."});
       return;
     }
 
@@ -55,13 +56,13 @@ export default function EditCategoryPage({ id }: { id: string }) {
         },
       }).unwrap();
 
-      toast.success("دسته‌بندی با موفقیت ویرایش شد.");
+      sileo.success({title : "دسته‌بندی با موفقیت ویرایش شد."});
 
       router.push(`/dashboard/categories/${id}`);
     } catch (error) {
       console.error("Update category error:", error);
 
-      toast.error("ویرایش دسته‌بندی با خطا مواجه شد.");
+      sileo.error({title : "ویرایش دسته‌بندی با خطا مواجه شد."});
     }
   };
 

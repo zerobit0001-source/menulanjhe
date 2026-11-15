@@ -13,6 +13,7 @@ import { Alert, Button, Card, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import { useChangePasswordMutation } from "@/features/auth/api/authApi";
 import DashboardContainer from "@/features/dashboard/components/DashboardContainer";
+import { sileo } from "sileo";
 
 type PasswordFieldProps = {
   label: string;
@@ -158,7 +159,7 @@ export default function ChangePasswordPageClient() {
         throw new Error(response.message || "تغییر رمز عبور انجام نشد.");
       }
 
-      toast.success(response.message || "رمز عبور با موفقیت تغییر کرد.");
+      sileo.success({title : response.message || "رمز عبور با موفقیت تغییر کرد."});
 
       setOldPassword("");
       setNewPassword("");
@@ -170,7 +171,7 @@ export default function ChangePasswordPageClient() {
 
       const message = getChangePasswordErrorMessage(backendMessage);
 
-      toast.error(message);
+      sileo.error({title : message});
     }
   };
 

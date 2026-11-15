@@ -25,6 +25,7 @@ import { useCreateAdminOrderMutation } from "@/features/dashboard/api/orderApi";
 
 import type { Product } from "@/features/dashboard/types/products/products.type";
 import type { Table } from "@/features/dashboard/types/tables/tables.type";
+import { sileo } from "sileo";
 
 type CartItem = {
   product: Product;
@@ -236,17 +237,17 @@ export default function CreateOrderClientPage() {
 
   const handleSubmit = async () => {
     if (cart.length === 0) {
-      toast.error("حداقل یک محصول به سفارش اضافه کنید.");
+      sileo.error({title : "حداقل یک محصول به سفارش اضافه کنید."});
       return;
     }
 
     if (!selectedTableId || !selectedTable) {
-      toast.error("لطفاً یک میز انتخاب کنید.");
+      sileo.error({title : "لطفاً یک میز انتخاب کنید."});
       return;
     }
 
     if (!customerName.trim()) {
-      toast.error("نام مشتری را وارد کنید.");
+      sileo.error({title : "نام مشتری را وارد کنید."});
       return;
     }
 
@@ -278,14 +279,14 @@ export default function CreateOrderClientPage() {
         }),
       }).unwrap();
 
-      toast.success("سفارش با موفقیت ثبت شد.");
+      sileo.success({title : "سفارش با موفقیت ثبت شد."});
 
       setCart([]);
       setIdempotencyKey(undefined);
 
       router.push("/dashboard/orders");
     } catch (error: unknown) {
-      toast.error(getErrorMessage(error));
+      sileo.error({title : getErrorMessage(error)});
     }
   };
 

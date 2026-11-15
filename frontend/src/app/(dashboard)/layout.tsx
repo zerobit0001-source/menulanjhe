@@ -33,7 +33,6 @@ export default async function DashboardLayout({
     redirect("/auth");
   }
 
-
   if (!currentUser) {
     console.log("❌ DASHBOARD REDIRECT TO AUTH");
     redirect("/auth");

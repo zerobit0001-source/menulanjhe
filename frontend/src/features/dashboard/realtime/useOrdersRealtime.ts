@@ -8,6 +8,8 @@ import type { AppDispatch } from "@/store";
 
 import { createOrdersSocket, type OrderRealtimeMessage } from "./ordersSocket";
 import { toast } from "react-toastify";
+import { sileo } from "sileo";
+import { useRouter } from "next/navigation";
 
 type ConnectionState =
   | "idle"
@@ -27,6 +29,8 @@ export function useOrdersRealtime(enabled = true) {
 
   const reconnectAttemptsRef = useRef(0);
   const stoppedRef = useRef(false);
+
+  const router = useRouter();
 
   const [connectionState, setConnectionState] =
     useState<ConnectionState>("idle");
@@ -119,19 +123,37 @@ export function useOrdersRealtime(enabled = true) {
           },
 
           onMessage: (message: OrderRealtimeMessage) => {
+            const shortId = message.order.id.slice(0, 8);
+            const fullId = message.order.id;
+
             switch (message.event) {
               case "ORDER_CREATED":
-                toast.success("سفارش جدید دریافت شد 🛎️");
+                sileo.action({
+                  title: `سفارش جدید #${shortId}`,
+                  description: `شناسه کامل: ${fullId}`,
+                  button: {
+                    title: "مشاهده سفارش",
+                    onClick: () => {
+                      router.push(`/dashboard/orders/?search=${fullId}`);
+                    },
+                  },
+                });
                 invalidateOrders();
                 break;
 
               case "ORDER_UPDATED":
-                toast.info("وضعیت یک سفارش تغییر کرد");
+                sileo.info({
+                  title: `به‌روزرسانی سفارش #${shortId}`,
+                  description: `وضعیت سفارش با شناسه ${fullId} با موفقیت به‌روزرسانی شد.`,
+                });
                 invalidateOrders();
                 break;
 
               case "ORDER_CANCELLED":
-                toast.warning("یک سفارش لغو شد");
+                sileo.warning({
+                  title: `لغو سفارش #${shortId}`,
+                  description: `سفارش با شناسه ${fullId} لغو شد.`,
+                });
                 invalidateOrders();
                 break;
 
