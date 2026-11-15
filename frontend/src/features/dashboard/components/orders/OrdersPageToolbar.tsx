@@ -2,13 +2,17 @@
 
 import {
   IconButton,
+  InputAdornment,
   InputBase,
   Paper,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
-import { Search, SlidersHorizontal } from "lucide-react";
+
+import { Search, SlidersHorizontal, X } from "lucide-react";
+
 import type { OrderStatus } from "../../types/orders/orders.types";
+
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -52,14 +56,6 @@ export default function OrdersPageToolbar({
   search,
   onFilterChange,
 }: Props) {
-  const handleFilter = (
-    _event: React.MouseEvent<HTMLElement>,
-    newFilter: FilterValue | null,
-  ) => {
-    if (newFilter !== null) {
-      onFilterChange(newFilter);
-    }
-  };
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -70,6 +66,7 @@ export default function OrdersPageToolbar({
     setSearchValue(search);
   }, [search]);
 
+  // Search debounce
   useEffect(() => {
     const timeout = setTimeout(() => {
       const params = new URLSearchParams(searchParams.toString());
@@ -82,11 +79,33 @@ export default function OrdersPageToolbar({
 
       const queryString = params.toString();
 
-      router.push(queryString ? `${pathname}?${queryString}` : pathname);
+      router.replace(queryString ? `${pathname}?${queryString}` : pathname);
     }, 500);
 
     return () => clearTimeout(timeout);
-  }, [searchValue, pathname, router]);
+  }, [searchValue, pathname, router, searchParams]);
+
+  // Clear search
+  const handleClearSearch = () => {
+    setSearchValue("");
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("search");
+
+    const queryString = params.toString();
+
+    router.replace(queryString ? `${pathname}?${queryString}` : pathname);
+  };
+
+  // Filter change
+  const handleFilter = (
+    _event: React.MouseEvent<HTMLElement>,
+    newFilter: FilterValue | null,
+  ) => {
+    if (newFilter !== null) {
+      onFilterChange(newFilter);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -103,6 +122,20 @@ export default function OrdersPageToolbar({
             placeholder="جستجوی سفارش..."
             className="flex-1 text-sm!"
             fullWidth
+            endAdornment={
+              searchValue && (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={handleClearSearch}
+                    aria-label="پاک کردن جستجو"
+                    edge="end"
+                  >
+                    <X size={16} />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }
           />
         </Paper>
 
