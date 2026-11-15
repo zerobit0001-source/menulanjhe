@@ -6,6 +6,7 @@ export type Product = {
   slug: string;
   description: string;
   image: string | null;
+  optimized_image: string | null;
   price: string;
   is_available: boolean;
   is_featured: boolean;

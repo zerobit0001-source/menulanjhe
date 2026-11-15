@@ -50,9 +50,9 @@ export default function ProductPageProductCard({
           </Typography>
         </span>
 
-        {product.image ? (
+        {product.image || product.optimized_image ? (
           <img
-            src={product.image}
+            src={product.optimized_image ?? product.image}
             alt={product.name}
             className="h-full w-full object-cover"
           />
