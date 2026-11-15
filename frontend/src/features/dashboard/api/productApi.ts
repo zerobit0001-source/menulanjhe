@@ -7,7 +7,6 @@ import type {
   UpdateProductRequest,
 } from "../types/products/products.type";
 
-
 function buildCreateProductFormData(input: CreateProductRequest): FormData {
   const formData = new FormData();
 
@@ -36,7 +35,11 @@ function buildUpdateProductFormData(body: UpdateProductRequest): FormData {
   if (body.is_featured !== undefined) {
     formData.append("is_featured", String(body.is_featured));
   }
-  if (body.image) formData.append("image", body.image);
+  if (body.image instanceof File) {
+    formData.append("image", body.image);
+  } else if (body.image === null) {
+    formData.append("image", "");
+  }
 
   return formData;
 }

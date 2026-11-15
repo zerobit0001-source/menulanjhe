@@ -26,15 +26,6 @@ import { useMemo, useState } from "react";
 import ProductImageField from "../ProductImageField";
 import { FormSection, getApiErrorMessage } from "../Productformshared";
 
-/**
- * Removing an existing image needs a confirmed backend convention
- * (e.g. a dedicated flag or `image: null` handling in Django), and none exists
- * yet. While this is `false` the "remove existing image" action is hidden and
- * nothing is ever sent for removal. Flip it only after the backend supports it
- * and `updateProduct` is extended to send the agreed field.
- */
-const IMAGE_REMOVAL_SUPPORTED = false;
-
 const UPDATE_ERROR_FALLBACK = "ویرایش محصول انجام نشد. لطفاً دوباره تلاش کنید.";
 
 type FieldErrors = {
@@ -76,7 +67,13 @@ function EditProductForm({ product, categories }: EditProductFormProps) {
   // Three separate image states — never mixed:
   const existingImageUrl = product.image ?? null; // 1. what the backend has
   const [imageFile, setImageFile] = useState<File | null>(null); // 2. pending new File
-  const [removeExistingImage, setRemoveExistingImage] = useState(false); // 3. removal intent (UI only)
+  const [removeExistingImage, setRemoveExistingImage] = useState(false); // 3. removal intent
+
+  // Picking a new file replaces the image, so it cancels a pending removal.
+  const handleImageChange = (file: File | null) => {
+    setImageFile(file);
+    if (file) setRemoveExistingImage(false);
+  };
 
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [apiError, setApiError] = useState("");
@@ -128,9 +125,10 @@ function EditProductForm({ product, categories }: EditProductFormProps) {
           description: description.trim(),
           price: price,
           is_featured: isFeatured,
-          // Scenario A: null → no image field is sent, old image is kept.
-          // Scenario B: File → sent as multipart `image`.
-          image: imageFile,
+          // File       → replace the image (multipart `image`).
+          // null       → remove the image (blank `image` is sent).
+          // undefined  → untouched: nothing is sent, old image is kept.
+          image: imageFile ?? (removeExistingImage ? null : undefined),
         },
       }).unwrap();
 
@@ -249,13 +247,9 @@ function EditProductForm({ product, categories }: EditProductFormProps) {
           >
             <ProductImageField
               value={imageFile}
-              onChange={setImageFile}
+              onChange={handleImageChange}
               existingImageUrl={removeExistingImage ? null : existingImageUrl}
-              onRemoveExisting={
-                IMAGE_REMOVAL_SUPPORTED
-                  ? () => setRemoveExistingImage(true)
-                  : undefined
-              }
+              onRemoveExisting={() => setRemoveExistingImage(true)}
               disabled={isUpdating}
             />
 

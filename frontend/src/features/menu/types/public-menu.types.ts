@@ -4,6 +4,7 @@ export type PublicMenuProduct = {
   slug: string;
   description: string;
   image: string | null;
+  optimized_image: string | null;
   price: number;
   category_name: string;
   is_available: boolean;
