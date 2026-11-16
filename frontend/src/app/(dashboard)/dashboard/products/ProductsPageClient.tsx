@@ -7,6 +7,7 @@ import Link from "next/link";
 import { SectionTitle } from "@/features/dashboard/components/SectionTitle";
 import ProductsPageProductsList from "@/features/dashboard/components/products/ProductsPageProductsList";
 import ProductsPageToolbar from "@/features/dashboard/components/products/ProductsPageToolbar";
+import { useState } from "react";
 
 type FilterValue = "all" | "DISABLED" | "VISIBLE";
 
@@ -23,12 +24,13 @@ export default function ProductsPageClient({
   page,
   category,
 }: Props) {
+  const [count , setCount] = useState(0)
   return (
     <>
       <SectionTitle
         title="محصولات"
         icon={<ShoppingCart size={20} className="text-gray-500" />}
-        count={23}
+        count={count}
       >
         <Link href="/dashboard/products/create">
           <Button variant="contained">افزودن محصول</Button>
@@ -42,6 +44,7 @@ export default function ProductsPageClient({
         filter={filter}
         page={page}
         category={category}
+        setCount={setCount}
       />
     </>
   );

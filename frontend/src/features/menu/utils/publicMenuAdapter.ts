@@ -23,7 +23,7 @@ export function publicMenuToMenuData(menu: PublicMenuResponse): MenuData {
             name: product.name,
             description: product.description,
             price: product.price,
-            image: product.optimized_image ?? product.image ?? undefined,
+            image: product.optimized_image || product.image || undefined,
             available: product.is_available,
           })),
       },
@@ -50,7 +50,7 @@ export function publicMenuToMenuData(menu: PublicMenuResponse): MenuData {
 
           price: product.price,
 
-          image: product.image ?? undefined,
+          image: product.optimized_image || product.image || undefined,
 
           available: product.is_available,
         })),

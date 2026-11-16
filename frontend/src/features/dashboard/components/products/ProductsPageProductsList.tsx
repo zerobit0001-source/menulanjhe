@@ -10,6 +10,7 @@ type Props = {
   filter: "all" | "DISABLED" | "VISIBLE";
   page: number;
   category: string;
+  setCount: () => void;
 };
 
 export default function ProductsPageProductsList({
@@ -17,6 +18,7 @@ export default function ProductsPageProductsList({
   filter,
   page,
   category,
+  setCount,
 }: Props) {
   const isAvailable =
     filter === "VISIBLE" ? true : filter === "DISABLED" ? false : undefined;
@@ -61,6 +63,8 @@ export default function ProductsPageProductsList({
       </div>
     );
   }
+
+  setCount(data?.count || 0);
 
   return (
     <>

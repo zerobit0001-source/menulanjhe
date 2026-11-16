@@ -15,6 +15,7 @@ import Template015 from "./templates/Template015";
 import Template016 from "./templates/Template016";
 import Template017 from "./templates/Template017";
 import Template018 from "./templates/Template018";
+import Template020 from "./templates/Template020";
 
 const menuTemplates = {
   modern: ModernMenu,
