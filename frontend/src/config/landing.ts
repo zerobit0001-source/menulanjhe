@@ -277,14 +277,14 @@ export const features: Feature[] = [
  */
 export const menuTemplates: MenuTemplate[] = [
   {
-    src: "/images/mainpage/image.png",
+    src: "/images/mainpage/image (3).png",
     id: "fullscreen",
     name: "قالب تمام صفحه",
     description:
       "نمایش هر محصول به‌صورت تمام‌صفحه با اسلاید بین محصولات هر دسته؛ مناسب کافه‌ها و رستوران‌هایی که عکس غذا را در اولویت می‌دانند",
   },
   {
-    src: "/images/mainpage/image (3).png",
+    src: "/images/mainpage/image (4).png",
     id: "categoryflow",
     name: "قالب جریان دسته‌ها",
     description:

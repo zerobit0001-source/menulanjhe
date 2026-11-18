@@ -1,8 +1,11 @@
-import { LayoutTemplate } from "lucide-react";
-import { menuTemplates } from "@/config/landing";
-import { ImagePlaceholder } from "./image-placeholder";
-import { Section, SectionHeading } from "./ui";
 import Image from "next/image";
+
+import { menuTemplates } from "@/config/landing";
+import { Section, SectionHeading } from "./ui";
+
+// All screenshots share the same size.
+const IMAGE_WIDTH = 220;
+const IMAGE_HEIGHT = 478;
 
 export function TemplatesGallery() {
   return (
@@ -15,19 +18,28 @@ export function TemplatesGallery() {
       />
 
       <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {menuTemplates.map((template) => (
+        {menuTemplates.map((template, index) => (
           <li
             key={template.id}
-            className="min-w-0 overflow-hidden rounded-2xl border border-stone-200 bg-white p-3 sm:p-4"
+            className="group min-w-0 overflow-hidden rounded-2xl border border-stone-200 bg-white p-3 transition-shadow duration-300 hover:shadow-lg motion-reduce:transition-none sm:p-4"
           >
-            {/* Preview */}
-            <div className="relative aspect-[2/4] w-full overflow-hidden rounded-xl bg-stone-100">
-              <Image
-                src={template.src}
-                alt={template.name}
-                fill
-                sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, (max-width: 1279px) 33vw, 25vw"
-              />
+            {/* Preview: the screenshot keeps its real size inside a phone frame,
+                so it is never stretched or upscaled. */}
+            <div className="flex justify-center rounded-xl bg-stone-100 px-4 py-8">
+              <div className="rounded-[2.25rem] border border-stone-300 bg-stone-900 p-1.5 shadow-xl transition-transform duration-300 group-hover:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0">
+                <div className="overflow-hidden rounded-[1.8rem] bg-white">
+                  <Image
+                    src={template.src}
+                    alt={`پیش‌نمایش ${template.name}`}
+                    width={IMAGE_WIDTH}
+                    height={IMAGE_HEIGHT}
+                    quality={100}
+                    priority={index === 0}
+                    sizes={`${IMAGE_WIDTH}px`}
+                    className="block h-auto w-[220px] max-w-full"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Details */}
@@ -35,7 +47,6 @@ export function TemplatesGallery() {
               <div className="flex min-w-0 items-center justify-between gap-2">
                 <h3 className="min-w-0 truncate text-sm font-bold text-stone-900 sm:text-base">
                   {template.name}
-                  menulounge
                 </h3>
 
                 <span
