@@ -1,6 +1,4 @@
-import { Smartphone } from "lucide-react";
 import { demoHref, requestHref } from "@/config/landing";
-import { ImagePlaceholder } from "./image-placeholder";
 import { Container, LinkButton } from "./ui";
 import Image from "next/image";
 
@@ -56,7 +54,7 @@ export function Hero() {
             /> */}
             <div className="w-[320px] h-[661px] ">
               <Image
-                src={"/images/mainpage/hero1.png"}
+                src={"/images/mainpage/hero2.png"}
                 alt="عکس منو برای صفحه اصلی"
                 width={320}
                 height={661}
