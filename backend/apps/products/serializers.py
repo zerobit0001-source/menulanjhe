@@ -4,6 +4,7 @@ from .models import Product
 from apps.common.fields import TomanPriceField, FormSafeBooleanField
 from apps.common.image_service import ImageValidationError, validate_image_upload, optimize_image
 from django.core.files.storage import default_storage
+from decimal import Decimal
 
 
 
@@ -79,3 +80,16 @@ class PublicProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ["id", "name", "slug", "description", "image", "optimized_image", "price", "category_name", "is_available", "is_featured"]
         read_only_fields = fields
+
+
+class CategoryPriceAdjustSerializer(serializers.Serializer):
+    percent = serializers.DecimalField(
+        max_digits=6, decimal_places=2, min_value=Decimal("-90"), max_value=Decimal("500")
+    )
+    round_to = serializers.IntegerField(required=False, default=1, min_value=1, max_value=100000)
+    dry_run = serializers.BooleanField(required=False, default=False)
+
+    def validate_percent(self, value):
+        if value == 0:
+            raise serializers.ValidationError("درصد تغییر نمی‌تواند صفر باشد.")
+        return value
