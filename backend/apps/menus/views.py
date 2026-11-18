@@ -1,3 +1,5 @@
+import logging
+
 from django.db import transaction
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -9,6 +11,11 @@ from apps.tenants.permissions import HasTenantPermission
 from .models import Category, Menu
 from .serializers import AdminCategorySerializer, AdminMenuSerializer, CategoryReorderSerializer
 
+from apps.products.serializers import CategoryPriceAdjustSerializer
+from apps.products.services import adjust_category_prices
+
+
+logger = logging.getLogger(__name__)
 
 class MenuViewSet(TenantScopedQuerySetMixin, viewsets.ModelViewSet):
     queryset = Menu.objects.select_related("branch")
@@ -31,6 +38,7 @@ class CategoryViewSet(TenantScopedQuerySetMixin, viewsets.ModelViewSet):
         "create": "category.create", "update": "category.update",
         "partial_update": "category.update", "destroy": "category.delete",
         "reorder": "category.update", "toggle_active": "category.update",
+        "adjust_prices": "product.update",
     }
     required_permission = "category.view"
     filterset_fields = ["menu", "is_active"]
@@ -60,3 +68,16 @@ class CategoryViewSet(TenantScopedQuerySetMixin, viewsets.ModelViewSet):
         category.is_active = not category.is_active
         category.save(update_fields=["is_active", "updated_at"])
         return Response(self.get_serializer(category).data)
+    
+    @action(detail=True, methods=["post"], url_path="adjust_prices")
+    def adjust_prices(self, request, pk=None):
+        category = self.get_object()
+        serializer = CategoryPriceAdjustSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        result = adjust_category_prices(category=category, **serializer.validated_data)
+        if not result["dry_run"]:
+            logger.info(
+                "category prices adjusted tenant=%s user=%s category=%s percent=%s count=%s",
+                request.tenant.id, request.user.id, category.id, result["percent"], result["updated_count"],
+            )
+        return Response(result)
